@@ -2,18 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/features/onboarding/presentation/views/onboarding_view.dart';
+import 'package:mashena_rider/features/splash/presentation/views/splash_view.dart';
 
 final class AppRouter {
   const AppRouter._();
 
   static final GoRouter router = GoRouter(
-    initialLocation: AppRoutes.onboardingPath,
+    initialLocation: AppRoutes.splashPath,
     routes: <RouteBase>[
       GoRoute(path: '/', builder: (context, state) => const _RootPage()),
       GoRoute(
         path: AppRoutes.onboardingPath,
         name: AppRoutes.onboarding,
         builder: (context, state) => const OnboardingView(),
+      ),
+      GoRoute(
+        path: AppRoutes.splashPath,
+        name: AppRoutes.splash,
+        builder: (context, state) => const SplashView(),
       ),
     ],
     errorBuilder: (context, state) => _ErrorPage(error: state.error),

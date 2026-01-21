@@ -8,6 +8,8 @@ final class LocaleKeys {
   static const String onboardingSubtitle2 = 'onboarding.2.subtitle';
   static const String onboardingSubtitle3 = 'onboarding.3.subtitle';
   // General
+  static const String appName = 'appname';
+  static const String appDescription = 'appdescription';
   static const String ok = 'ok';
   static const String cancel = 'cancel';
   static const String close = 'close';

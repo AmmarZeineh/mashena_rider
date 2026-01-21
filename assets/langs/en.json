@@ -1,4 +1,6 @@
 {
+  "appname": "Mashena",
+  "appdescription": "Welcome to Mashena",
   "onboarding": {
     "1": {
       "title": "Book a Ride Anytime",
