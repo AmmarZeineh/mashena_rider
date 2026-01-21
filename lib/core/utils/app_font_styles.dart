@@ -12,6 +12,11 @@ abstract class AppTextStyles {
     fontSize: 16.sp,
     color: Colors.black,
   );
+  static TextStyle w500_18 = TextStyle(
+    fontWeight: FontWeight.w500,
+    fontSize: 18.sp,
+    color: Colors.black,
+  );
   static TextStyle w600_12 = TextStyle(
     fontWeight: FontWeight.w600,
     fontSize: 12.sp,
@@ -135,6 +140,11 @@ abstract class AppTextStyles {
   static TextStyle w800_16 = TextStyle(
     fontWeight: FontWeight.w800,
     fontSize: 16.sp,
+    color: Colors.black,
+  );
+  static TextStyle w400_42 = TextStyle(
+    fontWeight: FontWeight.w400,
+    fontSize: 42.sp,
     color: Colors.black,
   );
 }

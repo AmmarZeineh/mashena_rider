@@ -11,8 +11,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
+      theme: AppTheme.light(context.locale),
+      darkTheme: AppTheme.dark(context.locale),
       routerConfig: AppRouter.router,
 
       // ✅ Easy Localization

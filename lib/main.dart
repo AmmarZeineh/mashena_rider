@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'app/app.dart';
 
@@ -8,11 +9,14 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
 
   runApp(
-    EasyLocalization(
-      supportedLocales: const [Locale('en'), Locale('ar')],
-      path: 'assets/langs',
-      fallbackLocale: const Locale('en'),
-      child: const App(),
+    ScreenUtilInit(
+      designSize: Size(428, 926),
+      child: EasyLocalization(
+        supportedLocales: const [Locale('en'), Locale('ar')],
+        path: 'assets/langs',
+        fallbackLocale: const Locale('en'),
+        child: const App(),
+      ),
     ),
   );
 }
