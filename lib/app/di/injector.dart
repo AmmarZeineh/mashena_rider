@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mashena_rider/core/network/token_manager.dart';
 
 import '../../core/network/dio_client.dart';
 import '../../core/network/network_info.dart';
@@ -11,5 +13,12 @@ Future<void> configureDependencies() async {
 
   // Core
   getIt.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
-  getIt.registerLazySingleton<Api>(() => Api());
+  // ApiClient
+  getIt.registerLazySingleton<ApiClient>(
+    () => ApiClient(
+      tokenManager: getIt<TokenManager>(),
+      dio: getIt<Dio>(),
+      baseUrl: 'https://YOUR_BASE_URL_HERE', // غيّره
+    ),
+  );
 }

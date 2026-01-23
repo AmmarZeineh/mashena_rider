@@ -1,8 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
-import 'package:mashena_rider/core/localization/locale_keys.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/network/network_info.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
@@ -121,7 +120,6 @@ class _SplashViewBodyState extends State<SplashViewBody>
 
   void _navigateToNextScreen() {
     GoRouter.of(context).goNamed(AppRoutes.onboarding);
-    
   }
 
   void _showNoInternetDialog() {
@@ -211,7 +209,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
                     child: Text(
-                      LocaleKeys.appDescription.tr(),
+                      S.of(context).appDescription,
                       textAlign: TextAlign.center,
                       style: AppTextStyles.w400_16.copyWith(
                         color: Colors.grey.shade700,

@@ -1,6 +1,8 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:mashena_rider/core/localization/locale_keys.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mashena_rider/app/router/app_routes.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/utils/app_images.dart';
 import 'package:mashena_rider/core/widgets/custom_elvated_button.dart';
 import 'package:mashena_rider/features/onboarding/domain/entities/onboarding_entity.dart';
@@ -17,23 +19,29 @@ class _OnboardingViewBodyState extends State<OnboardingViewBody> {
   late final PageController _pageController;
   int _currentIndex = 0;
 
-  final List<OnboardingEntity> _pages = [
-    OnboardingEntity(
-      titleKey: LocaleKeys.onboardingTitle1,
-      subtitleKey: LocaleKeys.onboardingSubtitle1,
-      image: Assets.imagesOnboarding1,
-    ),
-    OnboardingEntity(
-      titleKey: LocaleKeys.onboardingTitle2,
-      subtitleKey: LocaleKeys.onboardingSubtitle2,
-      image: Assets.imagesOnboarding2,
-    ),
-    OnboardingEntity(
-      titleKey: LocaleKeys.onboardingTitle3,
-      subtitleKey: LocaleKeys.onboardingSubtitle3,
-      image: Assets.imagesOnboarding3,
-    ),
-  ];
+  final List<OnboardingEntity> _pages = [];
+
+  @override
+  void didChangeDependencies() {
+    _pages.addAll([
+      OnboardingEntity(
+        title: S.of(context).onboardingTitle1,
+        subtitle: S.of(context).onboardingSubtitle1,
+        image: Assets.imagesOnboarding1,
+      ),
+      OnboardingEntity(
+        title: S.of(context).onboardingTitle2,
+        subtitle: S.of(context).onboardingSubtitle2,
+        image: Assets.imagesOnboarding2,
+      ),
+      OnboardingEntity(
+        title: S.of(context).onboardingTitle3,
+        subtitle: S.of(context).onboardingSubtitle3,
+        image: Assets.imagesOnboarding3,
+      ),
+    ]);
+    super.didChangeDependencies();
+  }
 
   @override
   void initState() {
@@ -75,13 +83,16 @@ class _OnboardingViewBodyState extends State<OnboardingViewBody> {
         ),
         Spacer(),
         CustomElevatedButton(
-          title: _currentIndex != _pages.length - 1 ? 'Next' : 'Get started',
+          title: S.of(context).commonNext,
           onPressed: () {
             if (_currentIndex != _pages.length - 1) {
               _pageController.nextPage(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
               );
+            }
+            if (_currentIndex == 2) {
+              GoRouter.of(context).goNamed(AppRoutes.login);
             }
           },
         ),
