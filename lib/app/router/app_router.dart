@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/features/auth/presentation/views/login_view.dart';
+import 'package:mashena_rider/features/auth/presentation/views/signup_view.dart';
 import 'package:mashena_rider/features/onboarding/presentation/views/onboarding_view.dart';
 import 'package:mashena_rider/features/splash/presentation/views/splash_view.dart';
 
@@ -26,6 +27,11 @@ final class AppRouter {
         path: AppRoutes.loginPath,
         name: AppRoutes.login,
         builder: (context, state) => const LoginView(),
+      ),
+      GoRoute(
+        path: AppRoutes.signupPath,
+        name: AppRoutes.signup,
+        builder: (context, state) => const SignupView(),
       ),
     ],
     errorBuilder: (context, state) => _ErrorPage(error: state.error),

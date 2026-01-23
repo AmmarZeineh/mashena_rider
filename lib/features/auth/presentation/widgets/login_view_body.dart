@@ -1,4 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_context_x.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/l10n/validation_localizer.dart';
@@ -107,6 +110,9 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                               style: AppTextStyles.w400_16,
                             ),
                             TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () =>
+                                    context.pushNamed(AppRoutes.signup),
                               text: S.of(context).authSignUp,
                               style: AppTextStyles.w600_16.copyWith(
                                 color: AppColors.primaryColor,
