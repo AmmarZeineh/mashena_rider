@@ -16,26 +16,26 @@ class SplashViewBody extends StatefulWidget {
 
 class _SplashViewBodyState extends State<SplashViewBody>
     with TickerProviderStateMixin {
-  late AnimationController _logoController;
-  late AnimationController _textController;
-  late AnimationController _shimmerController;
+  late final AnimationController _logoController;
+  late final AnimationController _textController;
+  late final AnimationController _shimmerController;
 
-  late Animation<double> _logoFadeAnimation;
-  late Animation<double> _logoScaleAnimation;
-  late Animation<double> _logoRotationAnimation;
+  late final Animation<double> _logoFadeAnimation;
+  late final Animation<double> _logoScaleAnimation;
+  late final Animation<double> _logoRotationAnimation;
 
-  late Animation<double> _textFadeAnimation;
-  late Animation<Offset> _textSlideAnimation;
+  late final Animation<double> _textFadeAnimation;
+  late final Animation<Offset> _textSlideAnimation;
 
-  late Animation<double> _shimmerAnimation;
+  late final Animation<double> _shimmerAnimation;
 
+  // الأفضل: خليه من DI، بس هون خليته مثل ما عندك
   final NetworkInfo _networkInfo = NetworkInfoImpl();
 
   @override
   void initState() {
     super.initState();
 
-    // Logo Animation Controller
     _logoController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1800),
@@ -59,7 +59,6 @@ class _SplashViewBodyState extends State<SplashViewBody>
       ),
     );
 
-    // Text Animation Controller
     _textController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
@@ -75,7 +74,6 @@ class _SplashViewBodyState extends State<SplashViewBody>
           CurvedAnimation(parent: _textController, curve: Curves.easeOutCubic),
         );
 
-    // Shimmer Animation Controller
     _shimmerController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
@@ -85,20 +83,18 @@ class _SplashViewBodyState extends State<SplashViewBody>
       CurvedAnimation(parent: _shimmerController, curve: Curves.easeInOut),
     );
 
-    // Start animations and check connection
-    _startAnimationsAndNavigate();
+    // ابدأ بعد أول frame لتجنب أي مشاكل context
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAnimationsAndNavigate();
+    });
   }
 
-  void _startAnimationsAndNavigate() async {
-    // بدء الأنيميشنات
+  Future<void> _startAnimationsAndNavigate() async {
     await _logoController.forward();
     _textController.forward();
     _shimmerController.repeat();
 
-    // انتظار مدة معينة لعرض الـ splash
     await Future.delayed(const Duration(seconds: 2));
-
-    // فحص الاتصال بالإنترنت
     await _checkConnectionAndNavigate();
   }
 
@@ -110,40 +106,55 @@ class _SplashViewBodyState extends State<SplashViewBody>
     if (!mounted) return;
 
     if (isConnected) {
-      // في حال وجود اتصال، انتقل للواجهة التالية
       _navigateToNextScreen();
     } else {
-      // في حال عدم وجود اتصال، أظهر رسالة
       _showNoInternetDialog();
     }
   }
 
   void _navigateToNextScreen() {
-    GoRouter.of(context).goNamed(AppRoutes.onboarding);
+    context.goNamed(AppRoutes.onboarding);
   }
 
   void _showNoInternetDialog() {
+    final s = S.of(context);
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'لا يوجد اتصال بالإنترنت',
-          style: AppTextStyles.w400_16.copyWith(fontWeight: FontWeight.bold),
-        ),
-        content: const Text(
-          'يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _checkConnectionAndNavigate();
-            },
-            child: const Text('إعادة المحاولة'),
+      builder: (dialogContext) {
+        final theme = Theme.of(dialogContext);
+        final cs = theme.colorScheme;
+
+        return AlertDialog(
+          backgroundColor: cs.surface,
+          title: Text(
+            // إذا ما عندك key خاص، خليها مؤقتًا هيك أو أضف key بالـ ARB
+            // s.errorsNetwork (غير مناسب كعنوان) لذلك خليت نص عربي fallback
+            'لا يوجد اتصال بالإنترنت',
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: cs.onSurface,
+            ),
           ),
-        ],
-      ),
+          content: Text(
+            'يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى',
+            style: theme.textTheme.bodyMedium?.copyWith(color: cs.onSurface),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                _checkConnectionAndNavigate();
+              },
+              child: Text(
+                s.commonRetry, // موجود عندك
+                style: theme.textTheme.labelLarge?.copyWith(color: cs.primary),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -157,9 +168,17 @@ class _SplashViewBodyState extends State<SplashViewBody>
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     final size = MediaQuery.of(context).size;
     final isSmallScreen = size.width < 360;
     final logoSize = isSmallScreen ? 140.0 : 180.0;
+
+    // خلفية تتبع الثيم
+    final bg1 = cs.surface; // غالبًا أبيض بالـ light، داكن بالـ dark
+    final bg2 = cs.surfaceContainerHighest; // درجة ثانية مريحة
 
     return Container(
       width: double.infinity,
@@ -167,22 +186,19 @@ class _SplashViewBodyState extends State<SplashViewBody>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Colors.white, Colors.grey.shade50],
+          colors: [bg1, bg2],
         ),
       ),
       child: Stack(
         children: [
-          // Animated background circles
-          _buildBackgroundCircles(size),
+          _buildBackgroundCircles(size, cs),
 
-          // Main content
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(width: double.infinity),
 
-              // Logo with multiple animations
               AnimatedBuilder(
                 animation: _logoController,
                 builder: (context, child) {
@@ -192,7 +208,10 @@ class _SplashViewBodyState extends State<SplashViewBody>
                       scale: _logoScaleAnimation,
                       child: Transform.rotate(
                         angle: _logoRotationAnimation.value,
-                        child: _buildLogoWithShimmer(logoSize),
+                        child: _buildLogoWithShimmer(
+                          logoSize: logoSize,
+                          colorScheme: cs,
+                        ),
                       ),
                     ),
                   );
@@ -201,7 +220,6 @@ class _SplashViewBodyState extends State<SplashViewBody>
 
               SizedBox(height: size.height * 0.05),
 
-              // Text with slide animation
               SlideTransition(
                 position: _textSlideAnimation,
                 child: FadeTransition(
@@ -209,10 +227,10 @@ class _SplashViewBodyState extends State<SplashViewBody>
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
                     child: Text(
-                      S.of(context).appDescription,
+                      s.appDescription,
                       textAlign: TextAlign.center,
                       style: AppTextStyles.w400_16.copyWith(
-                        color: Colors.grey.shade700,
+                        color: cs.onSurface.withOpacity(0.75),
                         height: 1.5,
                         fontSize: isSmallScreen ? 14 : 16,
                       ),
@@ -223,10 +241,9 @@ class _SplashViewBodyState extends State<SplashViewBody>
 
               SizedBox(height: size.height * 0.08),
 
-              // Loading indicator
               FadeTransition(
                 opacity: _textFadeAnimation,
-                child: _buildLoadingIndicator(),
+                child: _buildLoadingIndicator(cs),
               ),
             ],
           ),
@@ -235,7 +252,13 @@ class _SplashViewBodyState extends State<SplashViewBody>
     );
   }
 
-  Widget _buildLogoWithShimmer(double logoSize) {
+  Widget _buildLogoWithShimmer({
+    required double logoSize,
+    required ColorScheme colorScheme,
+  }) {
+    // إذا عندك AppColors.primaryColor ثابت، ممكن تستخدم colorScheme.primary أفضل
+    final primary = AppColors.primaryColor;
+
     return AnimatedBuilder(
       animation: _shimmerAnimation,
       builder: (context, child) {
@@ -244,11 +267,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
             return LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: const [
-                Colors.white,
-                AppColors.primaryColor,
-                Colors.white,
-              ],
+              colors: [colorScheme.surface, primary, colorScheme.surface],
               stops: [
                 _shimmerAnimation.value - 0.3,
                 _shimmerAnimation.value,
@@ -257,6 +276,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
               transform: GradientRotation(_shimmerAnimation.value),
             ).createShader(bounds);
           },
+          blendMode: BlendMode.srcATop,
           child: Image.asset(
             Assets.imagesLogo,
             width: logoSize,
@@ -267,7 +287,10 @@ class _SplashViewBodyState extends State<SplashViewBody>
     );
   }
 
-  Widget _buildBackgroundCircles(Size size) {
+  Widget _buildBackgroundCircles(Size size, ColorScheme cs) {
+    final primary = cs.primary;
+    final onSurface = cs.onSurface;
+
     return AnimatedBuilder(
       animation: _logoController,
       builder: (context, child) {
@@ -277,13 +300,13 @@ class _SplashViewBodyState extends State<SplashViewBody>
               top: -size.height * 0.12,
               right: -size.width * 0.25,
               child: Opacity(
-                opacity: _logoFadeAnimation.value * 0.1,
+                opacity: _logoFadeAnimation.value * 0.10,
                 child: Container(
                   width: size.width * 0.75,
                   height: size.width * 0.75,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.primaryColor,
+                    color: primary,
                   ),
                 ),
               ),
@@ -292,13 +315,30 @@ class _SplashViewBodyState extends State<SplashViewBody>
               bottom: -size.height * 0.18,
               left: -size.width * 0.35,
               child: Opacity(
-                opacity: _logoFadeAnimation.value * 0.08,
+                opacity: _logoFadeAnimation.value * 0.07,
                 child: Container(
                   width: size.width,
                   height: size.width,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.primaryColor,
+                    color: primary,
+                  ),
+                ),
+              ),
+            ),
+
+            // دائرة خفيفة إضافية (تعطي عمق، تتبع الثيم)
+            Positioned(
+              top: size.height * 0.22,
+              left: -size.width * 0.20,
+              child: Opacity(
+                opacity: _logoFadeAnimation.value * 0.04,
+                child: Container(
+                  width: size.width * 0.55,
+                  height: size.width * 0.55,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: onSurface,
                   ),
                 ),
               ),
@@ -309,16 +349,11 @@ class _SplashViewBodyState extends State<SplashViewBody>
     );
   }
 
-  Widget _buildLoadingIndicator() {
+  Widget _buildLoadingIndicator(ColorScheme cs) {
     return SizedBox(
       width: 40,
       height: 40,
-      child: CircularProgressIndicator(
-        strokeWidth: 3,
-        valueColor: AlwaysStoppedAnimation<Color>(
-          AppColors.primaryColor.withOpacity(0.8),
-        ),
-      ),
+      child: CircularProgressIndicator(strokeWidth: 3),
     );
   }
 }

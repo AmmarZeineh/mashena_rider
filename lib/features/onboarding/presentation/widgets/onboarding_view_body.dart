@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
+import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_images.dart';
 import 'package:mashena_rider/core/widgets/custom_elvated_button.dart';
 import 'package:mashena_rider/features/onboarding/domain/entities/onboarding_entity.dart';
@@ -72,8 +73,10 @@ class _OnboardingViewBodyState extends State<OnboardingViewBody> {
 
         DotsIndicator(
           dotsCount: _pages.length,
+          animate: true,
           position: _currentIndex.toDouble(),
           decorator: DotsDecorator(
+            activeColor: AppColors.primaryColor,
             size: const Size.square(8),
             activeSize: const Size(16, 8),
             activeShape: RoundedRectangleBorder(
