@@ -57,7 +57,7 @@
   "profileProfile": "الملف الشخصي",
   "profileEditProfile": "تعديل الملف الشخصي",
   "profileName": "الاسم",
-  "profileEmail": "البريد الإلكتروني",
+  "email": "البريد الإلكتروني",
   "profileLanguage": "اللغة",
   "profileNotifications": "الإشعارات",
   "profilePrivacy": "الخصوصية",
@@ -72,6 +72,9 @@
   "apiSendTimeout": "انتهت مهلة الإرسال",
   "apiReceiveTimeout": "انتهت مهلة الاستلام",
   "enterYourNumberLogin": "ادخل رقمك لتسجيل الدخول",
+  "enterYpurNumberRegister": "ادخل رقمك للتسجيل",
+  "enterYourEmailLogin": "ادخل بريدك الالكتروني لتسجيل الدخول",
+  "enterYourEmailRegister": "ادخل بريدك الالكتروني للتسجيل",
   "apiRequestCancelled": "تم إلغاء الطلب",
   "apiConnectionError": "خطأ في الاتصال",
   "apiCertificateError": "خطأ في الشهادة",
@@ -90,5 +93,26 @@
     }
   },
   "apiUnknownError": "خطأ غير معروف",
-  "cacheError": "خطأ في التخزين"
+  "cacheError": "خطأ في التخزين",
+  "validationRequired": "هذا الحقل مطلوب",
+  "validationInvalidEmail": "بريد إلكتروني غير صالح",
+  "validationInvalidPhone": "رقم هاتف غير صالح",
+  "validationWeakPassword": "كلمة مرور ضعيفة (حرف كبير، صغير، رقم، رمز)",
+  "validationOtpInvalid": "رمز غير صالح",
+  "validationMinLength": "الحد الأدنى {min} أحرف",
+  "@validationMinLength": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "validationMaxLength": "الحد الأقصى {max} أحرف",
+  "@validationMaxLength": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -76,6 +76,15 @@ class SAr extends S {
   String get enterYourNumberLogin => 'ادخل رقمك لتسجيل الدخول';
 
   @override
+  String get enterYourNumberRegister => 'Enter your number to sign up';
+
+  @override
+  String get enterYourEmailLogin => 'ادخل بريدك الالكتروني لتسجيل الدخول';
+
+  @override
+  String get enterYourEmailRegister => 'ادخل بريدك الالكتروني للتسجيل';
+
+  @override
   String get authRegister => 'إنشاء حساب';
 
   @override
@@ -184,7 +193,7 @@ class SAr extends S {
   String get profileName => 'الاسم';
 
   @override
-  String get profileEmail => 'البريد الإلكتروني';
+  String get email => 'البريد الإلكتروني';
 
   @override
   String get profileLanguage => 'اللغة';
@@ -268,4 +277,30 @@ class SAr extends S {
 
   @override
   String get cacheError => 'خطأ في التخزين';
+
+  @override
+  String get validationRequired => 'هذا الحقل مطلوب';
+
+  @override
+  String get validationInvalidEmail => 'بريد إلكتروني غير صالح';
+
+  @override
+  String get validationInvalidPhone => 'رقم هاتف غير صالح';
+
+  @override
+  String get validationWeakPassword =>
+      'كلمة مرور ضعيفة (حرف كبير، صغير، رقم، رمز)';
+
+  @override
+  String get validationOtpInvalid => 'رمز غير صالح';
+
+  @override
+  String validationMinLength(int min) {
+    return 'الحد الأدنى $min أحرف';
+  }
+
+  @override
+  String validationMaxLength(int max) {
+    return 'الحد الأقصى $max أحرف';
+  }
 }

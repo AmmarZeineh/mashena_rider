@@ -229,6 +229,24 @@ abstract class S {
   /// **'Enter your number to login'**
   String get enterYourNumberLogin;
 
+  /// No description provided for @enterYourNumberRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your number to sign up'**
+  String get enterYourNumberRegister;
+
+  /// No description provided for @enterYourEmailLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email to login'**
+  String get enterYourEmailLogin;
+
+  /// No description provided for @enterYourEmailRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email to sign up'**
+  String get enterYourEmailRegister;
+
   /// No description provided for @authRegister.
   ///
   /// In en, this message translates to:
@@ -445,11 +463,11 @@ abstract class S {
   /// **'Name'**
   String get profileName;
 
-  /// No description provided for @profileEmail.
+  /// No description provided for @email.
   ///
   /// In en, this message translates to:
   /// **'Email'**
-  String get profileEmail;
+  String get email;
 
   /// No description provided for @profileLanguage.
   ///
@@ -612,6 +630,48 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Cache error'**
   String get cacheError;
+
+  /// No description provided for @validationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get validationRequired;
+
+  /// No description provided for @validationInvalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email'**
+  String get validationInvalidEmail;
+
+  /// No description provided for @validationInvalidPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid phone number'**
+  String get validationInvalidPhone;
+
+  /// No description provided for @validationWeakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak password (uppercase, lowercase, number, symbol)'**
+  String get validationWeakPassword;
+
+  /// No description provided for @validationOtpInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid code'**
+  String get validationOtpInvalid;
+
+  /// No description provided for @validationMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum {min} characters'**
+  String validationMinLength(int min);
+
+  /// No description provided for @validationMaxLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum {max} characters'**
+  String validationMaxLength(int max);
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

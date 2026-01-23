@@ -78,6 +78,15 @@ class SEn extends S {
   String get enterYourNumberLogin => 'Enter your number to login';
 
   @override
+  String get enterYourNumberRegister => 'Enter your number to sign up';
+
+  @override
+  String get enterYourEmailLogin => 'Enter your email to login';
+
+  @override
+  String get enterYourEmailRegister => 'Enter your email to sign up';
+
+  @override
   String get authRegister => 'Create Account';
 
   @override
@@ -186,7 +195,7 @@ class SEn extends S {
   String get profileName => 'Name';
 
   @override
-  String get profileEmail => 'Email';
+  String get email => 'Email';
 
   @override
   String get profileLanguage => 'Language';
@@ -270,4 +279,30 @@ class SEn extends S {
 
   @override
   String get cacheError => 'Cache error';
+
+  @override
+  String get validationRequired => 'This field is required';
+
+  @override
+  String get validationInvalidEmail => 'Invalid email';
+
+  @override
+  String get validationInvalidPhone => 'Invalid phone number';
+
+  @override
+  String get validationWeakPassword =>
+      'Weak password (uppercase, lowercase, number, symbol)';
+
+  @override
+  String get validationOtpInvalid => 'Invalid code';
+
+  @override
+  String validationMinLength(int min) {
+    return 'Minimum $min characters';
+  }
+
+  @override
+  String validationMaxLength(int max) {
+    return 'Maximum $max characters';
+  }
 }

@@ -1,0 +1,50 @@
+import 'package:flutter/material.dart';
+import 'package:mashena_rider/core/theme/app_colors.dart';
+import 'package:mashena_rider/core/utils/app_font_styles.dart';
+
+class CustomFormField extends StatelessWidget {
+  const CustomFormField({
+    super.key,
+    this.prefix,
+    this.sufix,
+    required this.hint,
+    this.keyboardType,
+    this.validator,
+    this.onSaved,
+    this.onChanged,
+  });
+  final Widget? prefix, sufix;
+  final String hint;
+  final TextInputType? keyboardType;
+  final String? Function(String?)? validator;
+  final void Function(String?)? onSaved;
+  final void Function(String)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      onChanged: onChanged,
+      onSaved: onSaved,
+      keyboardType: keyboardType,
+      validator: validator,
+      decoration: InputDecoration(
+        prefix: prefix,
+        suffix: sufix,
+        hint: Text(
+          hint,
+          style: AppTextStyles.w400_14.copyWith(color: AppColors.textGrey),
+        ),
+        focusedBorder: _buildBorder(),
+        border: _buildBorder(),
+        enabledBorder: _buildBorder(),
+      ),
+    );
+  }
+
+  OutlineInputBorder _buildBorder() {
+    return OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.textFieldBorderColor),
+      borderRadius: BorderRadius.circular(50),
+    );
+  }
+}

@@ -1,33 +1,10 @@
+import 'package:mashena_rider/core/enums/validation_error.dart';
+
 final class Validators {
   const Validators._();
 
-  // =========================
-  // BASIC
-  // =========================
-
-  static bool isNotEmpty(String? value) {
-    if (value == null) return false;
-    return value.trim().isNotEmpty;
-  }
-
-  static bool minLength(String? value, int min) {
-    if (value == null) return false;
-    return value.trim().length >= min;
-  }
-
-  static bool maxLength(String? value, int max) {
-    if (value == null) return false;
-    return value.trim().length <= max;
-  }
-
-  static bool exactLength(String? value, int length) {
-    if (value == null) return false;
-    return value.trim().length == length;
-  }
-
-  // =========================
-  // EMAIL
-  // =========================
+  static bool isNotEmpty(String? value) =>
+      value != null && value.trim().isNotEmpty;
 
   static bool isEmail(String? value) {
     if (!isNotEmpty(value)) return false;
@@ -38,18 +15,16 @@ final class Validators {
     ).hasMatch(email);
   }
 
-  // =========================
-  // PASSWORD
-  // =========================
+  static bool isPhoneNumber(String? value) {
+    if (!isNotEmpty(value)) return false;
+    return RegExp(r'^\+?[0-9]{7,15}$').hasMatch(value!.trim());
+  }
 
-  static bool hasUpperCase(String value) => RegExp(r'[A-Z]').hasMatch(value);
-
-  static bool hasLowerCase(String value) => RegExp(r'[a-z]').hasMatch(value);
-
-  static bool hasNumber(String value) => RegExp(r'\d').hasMatch(value);
-
-  static bool hasSpecialChar(String value) =>
-      RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value);
+  static bool hasUpperCase(String v) => RegExp(r'[A-Z]').hasMatch(v);
+  static bool hasLowerCase(String v) => RegExp(r'[a-z]').hasMatch(v);
+  static bool hasNumber(String v) => RegExp(r'\d').hasMatch(v);
+  static bool hasSpecialChar(String v) =>
+      RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(v);
 
   static bool isStrongPassword(String? value, {int minLength = 8}) {
     if (!isNotEmpty(value)) return false;
@@ -61,134 +36,42 @@ final class Validators {
         hasSpecialChar(v);
   }
 
-  static bool passwordsMatch(String? p1, String? p2) {
-    if (p1 == null || p2 == null) return false;
-    return p1 == p2;
-  }
-
-  // =========================
-  // PHONE
-  // =========================
-
-  /// Supports international numbers (+963..., +1..., etc.)
-  static bool isPhoneNumber(String? value) {
-    if (!isNotEmpty(value)) return false;
-    return RegExp(r'^\+?[0-9]{7,15}$').hasMatch(value!.trim());
-  }
-
-  // =========================
-  // NUMBERS
-  // =========================
-
-  static bool isNumeric(String? value) {
-    if (!isNotEmpty(value)) return false;
-    return num.tryParse(value!) != null;
-  }
-
-  static bool isInt(String? value) {
-    if (!isNotEmpty(value)) return false;
-    return int.tryParse(value!) != null;
-  }
-
-  static bool isPositiveNumber(String? value) {
-    if (!isNumeric(value)) return false;
-    return num.parse(value!) > 0;
-  }
-
-  static bool isInRange(num value, num min, num max) {
-    return value >= min && value <= max;
-  }
-
-  // =========================
-  // URL
-  // =========================
-
-  static bool isUrl(String? value) {
-    if (!isNotEmpty(value)) return false;
-    final uri = Uri.tryParse(value!.trim());
-    return uri != null && uri.hasAbsolutePath;
-  }
-
-  // =========================
-  // DATE & TIME
-  // =========================
-
-  static bool isValidDate(String? value) {
-    if (!isNotEmpty(value)) return false;
-    return DateTime.tryParse(value!) != null;
-  }
-
-  static bool isFutureDate(DateTime date) {
-    return date.isAfter(DateTime.now());
-  }
-
-  static bool isPastDate(DateTime date) {
-    return date.isBefore(DateTime.now());
-  }
-
-  static bool isAdult(DateTime birthDate, {int adultAge = 18}) {
-    final today = DateTime.now();
-    final age = today.year - birthDate.year;
-    return age >= adultAge;
-  }
-
-  // =========================
-  // USERNAME
-  // =========================
-
-  static bool isUsername(String? value) {
-    if (!isNotEmpty(value)) return false;
-    return RegExp(r'^[a-zA-Z0-9_]{3,20}$').hasMatch(value!.trim());
-  }
-
-  // =========================
-  // OTP / CODE
-  // =========================
-
   static bool isOtp(String? value, {int length = 6}) {
     if (!isNotEmpty(value)) return false;
     return RegExp('^\\d{$length}\$').hasMatch(value!.trim());
   }
 
-  // =========================
-  // NATIONAL ID / CUSTOM
-  // =========================
+  // -------------------------
+  // Field validators (return ValidationError?)
+  // -------------------------
 
-  static bool isNationalId(String? value, {int min = 6, int max = 14}) {
-    if (!isNotEmpty(value)) return false;
-    final v = value!.trim();
-    return RegExp(r'^\d+$').hasMatch(v) && v.length >= min && v.length <= max;
+  static ValidationError? required(String? value) {
+    return isNotEmpty(value) ? null : ValidationError.requiredField;
   }
 
-  // =========================
-  // FORM FIELD HELPERS (Flutter)
-  // =========================
-
-  /// Returns error message or null (for TextFormField.validator)
-  static String? requiredField(
-    String? value, {
-    String message = 'هذا الحقل مطلوب',
-  }) {
-    return isNotEmpty(value) ? null : message;
-  }
-
-  static String? emailField(String? value) {
-    if (!isNotEmpty(value)) return 'البريد الإلكتروني مطلوب';
-    if (!isEmail(value)) return 'بريد إلكتروني غير صالح';
+  static ValidationError? email(String? value) {
+    if (!isNotEmpty(value)) return ValidationError.requiredField;
+    if (!isEmail(value)) return ValidationError.invalidEmail;
     return null;
   }
 
-  static String? passwordField(String? value) {
-    if (!isNotEmpty(value)) return 'كلمة المرور مطلوبة';
-    if (!isStrongPassword(value)) {
-      return 'كلمة المرور ضعيفة (حرف كبير، صغير، رقم، رمز)';
+  static ValidationError? phone(String? value) {
+    if (!isNotEmpty(value)) return ValidationError.requiredField;
+    if (!isPhoneNumber(value)) return ValidationError.invalidPhone;
+    return null;
+  }
+
+  static ValidationError? password(String? value, {int minLen = 8}) {
+    if (!isNotEmpty(value)) return ValidationError.requiredField;
+    if (!isStrongPassword(value, minLength: minLen)) {
+      return ValidationError.weakPassword;
     }
     return null;
   }
 
-  static String? phoneField(String? value) {
-    if (!isNotEmpty(value)) return 'رقم الهاتف مطلوب';
-    if (!isPhoneNumber(value)) return 'رقم هاتف غير صالح';
+  static ValidationError? otp(String? value, {int length = 6}) {
+    if (!isNotEmpty(value)) return ValidationError.requiredField;
+    if (!isOtp(value, length: length)) return ValidationError.otpInvalid;
     return null;
   }
 }

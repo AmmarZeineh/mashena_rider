@@ -22,6 +22,9 @@
   "onboardingSubtitle3": "Pay cash or online with complete safety and comfort.",
   "authLogin": "Login",
   "enterYourNumberLogin": "Enter your number to login",
+  "enterYourNumberRegister": "Enter your number to sign up",
+  "enterYourEmailLogin": "Enter your email to login",
+  "enterYourEmailRegister": "Enter your email to sign up",
   "authRegister": "Create Account",
   "authLogout": "Logout",
   "authSendCode": "Send Code",
@@ -58,7 +61,7 @@
   "profileProfile": "Profile",
   "profileEditProfile": "Edit Profile",
   "profileName": "Name",
-  "profileEmail": "Email",
+  "email": "Email",
   "profileLanguage": "Language",
   "profileNotifications": "Notifications",
   "profilePrivacy": "Privacy",
@@ -90,5 +93,26 @@
     }
   },
   "apiUnknownError": "Unknown error",
-  "cacheError": "Cache error"
+  "cacheError": "Cache error",
+  "validationRequired": "This field is required",
+  "validationInvalidEmail": "Invalid email",
+  "validationInvalidPhone": "Invalid phone number",
+  "validationWeakPassword": "Weak password (uppercase, lowercase, number, symbol)",
+  "validationOtpInvalid": "Invalid code",
+  "validationMinLength": "Minimum {min} characters",
+  "@validationMinLength": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "validationMaxLength": "Maximum {max} characters",
+  "@validationMaxLength": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  }
 }
