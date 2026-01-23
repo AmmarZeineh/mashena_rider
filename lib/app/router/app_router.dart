@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mashena_rider/app/di/injector.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
+import 'package:mashena_rider/core/constants/app_constants.dart';
+import 'package:mashena_rider/core/storage/local_storage.dart';
 import 'package:mashena_rider/features/auth/presentation/views/login_view.dart';
 import 'package:mashena_rider/features/auth/presentation/views/signup_view.dart';
 import 'package:mashena_rider/features/onboarding/presentation/views/onboarding_view.dart';
@@ -10,18 +13,38 @@ final class AppRouter {
   const AppRouter._();
 
   static final GoRouter router = GoRouter(
+    redirect: (context, state) {
+      final storage = getIt<LocalStorage>();
+      final onboardingSeen =
+          storage.getBool(AppConstants.isOnboardingSeenKey) ?? false;
+      final loc = state.matchedLocation;
+
+      final isSplash = loc == AppRoutes.splashPath;
+      if (isSplash) return null;
+
+      if (!onboardingSeen) {
+        final isOnboarding = loc == AppRoutes.onboardingPath;
+        return isOnboarding ? null : AppRoutes.onboardingPath;
+      }
+
+      if (onboardingSeen && loc == AppRoutes.onboardingPath) {
+        return AppRoutes.loginPath;
+      }
+
+      return null;
+    },
     initialLocation: AppRoutes.splashPath,
     routes: <RouteBase>[
       GoRoute(path: '/', builder: (context, state) => const _RootPage()),
       GoRoute(
-        path: AppRoutes.onboardingPath,
-        name: AppRoutes.onboarding,
-        builder: (context, state) => const OnboardingView(),
-      ),
-      GoRoute(
         path: AppRoutes.splashPath,
         name: AppRoutes.splash,
         builder: (context, state) => const SplashView(),
+      ),
+      GoRoute(
+        path: AppRoutes.onboardingPath,
+        name: AppRoutes.onboarding,
+        builder: (context, state) => const OnboardingView(),
       ),
       GoRoute(
         path: AppRoutes.loginPath,

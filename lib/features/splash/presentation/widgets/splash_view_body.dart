@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mashena_rider/app/di/injector.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
+import 'package:mashena_rider/core/constants/app_constants.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/network/network_info.dart';
+import 'package:mashena_rider/core/storage/local_storage.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/utils/app_images.dart';
@@ -89,6 +92,21 @@ class _SplashViewBodyState extends State<SplashViewBody>
     });
   }
 
+  Future<void> _navigate() async {
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+
+    final storage = getIt<LocalStorage>();
+    final onboardingSeen =
+        storage.getBool(AppConstants.isOnboardingSeenKey) ?? false;
+
+    if (onboardingSeen) {
+      context.go(AppRoutes.loginPath);
+    } else {
+      context.go(AppRoutes.onboardingPath);
+    }
+  }
+
   Future<void> _startAnimationsAndNavigate() async {
     await _logoController.forward();
     _textController.forward();
@@ -102,18 +120,14 @@ class _SplashViewBodyState extends State<SplashViewBody>
     if (!mounted) return;
 
     final isConnected = await _networkInfo.isConnected;
-
     if (!mounted) return;
 
-    if (isConnected) {
-      _navigateToNextScreen();
-    } else {
+    if (!isConnected) {
       _showNoInternetDialog();
     }
-  }
-
-  void _navigateToNextScreen() {
-    context.goNamed(AppRoutes.onboarding);
+    if (isConnected) {
+      _navigate();
+    }
   }
 
   void _showNoInternetDialog() {
