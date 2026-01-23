@@ -12,6 +12,7 @@ class CustomFormField extends StatelessWidget {
     this.validator,
     this.onSaved,
     this.onChanged,
+    this.autofillHints,
   });
   final Widget? prefix, sufix;
   final String hint;
@@ -19,10 +20,12 @@ class CustomFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
   final void Function(String)? onChanged;
+  final Iterable<String>? autofillHints;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autofillHints: autofillHints,
       onChanged: onChanged,
       onSaved: onSaved,
       keyboardType: keyboardType,

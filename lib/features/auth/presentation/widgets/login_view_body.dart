@@ -25,97 +25,104 @@ class _LoginViewBodyState extends State<LoginViewBody> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverFillRemaining(
-          hasScrollBody: true,
-          child: Form(
-            key: _formKey,
-            autovalidateMode: autovalidateMode,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: context.screenHeight * 0.1),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: IntrinsicHeight(
+              child: Form(
+                key: _formKey,
+                autovalidateMode: autovalidateMode,
+                child: Column(
+                  children: [
+                    SizedBox(height: context.screenHeight * 0.1),
 
-                Image.asset(
-                  Assets.imagesLogo,
-                  height: context.screenHeight * 0.25,
-                ),
-
-                SizedBox(height: AppResponsive.h(10)),
-                Text(S.of(context).authLogin, style: AppTextStyles.w400_38),
-
-                const SizedBox(height: 45),
-
-                Text(
-                  S.of(context).enterYourEmailLogin,
-                  style: AppTextStyles.w400_16,
-                  textAlign: TextAlign.center,
-                ),
-
-                const SizedBox(height: 20),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: CustomFormField(
-                    onSaved: (value) => email = value,
-                    validator: (value) {
-                      final err = Validators.email(value);
-                      return err == null ? null : validationText(context, err);
-                    },
-                    hint: S.of(context).email,
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                ),
-
-                const SizedBox(height: 30),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: CustomElevatedButton(
-                      title: S.of(context).authSendCode,
-                      onPressed: () {
-                        setState(() {
-                          autovalidateMode = AutovalidateMode.always;
-                        });
-
-                        final ok = _formKey.currentState?.validate() ?? false;
-                        if (!ok) return;
-
-                        _formKey.currentState?.save();
-                      },
+                    Image.asset(
+                      Assets.imagesLogo,
+                      height: context.screenHeight * 0.25,
                     ),
-                  ),
-                ),
 
-                const Spacer(),
+                    SizedBox(height: AppResponsive.h(10)),
+                    Text(S.of(context).authLogin, style: AppTextStyles.w400_38),
 
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 30),
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '${S.of(context).authDontHaveAnAccount} ',
-                          style: AppTextStyles.w400_16,
-                        ),
-                        TextSpan(
-                          text: S.of(context).authSignUp,
-                          style: AppTextStyles.w600_16.copyWith(
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                      ],
+                    const SizedBox(height: 45),
+
+                    Text(
+                      S.of(context).enterYourEmailLogin,
+                      style: AppTextStyles.w400_16,
+                      textAlign: TextAlign.center,
                     ),
-                  ),
+
+                    const SizedBox(height: 20),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: CustomFormField(
+                        autofillHints: const [AutofillHints.email],
+                        onSaved: (value) => email = value,
+                        validator: (value) {
+                          final err = Validators.email(value);
+                          return err == null
+                              ? null
+                              : validationText(context, err);
+                        },
+                        hint: S.of(context).email,
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: CustomElevatedButton(
+                          title: S.of(context).authSendCode,
+                          onPressed: () {
+                            setState(
+                              () => autovalidateMode = AutovalidateMode.always,
+                            );
+
+                            final ok =
+                                _formKey.currentState?.validate() ?? false;
+                            if (!ok) return;
+
+                            _formKey.currentState?.save();
+                          },
+                        ),
+                      ),
+                    ),
+
+                    const Expanded(child: SizedBox(height: 16)),
+
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '${S.of(context).authDontHaveAnAccount} ',
+                              style: AppTextStyles.w400_16,
+                            ),
+                            TextSpan(
+                              text: S.of(context).authSignUp,
+                              style: AppTextStyles.w600_16.copyWith(
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 }

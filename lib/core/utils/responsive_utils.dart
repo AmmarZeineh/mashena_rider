@@ -92,6 +92,23 @@ class AppResponsive {
     return MediaQuery.of(context).padding.bottom;
   }
 
+  // ==================== Keyboard Insets ====================
+
+  /// Keyboard height (0 if closed)
+  static double keyboardInset(BuildContext context) {
+    return MediaQuery.of(context).viewInsets.bottom;
+  }
+
+  /// Check if keyboard is open
+  static bool isKeyboardOpen(BuildContext context) {
+    return keyboardInset(context) > 0;
+  }
+
+  /// Padding to avoid keyboard (animated-friendly)
+  static EdgeInsets keyboardPadding(BuildContext context) {
+    return EdgeInsets.only(bottom: keyboardInset(context));
+  }
+
   // ==================== Responsive Values ====================
 
   /// Return different values based on device type
