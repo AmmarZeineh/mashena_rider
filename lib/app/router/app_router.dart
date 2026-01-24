@@ -6,6 +6,7 @@ import 'package:mashena_rider/core/constants/app_constants.dart';
 import 'package:mashena_rider/core/storage/local_storage.dart';
 import 'package:mashena_rider/features/auth/presentation/views/login_view.dart';
 import 'package:mashena_rider/features/auth/presentation/views/signup_view.dart';
+import 'package:mashena_rider/features/auth/presentation/views/verification_view.dart';
 import 'package:mashena_rider/features/onboarding/presentation/views/onboarding_view.dart';
 import 'package:mashena_rider/features/splash/presentation/views/splash_view.dart';
 
@@ -55,6 +56,12 @@ final class AppRouter {
         path: AppRoutes.signupPath,
         name: AppRoutes.signup,
         builder: (context, state) => const SignupView(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.verificationPath,
+        name: AppRoutes.verification,
+        builder: (context, state) => const VerificationView(),
       ),
     ],
     errorBuilder: (context, state) => _ErrorPage(error: state.error),

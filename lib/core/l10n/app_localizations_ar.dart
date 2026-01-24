@@ -273,6 +273,23 @@ class SAr extends S {
   }
 
   @override
+  String get otpTitle => 'أدخل رمز التحقق';
+
+  @override
+  String otpSubtitle(Object phone) {
+    return 'تم إرسال رمز إلى $phone';
+  }
+
+  @override
+  String get otpDidNotReceive => 'لم يصلك الرمز؟';
+
+  @override
+  String get otpResend => 'إعادة الإرسال';
+
+  @override
+  String get otpVerifyNow => 'تحقق الآن';
+
+  @override
   String get apiUnknownError => 'خطأ غير معروف';
 
   @override

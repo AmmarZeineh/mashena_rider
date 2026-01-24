@@ -35,7 +35,9 @@ class CustomFormField extends StatelessWidget {
         suffix: sufix,
         hint: Text(
           hint,
-          style: AppTextStyles.w400_14.copyWith(color: AppColors.textGrey),
+          style: AppTextStyles.w400_14.copyWith(
+            color: AppColors.textfieldHintGrey,
+          ),
         ),
         focusedBorder: _buildBorder(),
         border: _buildBorder(),
@@ -46,7 +48,7 @@ class CustomFormField extends StatelessWidget {
 
   OutlineInputBorder _buildBorder() {
     return OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.textFieldBorderColor),
+      borderSide: BorderSide(color: AppColors.borderColor),
       borderRadius: BorderRadius.circular(50),
     );
   }

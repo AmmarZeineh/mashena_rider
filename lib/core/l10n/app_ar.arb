@@ -87,6 +87,11 @@
   "apiBadGateway": "بوابة غير صالحة",
   "apiServiceUnavailable": "الخدمة غير متاحة",
   "apiRequestFailed": "فشل الطلب ({code})",
+  "otpTitle": "أدخل رمز التحقق",
+  "otpSubtitle": "تم إرسال رمز إلى {phone}",
+  "otpDidNotReceive": "لم يصلك الرمز؟",
+  "otpResend": "إعادة الإرسال",
+  "otpVerifyNow": "تحقق الآن",
   "@apiRequestFailed": {
     "placeholders": {
       "code": {}

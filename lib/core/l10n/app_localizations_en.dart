@@ -275,6 +275,23 @@ class SEn extends S {
   }
 
   @override
+  String get otpTitle => 'Enter verification code';
+
+  @override
+  String otpSubtitle(Object phone) {
+    return 'A code has been sent to $phone';
+  }
+
+  @override
+  String get otpDidNotReceive => 'Don\'t receive a code?';
+
+  @override
+  String get otpResend => 'Resend';
+
+  @override
+  String get otpVerifyNow => 'Verify Now';
+
+  @override
   String get apiUnknownError => 'Unknown error';
 
   @override

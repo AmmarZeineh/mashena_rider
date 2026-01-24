@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_context_x.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/l10n/validation_localizer.dart';
@@ -21,7 +22,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
-  String? email, password, name;
+  String? email, phone, name;
 
   @override
   Widget build(BuildContext context) {
@@ -83,16 +84,16 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: CustomFormField(
-                        autofillHints: const [AutofillHints.password],
-                        onSaved: (value) => password = value,
+                        autofillHints: const [AutofillHints.photo],
+                        onSaved: (value) => phone = value,
                         validator: (value) {
-                          final err = Validators.password(value);
+                          final err = Validators.phone(value);
                           return err == null
                               ? null
                               : validationText(context, err);
                         },
-                        hint: S.of(context).authPassword,
-                        keyboardType: TextInputType.visiblePassword,
+                        hint: S.of(context).authPhone,
+                        keyboardType: TextInputType.phone,
                       ),
                     ),
 
@@ -114,6 +115,9 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                             if (!ok) return;
 
                             _formKey.currentState?.save();
+                            GoRouter.of(
+                              context,
+                            ).goNamed(AppRoutes.verification);
                           },
                         ),
                       ),

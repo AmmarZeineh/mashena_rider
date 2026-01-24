@@ -17,7 +17,8 @@ final class Validators {
 
   static bool isPhoneNumber(String? value) {
     if (!isNotEmpty(value)) return false;
-    return RegExp(r'^\+?[0-9]{7,15}$').hasMatch(value!.trim());
+    final phone = value!.trim();
+    return RegExp(r'^\+?963\d{9}$|^0\d{9}$').hasMatch(phone);
   }
 
   static bool hasUpperCase(String v) => RegExp(r'[A-Z]').hasMatch(v);

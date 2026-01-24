@@ -619,6 +619,36 @@ abstract class S {
   /// **'Request failed ({code})'**
   String apiRequestFailed(Object code);
 
+  /// No description provided for @otpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter verification code'**
+  String get otpTitle;
+
+  /// No description provided for @otpSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A code has been sent to {phone}'**
+  String otpSubtitle(Object phone);
+
+  /// No description provided for @otpDidNotReceive.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t receive a code?'**
+  String get otpDidNotReceive;
+
+  /// No description provided for @otpResend.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend'**
+  String get otpResend;
+
+  /// No description provided for @otpVerifyNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Now'**
+  String get otpVerifyNow;
+
   /// No description provided for @apiUnknownError.
   ///
   /// In en, this message translates to:

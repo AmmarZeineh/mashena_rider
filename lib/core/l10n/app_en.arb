@@ -87,6 +87,11 @@
   "apiBadGateway": "Bad gateway",
   "apiServiceUnavailable": "Service unavailable",
   "apiRequestFailed": "Request failed ({code})",
+  "otpTitle": "Enter verification code",
+  "otpSubtitle": "A code has been sent to {phone}",
+  "otpDidNotReceive": "Don't receive a code?",
+  "otpResend": "Resend",
+  "otpVerifyNow": "Verify Now",
   "@apiRequestFailed": {
     "placeholders": {
       "code": {}
