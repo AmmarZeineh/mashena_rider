@@ -75,6 +75,24 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                       ),
                     ),
 
+                    const SizedBox(height: 20),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: CustomFormField(
+                        autofillHints: const [AutofillHints.password],
+                        onSaved: (value) => email = value,
+                        validator: (value) {
+                          final err = Validators.password(value);
+                          return err == null
+                              ? null
+                              : validationText(context, err);
+                        },
+                        hint: S.of(context).authPassword,
+                        keyboardType: TextInputType.visiblePassword,
+                      ),
+                    ),
+
                     const SizedBox(height: 30),
 
                     Padding(

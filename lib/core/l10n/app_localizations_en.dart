@@ -278,6 +278,12 @@ class SEn extends S {
   String get otpTitle => 'Enter verification code';
 
   @override
+  String get alreadyHaveAnAccount => 'Already have an account?';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
   String otpSubtitle(Object phone) {
     return 'A code has been sent to $phone';
   }
@@ -317,6 +323,9 @@ class SEn extends S {
   String validationMinLength(int min) {
     return 'Minimum $min characters';
   }
+
+  @override
+  String get validationPasswordsNotMatch => 'Passwords do not match';
 
   @override
   String validationMaxLength(int max) {

@@ -88,6 +88,8 @@
   "apiServiceUnavailable": "Service unavailable",
   "apiRequestFailed": "Request failed ({code})",
   "otpTitle": "Enter verification code",
+  "alreadyHaveAnAccount": "Already have an account?",
+  "confirmPassword": "Confirm Password",
   "otpSubtitle": "A code has been sent to {phone}",
   "otpDidNotReceive": "Don't receive a code?",
   "otpResend": "Resend",
@@ -105,6 +107,7 @@
   "validationWeakPassword": "Weak password (uppercase, lowercase, number, symbol)",
   "validationOtpInvalid": "Invalid code",
   "validationMinLength": "Minimum {min} characters",
+  "validationPasswordsNotMatch": "Passwords do not match",
   "@validationMinLength": {
     "placeholders": {
       "min": {

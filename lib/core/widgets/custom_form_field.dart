@@ -13,6 +13,8 @@ class CustomFormField extends StatelessWidget {
     this.onSaved,
     this.onChanged,
     this.autofillHints,
+    this.controller,
+    this.obscureText = false,
   });
   final Widget? prefix, sufix;
   final String hint;
@@ -20,11 +22,15 @@ class CustomFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
   final void Function(String)? onChanged;
+  final TextEditingController? controller;
   final Iterable<String>? autofillHints;
+  final bool obscureText;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
       autofillHints: autofillHints,
       onChanged: onChanged,
       onSaved: onSaved,

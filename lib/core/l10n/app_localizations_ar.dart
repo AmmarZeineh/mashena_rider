@@ -276,6 +276,12 @@ class SAr extends S {
   String get otpTitle => 'أدخل رمز التحقق';
 
   @override
+  String get alreadyHaveAnAccount => 'لديك حساب؟';
+
+  @override
+  String get confirmPassword => 'تاكيد كلمة المرور';
+
+  @override
   String otpSubtitle(Object phone) {
     return 'تم إرسال رمز إلى $phone';
   }
@@ -315,6 +321,9 @@ class SAr extends S {
   String validationMinLength(int min) {
     return 'الحد الأدنى $min أحرف';
   }
+
+  @override
+  String get validationPasswordsNotMatch => 'Passwords do not match';
 
   @override
   String validationMaxLength(int max) {

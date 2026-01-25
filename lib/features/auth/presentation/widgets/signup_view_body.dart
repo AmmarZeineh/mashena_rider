@@ -22,7 +22,17 @@ class _SignupViewBodyState extends State<SignupViewBody> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
-  String? email, phone, name;
+  String? email, phone, name, password, confirmPassword;
+
+  final _passwordCtrl = TextEditingController();
+  final _confirmCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _passwordCtrl.dispose();
+    _confirmCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +49,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                   children: [
                     Image.asset(
                       Assets.imagesLogo,
-                      height: context.screenHeight * 0.25,
+                      height: context.screenHeight * 0.15,
                     ),
 
                     Text(
@@ -47,7 +57,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                       style: AppTextStyles.w400_38,
                     ),
 
-                    const SizedBox(height: 45),
+                    const SizedBox(height: 30),
 
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -84,7 +94,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: CustomFormField(
-                        autofillHints: const [AutofillHints.photo],
+                        autofillHints: const [AutofillHints.telephoneNumber],
                         onSaved: (value) => phone = value,
                         validator: (value) {
                           final err = Validators.phone(value);
@@ -94,6 +104,55 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                         },
                         hint: S.of(context).authPhone,
                         keyboardType: TextInputType.phone,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: CustomFormField(
+                        controller: _passwordCtrl,
+                        autofillHints: const [AutofillHints.newPassword],
+                        obscureText: true,
+                        onSaved: (v) => password = v,
+                        validator: (v) {
+                          final err = Validators.password(v);
+                          return err == null
+                              ? null
+                              : validationText(context, err);
+                        },
+                        hint: S.of(context).authPassword,
+                        keyboardType: TextInputType.visiblePassword,
+                        onChanged: (_) {
+                          if (autovalidateMode != AutovalidateMode.disabled) {
+                            _formKey.currentState?.validate();
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: CustomFormField(
+                        controller: _confirmCtrl,
+                        autofillHints: const [AutofillHints.newPassword],
+                        obscureText: true,
+                        onSaved: (v) => confirmPassword = v,
+                        validator: (v) {
+                          final err1 = Validators.password(v);
+                          if (err1 != null) {
+                            return validationText(context, err1);
+                          }
+
+                          final err2 = Validators.passwordsMatch(
+                            _passwordCtrl.text,
+                            v,
+                          );
+                          return err2 == null
+                              ? null
+                              : validationText(context, err2);
+                        },
+                        hint: S.of(context).confirmPassword,
+                        keyboardType: TextInputType.visiblePassword,
                       ),
                     ),
 
@@ -131,14 +190,14 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                         TextSpan(
                           children: [
                             TextSpan(
-                              text: '${S.of(context).authDontHaveAnAccount} ',
+                              text: '${S.of(context).alreadyHaveAnAccount} ',
                               style: AppTextStyles.w400_16,
                             ),
                             WidgetSpan(
                               child: GestureDetector(
                                 onTap: () => context.pop(),
                                 child: Text(
-                                  S.of(context).authSignUp,
+                                  S.of(context).authLogin,
                                   style: AppTextStyles.w600_16.copyWith(
                                     color: AppColors.primaryColor,
                                   ),

@@ -6,4 +6,5 @@ enum ValidationError {
   minLength,
   maxLength,
   otpInvalid,
+  passwordsNotMatch,
 }

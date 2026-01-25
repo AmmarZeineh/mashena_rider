@@ -21,6 +21,15 @@ final class Validators {
     return RegExp(r'^\+?963\d{9}$|^0\d{9}$').hasMatch(phone);
   }
 
+  static ValidationError? passwordsMatch(String? p1, String? p2) {
+    if (!isNotEmpty(p1) || !isNotEmpty(p2)) {
+      return ValidationError.requiredField;
+    }
+    return p1 == p2
+        ? null
+        : ValidationError.passwordsNotMatch;
+  }
+
   static bool hasUpperCase(String v) => RegExp(r'[A-Z]').hasMatch(v);
   static bool hasLowerCase(String v) => RegExp(r'[a-z]').hasMatch(v);
   static bool hasNumber(String v) => RegExp(r'\d').hasMatch(v);

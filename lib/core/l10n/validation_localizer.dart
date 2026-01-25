@@ -18,5 +18,6 @@ String validationText(
     ValidationError.minLength => s.validationMinLength(min ?? 0),
     ValidationError.maxLength => s.validationMaxLength(max ?? 0),
     ValidationError.otpInvalid => s.validationOtpInvalid,
+    ValidationError.passwordsNotMatch => s.validationPasswordsNotMatch,
   };
 }

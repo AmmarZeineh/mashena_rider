@@ -625,6 +625,18 @@ abstract class S {
   /// **'Enter verification code'**
   String get otpTitle;
 
+  /// No description provided for @alreadyHaveAnAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get alreadyHaveAnAccount;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
   /// No description provided for @otpSubtitle.
   ///
   /// In en, this message translates to:
@@ -696,6 +708,12 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Minimum {min} characters'**
   String validationMinLength(int min);
+
+  /// No description provided for @validationPasswordsNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get validationPasswordsNotMatch;
 
   /// No description provided for @validationMaxLength.
   ///

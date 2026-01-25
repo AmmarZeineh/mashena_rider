@@ -90,6 +90,8 @@
   "otpTitle": "أدخل رمز التحقق",
   "otpSubtitle": "تم إرسال رمز إلى {phone}",
   "otpDidNotReceive": "لم يصلك الرمز؟",
+  "confirmPassword": "تاكيد كلمة المرور",
+  "alreadyHaveAnAccount": "لديك حساب؟",
   "otpResend": "إعادة الإرسال",
   "otpVerifyNow": "تحقق الآن",
   "@apiRequestFailed": {
@@ -105,6 +107,7 @@
   "validationWeakPassword": "كلمة مرور ضعيفة (حرف كبير، صغير، رقم، رمز)",
   "validationOtpInvalid": "رمز غير صالح",
   "validationMinLength": "الحد الأدنى {min} أحرف",
+  "validationPasswordNotMatch": "كلمة المرور غير متطابقة",
   "@validationMinLength": {
     "placeholders": {
       "min": {
