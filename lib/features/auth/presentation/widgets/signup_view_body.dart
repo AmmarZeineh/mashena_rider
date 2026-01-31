@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_context_x.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/l10n/validation_localizer.dart';
+import 'package:mashena_rider/core/utils/snack_bars.dart';
 import 'package:mashena_rider/core/utils/validators.dart';
 import 'package:mashena_rider/core/widgets/custom_elvated_button.dart';
 import 'package:mashena_rider/core/widgets/custom_form_field.dart';
+import 'package:mashena_rider/features/auth/presentation/blocs/signup_bloc/signup_bloc.dart';
 import 'package:mashena_rider/features/auth/presentation/widgets/signup_footer.dart';
 import 'package:mashena_rider/features/auth/presentation/widgets/signup_view_header.dart';
 
@@ -46,7 +49,14 @@ class _SignupViewBodyState extends State<SignupViewBody> {
     if (!ok) return;
 
     _formKey.currentState?.save();
-    context.goNamed(AppRoutes.verification);
+    context.read<SignupBloc>().add(
+      SignupSubmitted(
+        email: email!,
+        password: password!,
+        fullName: name!,
+        phoneNumber: phone!,
+      ),
+    );
   }
 
   String? _localizeErr(BuildContext context, err) {
@@ -131,9 +141,26 @@ class _SignupViewBodyState extends State<SignupViewBody> {
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: SizedBox(
                 width: double.infinity,
-                child: CustomElevatedButton(
-                  title: S.of(context).authSendCode,
-                  onPressed: _submit,
+                child: BlocConsumer<SignupBloc, SignupState>(
+                  listener: (context, state) {
+                    if (state is SignupSuccess) {
+                      context.pushNamed(AppRoutes.verification);
+                    } else if (state is SignupFailure) {
+                      showErrorMessage(
+                        state.failure.rawMessage ?? 'Unknown',
+                        context,
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is SignupLoading) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    return CustomElevatedButton(
+                      title: S.of(context).authSendCode,
+                      onPressed: _submit,
+                    );
+                  },
                 ),
               ),
             ),

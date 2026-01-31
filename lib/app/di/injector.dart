@@ -1,47 +1,96 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mashena_rider/app/config/env.dart';
-import 'package:mashena_rider/core/network/token_manager.dart';
-import 'package:mashena_rider/core/network/token_manager_impl.dart';
-import 'package:mashena_rider/core/storage/local_storage_impl.dart';
-import 'package:mashena_rider/features/onboarding/domain/usecases/complete_onboarding_usecase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../core/network/dio_client.dart';
-import '../../core/network/network_info.dart';
-import '../../core/storage/local_storage.dart';
+import 'package:mashena_rider/app/config/env.dart';
+
+// core
+import 'package:mashena_rider/core/network/dio_client.dart';
+import 'package:mashena_rider/core/network/network_info.dart';
+import 'package:mashena_rider/core/network/token_manager.dart';
+import 'package:mashena_rider/core/network/token_manager_impl.dart';
+import 'package:mashena_rider/core/storage/local_storage.dart';
+import 'package:mashena_rider/core/storage/local_storage_impl.dart';
+
+// onboarding
+import 'package:mashena_rider/features/onboarding/domain/usecases/complete_onboarding_usecase.dart';
+
+// auth
+import 'package:mashena_rider/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:mashena_rider/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:mashena_rider/features/auth/domain/repositories/auth_repository.dart';
+import 'package:mashena_rider/features/auth/domain/usecases/signup_usecase.dart';
 
 final GetIt getIt = GetIt.instance;
 
 Future<void> configureDependencies() async {
+  // ======================
+  // External
+  // ======================
   final prefs = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(prefs);
 
-  // Storage
+  // Dio واحد للتطبيق كله
+  getIt.registerLazySingleton<Dio>(() {
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: Env.baseUrl,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        sendTimeout: const Duration(seconds: 30),
+        headers: const {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
+    return dio;
+  });
+
+  // ======================
+  // Core
+  // ======================
   getIt.registerLazySingleton<LocalStorage>(
     () => LocalStorageImpl(getIt<SharedPreferences>()),
   );
 
-  // Dio + Token
-  getIt.registerLazySingleton<Dio>(() => Dio());
   getIt.registerLazySingleton<TokenManager>(
-    () => TokenManagerImpl(getIt<SharedPreferences>()), // عدّل حسب عندك
+    () => TokenManagerImpl(getIt<SharedPreferences>()),
   );
 
-  // Network
   getIt.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
 
-  // Usecases
-  getIt.registerLazySingleton<CompleteOnboarding>(
-    () => CompleteOnboarding(getIt<LocalStorage>()),
-  );
-
-  // ApiClient
+  // ApiClient فوق Dio
   getIt.registerLazySingleton<ApiClient>(
     () => ApiClient(
       tokenManager: getIt<TokenManager>(),
       dio: getIt<Dio>(),
       baseUrl: Env.baseUrl,
     ),
+  );
+
+  // ======================
+  // Features: Onboarding
+  // ======================
+  getIt.registerLazySingleton<CompleteOnboarding>(
+    () => CompleteOnboarding(getIt<LocalStorage>()),
+  );
+
+  // ======================
+  // Features: Auth (Data)
+  // ======================
+  getIt.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(getIt<ApiClient>()),
+  );
+
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(getIt<AuthRemoteDataSource>()),
+  );
+
+  // ======================
+  // Features: Auth (Domain)
+  // ======================
+  getIt.registerLazySingleton<SignupUsecase>(
+    () => SignupUsecase(getIt<AuthRepository>()),
   );
 }
