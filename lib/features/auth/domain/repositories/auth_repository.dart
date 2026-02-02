@@ -15,4 +15,10 @@ abstract class AuthRepository {
     required String email,
     required String password,
   });
+
+  Future<Either<Failure, Unit>> sendOtp({
+    required String channel,
+    String? email,
+    String? phone,
+  });
 }

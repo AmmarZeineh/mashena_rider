@@ -8,6 +8,7 @@ import 'package:mashena_rider/core/network/dio_client.dart';
 import 'package:mashena_rider/features/auth/data/mappers/user_mapper.dart';
 import 'package:mashena_rider/features/auth/data/models/login_request_dto.dart';
 import 'package:mashena_rider/features/auth/data/models/login_response.dart';
+import 'package:mashena_rider/features/auth/data/models/send_otp_request_dto.dart';
 import 'package:mashena_rider/features/auth/data/models/signup_request_dto.dart';
 
 import 'package:mashena_rider/features/auth/domain/entities/user.dart';
@@ -55,6 +56,24 @@ class AuthRepositoryImpl implements AuthRepository {
         LoginRequestDto(email: email, password: password),
       );
       return Right(dto);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e, getIt.get<ApiClient>()));
+    } catch (e) {
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> sendOtp({
+    required String channel,
+    String? email,
+    String? phone,
+  }) async {
+    try {
+      await remote.sendOtp(
+        SendOtpRequestDto(channel: channel, email: email, phone: phone),
+      );
+      return const Right(unit);
     } on ApiException catch (e) {
       return Left(mapApiExceptionToFailure(e, getIt.get<ApiClient>()));
     } catch (e) {

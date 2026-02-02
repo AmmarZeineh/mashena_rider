@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mashena_rider/core/common/extensions/pinput_theme_x.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
@@ -15,7 +16,7 @@ class VerificationViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pinputTheme = Theme.of(context).extension<PinputTheme>()!;
-
+    final email = GoRouterState.of(context).extra as String;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: SingleChildScrollView(
@@ -32,7 +33,7 @@ class VerificationViewBody extends StatelessWidget {
                   Text(S.of(context).otpTitle, style: AppTextStyles.w600_20),
                   SizedBox(height: 7),
                   Text(
-                    S.of(context).otpSubtitle('ammarzeineh3@gmail.com'),
+                    S.of(context).otpSubtitle(email),
                     textAlign: TextAlign.center,
                     style: AppTextStyles.w400_16.copyWith(
                       color: AppColors.textGrey,
@@ -40,7 +41,7 @@ class VerificationViewBody extends StatelessWidget {
                   ),
                   SizedBox(height: 48),
                   Pinput(
-                    length: 4,
+                    length: 6,
                     defaultPinTheme: PinTheme(
                       width: pinputTheme.width,
                       height: pinputTheme.height,

@@ -92,7 +92,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                               : validationText(context, err);
                         },
                         hint: S.of(context).authPassword,
-                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: true,
                       ),
                     ),
 
@@ -120,7 +120,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                               return Center(child: CircularProgressIndicator());
                             }
                             return CustomElevatedButton(
-                              title: S.of(context).authSendCode,
+                              title: S.of(context).authLogin,
                               onPressed: () {
                                 setState(
                                   () => autovalidateMode =

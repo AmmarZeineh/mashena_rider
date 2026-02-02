@@ -23,11 +23,12 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       password: event.password,
       fullName: event.fullName,
       phoneNumber: event.phoneNumber,
+      channel: 'email',
     );
 
     result.fold(
       (failure) => emit(SignupFailure(failure)),
-      (_) => emit(SignupSuccess()),
+      (otp) => emit(SignupSuccess()),
     );
   }
 }

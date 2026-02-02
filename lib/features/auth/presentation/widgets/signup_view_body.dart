@@ -144,7 +144,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                 child: BlocConsumer<SignupBloc, SignupState>(
                   listener: (context, state) {
                     if (state is SignupSuccess) {
-                      context.pushNamed(AppRoutes.verification);
+                      context.pushNamed(AppRoutes.verification, extra: email);
                     } else if (state is SignupFailure) {
                       showErrorMessage(
                         state.failure.rawMessage ?? 'Unknown',
