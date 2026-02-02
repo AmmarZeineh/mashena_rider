@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_context_x.dart';
@@ -9,9 +10,11 @@ import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/utils/app_images.dart';
 import 'package:mashena_rider/core/utils/responsive_utils.dart';
+import 'package:mashena_rider/core/utils/snack_bars.dart';
 import 'package:mashena_rider/core/utils/validators.dart';
 import 'package:mashena_rider/core/widgets/custom_elvated_button.dart';
 import 'package:mashena_rider/core/widgets/custom_form_field.dart';
+import 'package:mashena_rider/features/auth/presentation/blocs/login_bloc/login_bloc.dart';
 
 class LoginViewBody extends StatefulWidget {
   const LoginViewBody({super.key});
@@ -24,7 +27,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
-  String? email;
+  String? email, password;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +84,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: CustomFormField(
                         autofillHints: const [AutofillHints.password],
-                        onSaved: (value) => email = value,
+                        onSaved: (value) => password = value,
                         validator: (value) {
                           final err = Validators.password(value);
                           return err == null
@@ -99,18 +102,43 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: SizedBox(
                         width: double.infinity,
-                        child: CustomElevatedButton(
-                          title: S.of(context).authSendCode,
-                          onPressed: () {
-                            setState(
-                              () => autovalidateMode = AutovalidateMode.always,
+                        child: BlocConsumer<LoginBloc, LoginState>(
+                          listener: (context, state) {
+                            if (state is LoginSuccess) {
+                              showSuccessMessage('Success', context);
+                            }
+
+                            if (state is LoginFailure) {
+                              showErrorMessage(
+                                state.failure.rawMessage ?? '',
+                                context,
+                              );
+                            }
+                          },
+                          builder: (context, state) {
+                            if (state is LoginLoading) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                            return CustomElevatedButton(
+                              title: S.of(context).authSendCode,
+                              onPressed: () {
+                                setState(
+                                  () => autovalidateMode =
+                                      AutovalidateMode.always,
+                                );
+
+                                final ok =
+                                    _formKey.currentState?.validate() ?? false;
+                                if (!ok) return;
+                                _formKey.currentState?.save();
+                                context.read<LoginBloc>().add(
+                                  LoginSubmitted(
+                                    email: email!,
+                                    password: password!,
+                                  ),
+                                );
+                              },
                             );
-
-                            final ok =
-                                _formKey.currentState?.validate() ?? false;
-                            if (!ok) return;
-
-                            _formKey.currentState?.save();
                           },
                         ),
                       ),

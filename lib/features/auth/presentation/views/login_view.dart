@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/app/di/injector.dart';
+import 'package:mashena_rider/features/auth/domain/usecases/login_usecase.dart';
+import 'package:mashena_rider/features/auth/presentation/blocs/login_bloc/login_bloc.dart';
 import 'package:mashena_rider/features/auth/presentation/widgets/login_view_body.dart';
 
 class LoginView extends StatelessWidget {
@@ -6,6 +10,12 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(resizeToAvoidBottomInset: true, body: LoginViewBody());
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: BlocProvider(
+        create: (context) => LoginBloc(getIt.get<LoginUsecase>()),
+        child: LoginViewBody(),
+      ),
+    );
   }
 }

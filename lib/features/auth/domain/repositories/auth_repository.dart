@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
+import 'package:mashena_rider/features/auth/data/models/login_response.dart';
 import 'package:mashena_rider/features/auth/domain/entities/user.dart';
 
 abstract class AuthRepository {
@@ -8,5 +9,10 @@ abstract class AuthRepository {
     required String password,
     required String fullName,
     required String phoneNumber,
+  });
+
+  Future<Either<Failure, LoginResponseDto>> login({
+    required String email,
+    required String password,
   });
 }
