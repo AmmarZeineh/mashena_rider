@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +8,7 @@ import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_context_x.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/l10n/validation_localizer.dart';
+import 'package:mashena_rider/core/services/notification_service.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/utils/app_images.dart';
@@ -121,7 +124,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                             }
                             return CustomElevatedButton(
                               title: S.of(context).authLogin,
-                              onPressed: () {
+                              onPressed: () async {
                                 setState(
                                   () => autovalidateMode =
                                       AutovalidateMode.always,
@@ -131,14 +134,18 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                                     _formKey.currentState?.validate() ?? false;
                                 if (!ok) return;
                                 _formKey.currentState?.save();
-
-                                context.read<LoginBloc>().add(
-                                  LoginSubmitted(
-                                    email: email!,
-                                    password: password!,
-                                    fcmToken: 'H',
-                                  ),
-                                );
+                                var token =
+                                    await NotificationService.getFcmToken();
+                                log(token.toString());
+                                if (context.mounted) {
+                                  context.read<LoginBloc>().add(
+                                    LoginSubmitted(
+                                      email: email!,
+                                      password: password!,
+                                      fcmToken: token,
+                                    ),
+                                  );
+                                }
                               },
                             );
                           },
