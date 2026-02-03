@@ -15,7 +15,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<void> _onSubmit(LoginSubmitted event, Emitter<LoginState> emit) async {
     emit(LoginLoading());
 
-    final result = await _login(email: event.email, password: event.password);
+    final result = await _login(
+      email: event.email,
+      password: event.password,
+      fcmToken: event.fcmToken,
+    );
 
     result.fold(
       (failure) => emit(LoginFailure(failure)),

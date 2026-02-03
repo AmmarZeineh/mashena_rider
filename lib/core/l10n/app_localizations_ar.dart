@@ -118,6 +118,9 @@ class SAr extends S {
   String get authResendOtp => 'إعادة إرسال الرمز';
 
   @override
+  String get authOtpSuccess => 'تم تأكيد رمز التحقق';
+
+  @override
   String get homeWhereTo => 'إلى أين تريد الذهاب؟';
 
   @override

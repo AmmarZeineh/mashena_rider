@@ -14,11 +14,19 @@ abstract class AuthRepository {
   Future<Either<Failure, LoginResponseDto>> login({
     required String email,
     required String password,
+    required String? fcmToken,
   });
 
   Future<Either<Failure, Unit>> sendOtp({
     required String channel,
     String? email,
     String? phone,
+  });
+
+  Future<Either<Failure, Unit>> verifyOtp({
+    required String channel,
+    required String code,
+    required String email,
+    required String phone,
   });
 }

@@ -313,6 +313,12 @@ abstract class S {
   /// **'Resend Code'**
   String get authResendOtp;
 
+  /// No description provided for @authOtpSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification successful'**
+  String get authOtpSuccess;
+
   /// No description provided for @homeWhereTo.
   ///
   /// In en, this message translates to:

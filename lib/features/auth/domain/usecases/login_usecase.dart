@@ -11,7 +11,8 @@ class LoginUsecase {
   Future<Either<Failure, LoginResponseDto>> call({
     required String email,
     required String password,
+    required String? fcmToken,
   }) {
-    return repo.login(email: email, password: password);
+    return repo.login(email: email, password: password, fcmToken: fcmToken);
   }
 }

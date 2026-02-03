@@ -131,10 +131,12 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                                     _formKey.currentState?.validate() ?? false;
                                 if (!ok) return;
                                 _formKey.currentState?.save();
+
                                 context.read<LoginBloc>().add(
                                   LoginSubmitted(
                                     email: email!,
                                     password: password!,
+                                    fcmToken: 'H',
                                   ),
                                 );
                               },

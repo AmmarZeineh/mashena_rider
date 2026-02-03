@@ -36,6 +36,7 @@
   "authOtpTitle": "Verification Code",
   "authOtpSubtitle": "Enter the code sent to your phone",
   "authResendOtp": "Resend Code",
+  "authOtpSuccess": "Verification successful",
   "homeWhereTo": "Where to?",
   "homeCurrentLocation": "Current location",
   "homeSearchDestination": "Search destination",

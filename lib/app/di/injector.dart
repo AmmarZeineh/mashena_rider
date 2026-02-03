@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/login_usecase.dart';
+import 'package:mashena_rider/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mashena_rider/app/config/env.dart';
@@ -96,5 +97,8 @@ Future<void> configureDependencies() async {
   );
   getIt.registerLazySingleton<LoginUsecase>(
     () => LoginUsecase(getIt<AuthRepository>()),
+  );
+  getIt.registerLazySingleton<VerifyOtpUsecase>(
+    () => VerifyOtpUsecase(getIt<AuthRepository>()),
   );
 }

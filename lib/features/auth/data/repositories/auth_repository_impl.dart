@@ -10,6 +10,7 @@ import 'package:mashena_rider/features/auth/data/models/login_request_dto.dart';
 import 'package:mashena_rider/features/auth/data/models/login_response.dart';
 import 'package:mashena_rider/features/auth/data/models/send_otp_request_dto.dart';
 import 'package:mashena_rider/features/auth/data/models/signup_request_dto.dart';
+import 'package:mashena_rider/features/auth/data/models/verify_otp_request_dto.dart';
 
 import 'package:mashena_rider/features/auth/domain/entities/user.dart';
 
@@ -50,10 +51,11 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, LoginResponseDto>> login({
     required String email,
     required String password,
+    required String? fcmToken,
   }) async {
     try {
       final dto = await remote.login(
-        LoginRequestDto(email: email, password: password),
+        LoginRequestDto(email: email, password: password, fcmToken: fcmToken),
       );
       return Right(dto);
     } on ApiException catch (e) {
@@ -72,6 +74,30 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       await remote.sendOtp(
         SendOtpRequestDto(channel: channel, email: email, phone: phone),
+      );
+      return const Right(unit);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e, getIt.get<ApiClient>()));
+    } catch (e) {
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> verifyOtp({
+    required String channel,
+    required String code,
+    required String email,
+    required String phone,
+  }) async {
+    try {
+      await remote.verifyOtp(
+        VerifyOtpRequestDto(
+          channel: channel,
+          code: code,
+          email: email,
+          phone: phone,
+        ),
       );
       return const Right(unit);
     } on ApiException catch (e) {

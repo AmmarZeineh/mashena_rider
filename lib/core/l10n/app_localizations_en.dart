@@ -120,6 +120,9 @@ class SEn extends S {
   String get authResendOtp => 'Resend Code';
 
   @override
+  String get authOtpSuccess => 'Verification successful';
+
+  @override
   String get homeWhereTo => 'Where to?';
 
   @override
