@@ -10,7 +10,7 @@ import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/utils/responsive_utils.dart';
-import 'package:mashena_rider/core/utils/snack_bars.dart';
+import 'package:mashena_rider/core/utils/toast_helper.dart';
 import 'package:mashena_rider/core/widgets/custom_elvated_button.dart';
 import 'package:mashena_rider/core/widgets/custom_header_button.dart';
 import 'package:mashena_rider/features/auth/presentation/blocs/verify_otp_bloc/verify_otp_bloc.dart';
@@ -129,16 +129,15 @@ class _VerificationViewBodyState extends State<VerificationViewBody> {
                     child: BlocConsumer<VerifyOtpBloc, VerifyOtpState>(
                       listener: (context, state) {
                         if (state is VerifyOtpSuccess) {
-                          showSuccessMessage(
+                          context.showSuccessToast(
                             S.of(context).authOtpSuccess,
-                            context,
                           );
+
                           context.pushReplacementNamed(AppRoutes.login);
                         } else if (state is VerifyOtpFailure) {
-                          showErrorMessage(
+                          context.showErrorToast(
                             state.failure.rawMessage ??
                                 S.of(context).apiUnknownError,
-                            context,
                           );
                         }
                       },

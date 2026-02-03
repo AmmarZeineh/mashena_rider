@@ -13,7 +13,7 @@ import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/utils/app_images.dart';
 import 'package:mashena_rider/core/utils/responsive_utils.dart';
-import 'package:mashena_rider/core/utils/snack_bars.dart';
+import 'package:mashena_rider/core/utils/toast_helper.dart';
 import 'package:mashena_rider/core/utils/validators.dart';
 import 'package:mashena_rider/core/widgets/custom_elvated_button.dart';
 import 'package:mashena_rider/core/widgets/custom_form_field.dart';
@@ -108,13 +108,15 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                         child: BlocConsumer<LoginBloc, LoginState>(
                           listener: (context, state) {
                             if (state is LoginSuccess) {
-                              showSuccessMessage('Success', context);
+                              context.showSuccessToast(
+                                S.of(context).authOtpSuccess,
+                              );
                             }
 
                             if (state is LoginFailure) {
-                              showErrorMessage(
-                                state.failure.rawMessage ?? '',
-                                context,
+                              context.showErrorToast(
+                                state.failure.rawMessage ??
+                                    S.of(context).apiUnknownError,
                               );
                             }
                           },

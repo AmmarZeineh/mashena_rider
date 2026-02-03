@@ -5,7 +5,7 @@ import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_context_x.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/l10n/validation_localizer.dart';
-import 'package:mashena_rider/core/utils/snack_bars.dart';
+import 'package:mashena_rider/core/utils/toast_helper.dart';
 import 'package:mashena_rider/core/utils/validators.dart';
 import 'package:mashena_rider/core/widgets/custom_elvated_button.dart';
 import 'package:mashena_rider/core/widgets/custom_form_field.dart';
@@ -151,9 +151,9 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                                 as Map<String, dynamic>,
                       );
                     } else if (state is SignupFailure) {
-                      showErrorMessage(
-                        state.failure.rawMessage ?? 'Unknown',
-                        context,
+                      context.showErrorToast(
+                        state.failure.rawMessage ??
+                            S.of(context).apiUnknownError,
                       );
                     }
                   },
