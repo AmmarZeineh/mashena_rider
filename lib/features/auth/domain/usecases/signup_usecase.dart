@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
 
@@ -12,7 +13,6 @@ class SignupUsecase {
     required String email,
     required String phoneNumber,
     required String password,
-    String channel = 'email',
   }) async {
     final signupRes = await repo.signup(
       email: email,
@@ -22,13 +22,13 @@ class SignupUsecase {
     );
 
     return signupRes.fold((f) => Left(f), (_) async {
-      final otpRes = await repo.sendOtp(
-        channel: channel,
-        email: channel == 'email' ? email : null,
-        phone: channel == 'phone' ? phoneNumber : null,
-      );
-
-      return otpRes.fold((f) => Left(f), (_) => Right(null));
+      return await sendOtp(email);
     });
+  }
+
+  Future<FutureOr<Either<Failure, void>>> sendOtp(String email) async {
+    final otpRes = await repo.sendOtp(email: email, phone: null);
+
+    return otpRes.fold((f) => Left(f), (_) => Right(null));
   }
 }

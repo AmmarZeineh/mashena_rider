@@ -15,7 +15,7 @@ import 'package:mashena_rider/core/utils/app_images.dart';
 import 'package:mashena_rider/core/utils/responsive_utils.dart';
 import 'package:mashena_rider/core/utils/toast_helper.dart';
 import 'package:mashena_rider/core/utils/validators.dart';
-import 'package:mashena_rider/core/widgets/custom_elvated_button.dart';
+import 'package:mashena_rider/core/widgets/custom_elevated_button.dart';
 import 'package:mashena_rider/core/widgets/custom_form_field.dart';
 import 'package:mashena_rider/features/auth/presentation/blocs/login_bloc/login_bloc.dart';
 

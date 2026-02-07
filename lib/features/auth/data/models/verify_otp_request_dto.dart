@@ -6,9 +6,8 @@ part 'verify_otp_request_dto.g.dart';
 @freezed
 class VerifyOtpRequestDto with _$VerifyOtpRequestDto {
   const factory VerifyOtpRequestDto({
-    required String channel,
-    required String email,
-    required String phone,
+    String? email,
+    String? phone,
     required String code,
   }) = _VerifyOtpRequestDto;
 

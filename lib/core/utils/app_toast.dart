@@ -25,7 +25,9 @@ class AppToast {
       _dismissCallback!();
       // Small delay to let previous animation finish
       Future.delayed(const Duration(milliseconds: 250), () {
-        _showToast(context, message, type, duration);
+        if (context.mounted) {
+          _showToast(context, message, type, duration);
+        }
       });
     } else {
       _showToast(context, message, type, duration);
@@ -274,12 +276,12 @@ class _ToastContent extends StatelessWidget {
           color: config.backgroundColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: config.borderColor.withOpacity(0.3),
+            color: config.borderColor.withValues(alpha: .3),
             width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: .1),
               blurRadius: 20,
               offset: const Offset(0, 10),
               spreadRadius: -5,
@@ -306,7 +308,7 @@ class _ToastContent extends StatelessWidget {
             Icon(
               Icons.close_rounded,
               size: 20,
-              color: config.textColor.withOpacity(0.5),
+              color: config.textColor.withValues(alpha: .5),
             ),
           ],
         ),

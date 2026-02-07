@@ -6,7 +6,7 @@ class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
     super.key,
     required this.title,
-    this.onPressed, // ⬅️ nullable
+    this.onPressed,
   });
 
   final String title;

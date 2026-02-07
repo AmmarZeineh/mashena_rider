@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mashena_rider/app/di/injector.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
-import 'package:mashena_rider/core/constants/app_constants.dart';
-import 'package:mashena_rider/core/storage/local_storage.dart';
+import 'package:mashena_rider/features/onboarding/domain/usecases/get_onboarding_status_usecase.dart';
 import 'package:mashena_rider/features/auth/presentation/views/login_view.dart';
 import 'package:mashena_rider/features/auth/presentation/views/signup_view.dart';
 import 'package:mashena_rider/features/auth/presentation/views/verification_view.dart';
@@ -15,9 +14,7 @@ final class AppRouter {
 
   static final GoRouter router = GoRouter(
     redirect: (context, state) {
-      final storage = getIt<LocalStorage>();
-      final onboardingSeen =
-          storage.getBool(AppConstants.isOnboardingSeenKey) ?? false;
+      final onboardingSeen = getIt<GetOnboardingStatus>()();
       final loc = state.matchedLocation;
 
       final isSplash = loc == AppRoutes.splashPath;

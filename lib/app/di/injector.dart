@@ -16,11 +16,13 @@ import 'package:mashena_rider/core/storage/local_storage_impl.dart';
 
 // onboarding
 import 'package:mashena_rider/features/onboarding/domain/usecases/complete_onboarding_usecase.dart';
+import 'package:mashena_rider/features/onboarding/domain/usecases/get_onboarding_status_usecase.dart';
 
 // auth
 import 'package:mashena_rider/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:mashena_rider/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:mashena_rider/features/auth/domain/repositories/auth_repository.dart';
+import 'package:mashena_rider/features/auth/domain/usecases/resend_otp_usecase.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/signup_usecase.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -77,6 +79,9 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<CompleteOnboarding>(
     () => CompleteOnboarding(getIt<LocalStorage>()),
   );
+  getIt.registerLazySingleton<GetOnboardingStatus>(
+    () => GetOnboardingStatus(getIt<LocalStorage>()),
+  );
 
   // ======================
   // Features: Auth (Data)
@@ -86,7 +91,10 @@ Future<void> configureDependencies() async {
   );
 
   getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(getIt<AuthRemoteDataSource>()),
+    () => AuthRepositoryImpl(
+      getIt<AuthRemoteDataSource>(),
+      getIt<ApiClient>(),
+    ),
   );
 
   // ======================
@@ -100,5 +108,8 @@ Future<void> configureDependencies() async {
   );
   getIt.registerLazySingleton<VerifyOtpUsecase>(
     () => VerifyOtpUsecase(getIt<AuthRepository>()),
+  );
+  getIt.registerLazySingleton<ResendOtpUsecase>(
+    () => ResendOtpUsecase(getIt<AuthRepository>()),
   );
 }

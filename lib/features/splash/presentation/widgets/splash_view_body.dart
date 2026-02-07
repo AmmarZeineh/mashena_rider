@@ -119,7 +119,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
   Future<void> _checkConnectionAndNavigate() async {
     if (!mounted) return;
 
-    final isConnected = await _networkInfo.isConnected;
+    final isConnected = await _networkInfo.isReallyConnected();
     if (!mounted) return;
 
     if (!isConnected) {
@@ -244,7 +244,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
                       s.appDescription,
                       textAlign: TextAlign.center,
                       style: AppTextStyles.w400_16.copyWith(
-                        color: cs.onSurface.withOpacity(0.75),
+                        color: cs.onSurface.withValues(alpha: .75),
                         height: 1.5,
                         fontSize: isSmallScreen ? 14 : 16,
                       ),

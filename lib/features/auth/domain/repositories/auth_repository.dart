@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
-import 'package:mashena_rider/features/auth/data/models/login_response.dart';
+import 'package:mashena_rider/features/auth/domain/entities/auth_session.dart';
 import 'package:mashena_rider/features/auth/domain/entities/user.dart';
 
 abstract class AuthRepository {
@@ -11,22 +11,17 @@ abstract class AuthRepository {
     required String phoneNumber,
   });
 
-  Future<Either<Failure, LoginResponseDto>> login({
+  Future<Either<Failure, AuthSession>> login({
     required String email,
     required String password,
     required String? fcmToken,
   });
 
-  Future<Either<Failure, Unit>> sendOtp({
-    required String channel,
-    String? email,
-    String? phone,
-  });
+  Future<Either<Failure, Unit>> sendOtp({String? email, String? phone});
 
   Future<Either<Failure, Unit>> verifyOtp({
-    required String channel,
     required String code,
-    required String email,
-    required String phone,
+    String? email,
+    String? phone,
   });
 }

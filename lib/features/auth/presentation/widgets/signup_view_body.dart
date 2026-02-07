@@ -7,7 +7,7 @@ import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/l10n/validation_localizer.dart';
 import 'package:mashena_rider/core/utils/toast_helper.dart';
 import 'package:mashena_rider/core/utils/validators.dart';
-import 'package:mashena_rider/core/widgets/custom_elvated_button.dart';
+import 'package:mashena_rider/core/widgets/custom_elevated_button.dart';
 import 'package:mashena_rider/core/widgets/custom_form_field.dart';
 import 'package:mashena_rider/features/auth/presentation/blocs/signup_bloc/signup_bloc.dart';
 import 'package:mashena_rider/features/auth/presentation/widgets/signup_footer.dart';

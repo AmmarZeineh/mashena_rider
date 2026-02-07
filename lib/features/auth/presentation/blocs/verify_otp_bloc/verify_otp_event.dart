@@ -9,11 +9,9 @@ final class VerifyOtpSubmitted extends VerifyOtpEvent {
     required this.email,
     required this.phoneNumber,
     required this.code,
-    required this.channel,
   });
 
   final String email;
   final String phoneNumber;
   final String code;
-  final String channel;
 }

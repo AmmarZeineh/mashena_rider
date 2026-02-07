@@ -6,7 +6,7 @@ import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_images.dart';
-import 'package:mashena_rider/core/widgets/custom_elvated_button.dart';
+import 'package:mashena_rider/core/widgets/custom_elevated_button.dart';
 import 'package:mashena_rider/features/onboarding/domain/entities/onboarding_entity.dart';
 import 'package:mashena_rider/features/onboarding/domain/usecases/complete_onboarding_usecase.dart';
 import 'package:mashena_rider/features/onboarding/presentation/widgets/page_view_item.dart';

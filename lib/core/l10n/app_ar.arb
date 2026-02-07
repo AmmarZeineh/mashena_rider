@@ -33,6 +33,7 @@
   "authOtpSubtitle": "أدخل الرمز المرسل إلى رقمك",
   "authOtpSuccess": "تم تأكيد رمز التحقق",
   "authResendOtp": "إعادة إرسال الرمز",
+  "otpResendSuccess": "تم ارسال رمز التحقق بنجاح",
   "homeWhereTo": "إلى أين تريد الذهاب؟",
   "homeCurrentLocation": "موقعي الحالي",
   "homeSearchDestination": "ابحث عن وجهة",

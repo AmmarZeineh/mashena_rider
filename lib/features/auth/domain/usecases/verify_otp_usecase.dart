@@ -13,11 +13,6 @@ class VerifyOtpUsecase {
     required String phone,
     required String channel,
   }) {
-    return repo.verifyOtp(
-      email: email,
-      channel: channel,
-      code: code,
-      phone: phone,
-    );
+    return repo.verifyOtp(email: email, code: code, phone: phone);
   }
 }

@@ -16,11 +16,10 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(deviceLocale),
       darkTheme: AppTheme.dark(deviceLocale),
+      themeMode: ThemeMode.system,
+      locale: deviceLocale,
       routerConfig: AppRouter.router,
-      supportedLocales: const [
-        Locale('en'),
-        Locale('ar'),
-      ], // أو S.supportedLocales إذا موجودة عندك
+      supportedLocales: const [Locale('en'), Locale('ar')],
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

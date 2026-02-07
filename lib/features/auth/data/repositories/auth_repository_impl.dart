@@ -1,26 +1,27 @@
 import 'package:dartz/dartz.dart';
-import 'package:mashena_rider/app/di/injector.dart';
 
 import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/core/network/api_exception.dart';
 import 'package:mashena_rider/core/network/api_failure_mapper.dart';
 import 'package:mashena_rider/core/network/dio_client.dart';
+import 'package:mashena_rider/features/auth/data/mappers/login_user_mapper.dart';
 import 'package:mashena_rider/features/auth/data/mappers/user_mapper.dart';
 import 'package:mashena_rider/features/auth/data/models/login_request_dto.dart';
-import 'package:mashena_rider/features/auth/data/models/login_response.dart';
 import 'package:mashena_rider/features/auth/data/models/send_otp_request_dto.dart';
 import 'package:mashena_rider/features/auth/data/models/signup_request_dto.dart';
 import 'package:mashena_rider/features/auth/data/models/verify_otp_request_dto.dart';
 
+import 'package:mashena_rider/features/auth/domain/entities/auth_session.dart';
 import 'package:mashena_rider/features/auth/domain/entities/user.dart';
 
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthRemoteDataSource remote;
+  AuthRepositoryImpl(this._remote, this._apiClient);
 
-  AuthRepositoryImpl(this.remote);
+  final AuthRemoteDataSource _remote;
+  final ApiClient _apiClient;
 
   @override
   Future<Either<Failure, User>> signup({
@@ -30,7 +31,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required String phoneNumber,
   }) async {
     try {
-      final dto = await remote.signup(
+      final dto = await _remote.signup(
         SignupRequestDto(
           email: email,
           password: password,
@@ -41,43 +42,39 @@ class AuthRepositoryImpl implements AuthRepository {
 
       return Right(dto.toEntity());
     } on ApiException catch (e) {
-      return Left(mapApiExceptionToFailure(e, getIt.get<ApiClient>()));
+      return Left(mapApiExceptionToFailure(e, _apiClient));
     } catch (e) {
       return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, LoginResponseDto>> login({
+  Future<Either<Failure, AuthSession>> login({
     required String email,
     required String password,
     required String? fcmToken,
   }) async {
     try {
-      final dto = await remote.login(
+      final dto = await _remote.login(
         LoginRequestDto(email: email, password: password, fcmToken: fcmToken),
       );
-      return Right(dto);
+      return Right(
+        AuthSession(accessToken: dto.accessToken, user: dto.user.toEntity()),
+      );
     } on ApiException catch (e) {
-      return Left(mapApiExceptionToFailure(e, getIt.get<ApiClient>()));
+      return Left(mapApiExceptionToFailure(e, _apiClient));
     } catch (e) {
       return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, Unit>> sendOtp({
-    required String channel,
-    String? email,
-    String? phone,
-  }) async {
+  Future<Either<Failure, Unit>> sendOtp({String? email, String? phone}) async {
     try {
-      await remote.sendOtp(
-        SendOtpRequestDto(channel: channel, email: email, phone: phone),
-      );
+      await _remote.sendOtp(SendOtpRequestDto(email: email, phone: phone));
       return const Right(unit);
     } on ApiException catch (e) {
-      return Left(mapApiExceptionToFailure(e, getIt.get<ApiClient>()));
+      return Left(mapApiExceptionToFailure(e, _apiClient));
     } catch (e) {
       return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
@@ -85,23 +82,17 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, Unit>> verifyOtp({
-    required String channel,
     required String code,
-    required String email,
-    required String phone,
+    String? email,
+    String? phone,
   }) async {
     try {
-      await remote.verifyOtp(
-        VerifyOtpRequestDto(
-          channel: channel,
-          code: code,
-          email: email,
-          phone: phone,
-        ),
+      await _remote.verifyOtp(
+        VerifyOtpRequestDto(code: code, email: email, phone: null),
       );
       return const Right(unit);
     } on ApiException catch (e) {
-      return Left(mapApiExceptionToFailure(e, getIt.get<ApiClient>()));
+      return Left(mapApiExceptionToFailure(e, _apiClient));
     } catch (e) {
       return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
