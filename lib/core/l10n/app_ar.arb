@@ -41,6 +41,8 @@
   "rideFindingDriver": "جارٍ البحث عن سائق...",
   "rideDriverOnWay": "السائق في الطريق",
   "rideDriverArrived": "وصل السائق",
+  "noInternetConnection": "لا يوجد اتصال بالإنترنت",
+  "makeSureInternetConnection": "يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى",
   "rideTripStarted": "بدأت الرحلة",
   "rideTripEnded": "انتهت الرحلة",
   "rideCancelRide": "إلغاء الرحلة",

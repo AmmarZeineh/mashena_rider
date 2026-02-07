@@ -41,6 +41,8 @@
   "homeWhereTo": "Where to?",
   "homeCurrentLocation": "Current location",
   "homeSearchDestination": "Search destination",
+  "noInternetConnection": "No internet connection",
+  "makeSureInternetConnection": "Please check your internet connection and try again.",
   "rideRequestRide": "Request Ride",
   "rideFindingDriver": "Finding a driver...",
   "rideDriverOnWay": "Driver is on the way",

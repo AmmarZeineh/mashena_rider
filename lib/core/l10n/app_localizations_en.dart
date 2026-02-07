@@ -135,6 +135,13 @@ class SEn extends S {
   String get homeSearchDestination => 'Search destination';
 
   @override
+  String get noInternetConnection => 'No internet connection';
+
+  @override
+  String get makeSureInternetConnection =>
+      'Please check your internet connection and try again.';
+
+  @override
   String get rideRequestRide => 'Request Ride';
 
   @override

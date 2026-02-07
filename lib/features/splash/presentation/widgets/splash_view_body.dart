@@ -143,16 +143,14 @@ class _SplashViewBodyState extends State<SplashViewBody>
         return AlertDialog(
           backgroundColor: cs.surface,
           title: Text(
-            // إذا ما عندك key خاص، خليها مؤقتًا هيك أو أضف key بالـ ARB
-            // s.errorsNetwork (غير مناسب كعنوان) لذلك خليت نص عربي fallback
-            'لا يوجد اتصال بالإنترنت',
+            S.of(context).noInternetConnection,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: cs.onSurface,
             ),
           ),
           content: Text(
-            'يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى',
+            S.of(context).makeSureInternetConnection,
             style: theme.textTheme.bodyMedium?.copyWith(color: cs.onSurface),
           ),
           actions: [

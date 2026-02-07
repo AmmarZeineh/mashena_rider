@@ -343,6 +343,18 @@ abstract class S {
   /// **'Search destination'**
   String get homeSearchDestination;
 
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get noInternetConnection;
+
+  /// No description provided for @makeSureInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your internet connection and try again.'**
+  String get makeSureInternetConnection;
+
   /// No description provided for @rideRequestRide.
   ///
   /// In en, this message translates to:

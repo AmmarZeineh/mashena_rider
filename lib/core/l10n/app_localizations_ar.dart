@@ -133,6 +133,13 @@ class SAr extends S {
   String get homeSearchDestination => 'ابحث عن وجهة';
 
   @override
+  String get noInternetConnection => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get makeSureInternetConnection =>
+      'يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى';
+
+  @override
   String get rideRequestRide => 'طلب رحلة';
 
   @override
