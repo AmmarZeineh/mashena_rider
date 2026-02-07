@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mashena_rider/app/di/injector.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
+import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_usecase.dart';
+import 'package:mashena_rider/features/home/presentation/views/home_view.dart';
 import 'package:mashena_rider/features/onboarding/domain/usecases/get_onboarding_status_usecase.dart';
 import 'package:mashena_rider/features/auth/presentation/views/login_view.dart';
 import 'package:mashena_rider/features/auth/presentation/views/signup_view.dart';
@@ -13,24 +15,32 @@ final class AppRouter {
   const AppRouter._();
 
   static final GoRouter router = GoRouter(
-    redirect: (context, state) {
-      final onboardingSeen = getIt<GetOnboardingStatus>()();
+    redirect: (context, state) async {
       final loc = state.matchedLocation;
 
-      final isSplash = loc == AppRoutes.splashPath;
-      if (isSplash) return null;
-
+      final onboardingSeen = getIt<GetOnboardingStatus>()();
       if (!onboardingSeen) {
-        final isOnboarding = loc == AppRoutes.onboardingPath;
-        return isOnboarding ? null : AppRoutes.onboardingPath;
+        return loc == AppRoutes.onboardingPath
+            ? null
+            : AppRoutes.onboardingPath;
       }
 
-      if (onboardingSeen && loc == AppRoutes.onboardingPath) {
-        return AppRoutes.loginPath;
-      }
+      if (loc == AppRoutes.onboardingPath) return AppRoutes.loginPath;
+
+      final cached = await getIt<GetCachedSessionUsecase>()();
+      final isAuthed = cached.isRight();
+
+      final isAuthRoute =
+          loc == AppRoutes.loginPath ||
+          loc == AppRoutes.signupPath ||
+          loc == AppRoutes.verificationPath;
+
+      if (!isAuthed && !isAuthRoute) return AppRoutes.loginPath;
+      if (isAuthed && isAuthRoute) return AppRoutes.homePath;
 
       return null;
     },
+
     initialLocation: AppRoutes.splashPath,
     routes: <RouteBase>[
       GoRoute(path: '/', builder: (context, state) => const _RootPage()),
@@ -59,6 +69,12 @@ final class AppRouter {
         path: AppRoutes.verificationPath,
         name: AppRoutes.verification,
         builder: (context, state) => const VerificationView(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.homePath,
+        name: AppRoutes.homePath,
+        builder: (context, state) => const HomeView(),
       ),
     ],
     errorBuilder: (context, state) => _ErrorPage(error: state.error),

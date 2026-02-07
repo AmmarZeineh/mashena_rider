@@ -8,7 +8,11 @@ final class LoginInitial extends LoginState {}
 
 final class LoginLoading extends LoginState {}
 
-final class LoginSuccess extends LoginState {}
+final class LoginSuccess extends LoginState {
+  final AuthSession session;
+
+  LoginSuccess(this.session);
+}
 
 final class LoginFailure extends LoginState {
   const LoginFailure(this.failure);

@@ -17,6 +17,7 @@ import 'package:mashena_rider/core/utils/toast_helper.dart';
 import 'package:mashena_rider/core/utils/validators.dart';
 import 'package:mashena_rider/core/widgets/custom_elevated_button.dart';
 import 'package:mashena_rider/core/widgets/custom_form_field.dart';
+import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:mashena_rider/features/auth/presentation/blocs/login_bloc/login_bloc.dart';
 
 class LoginViewBody extends StatefulWidget {
@@ -108,9 +109,11 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                         child: BlocConsumer<LoginBloc, LoginState>(
                           listener: (context, state) {
                             if (state is LoginSuccess) {
-                              context.showSuccessToast(
-                                S.of(context).authOtpSuccess,
+                              context.read<AuthCubit>().setSession(
+                                state.session,
                               );
+
+                              GoRouter.of(context).goNamed(AppRoutes.home);
                             }
 
                             if (state is LoginFailure) {

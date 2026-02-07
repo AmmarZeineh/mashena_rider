@@ -24,4 +24,7 @@ abstract class AuthRepository {
     String? email,
     String? phone,
   });
+
+  Future<Either<Failure, AuthSession>> getCachedSession();
+  Future<Either<Failure, Unit>> logout();
 }

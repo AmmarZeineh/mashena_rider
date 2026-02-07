@@ -18,24 +18,32 @@ final class TokenManagerImpl implements TokenManager {
     String? refreshToken,
   }) async {
     _accessToken = accessToken;
-    _refreshToken = refreshToken;
-
     await _prefs.setString(_kAccess, accessToken);
+
     if (refreshToken != null) {
+      _refreshToken = refreshToken;
       await _prefs.setString(_kRefresh, refreshToken);
     }
   }
 
   @override
   Future<String?> getAccessToken() async {
-    _accessToken ??= _prefs.getString(_kAccess);
+    if (_accessToken != null) return _accessToken;
+    _accessToken = _prefs.getString(_kAccess);
     return _accessToken;
   }
 
   @override
   Future<String?> getRefreshToken() async {
-    _refreshToken ??= _prefs.getString(_kRefresh);
+    if (_refreshToken != null) return _refreshToken;
+    _refreshToken = _prefs.getString(_kRefresh);
     return _refreshToken;
+  }
+
+  @override
+  Future<bool> hasToken() async {
+    final token = await getAccessToken();
+    return token != null && token.isNotEmpty;
   }
 
   @override
@@ -44,11 +52,5 @@ final class TokenManagerImpl implements TokenManager {
     _refreshToken = null;
     await _prefs.remove(_kAccess);
     await _prefs.remove(_kRefresh);
-  }
-
-  @override
-  Future<bool> hasToken() async {
-    final t = await getAccessToken();
-    return t != null && t.isNotEmpty;
   }
 }

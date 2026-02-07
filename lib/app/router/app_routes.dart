@@ -5,6 +5,7 @@ class AppRoutes {
   static const login = 'login';
   static const signup = 'signup';
   static const verification = 'verification';
+  static const home = 'home';
 
   // route paths (للـ URL)
   static const onboardingPath = '/onboarding';
@@ -12,4 +13,5 @@ class AppRoutes {
   static const verificationPath = '/verification';
   static const loginPath = '/login';
   static const signupPath = '/signup';
+  static const homePath = '/home';
 }

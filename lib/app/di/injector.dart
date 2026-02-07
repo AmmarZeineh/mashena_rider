@@ -1,7 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mashena_rider/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_usecase.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/login_usecase.dart';
+import 'package:mashena_rider/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/verify_otp_usecase.dart';
+import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mashena_rider/app/config/env.dart';
@@ -86,6 +90,11 @@ Future<void> configureDependencies() async {
   // ======================
   // Features: Auth (Data)
   // ======================
+
+  // Auth (Local)
+  getIt.registerLazySingleton<AuthLocalDataSource>(
+    () => AuthLocalDataSourceImpl(getIt<LocalStorage>(), getIt<TokenManager>()),
+  );
   getIt.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(getIt<ApiClient>()),
   );
@@ -94,7 +103,12 @@ Future<void> configureDependencies() async {
     () => AuthRepositoryImpl(
       getIt<AuthRemoteDataSource>(),
       getIt<ApiClient>(),
+      getIt.get<AuthLocalDataSource>(),
     ),
+  );
+
+  getIt.registerFactory<AuthCubit>(
+    () => AuthCubit(getIt<GetCachedSessionUsecase>(), getIt<LogoutUsecase>()),
   );
 
   // ======================
@@ -111,5 +125,11 @@ Future<void> configureDependencies() async {
   );
   getIt.registerLazySingleton<ResendOtpUsecase>(
     () => ResendOtpUsecase(getIt<AuthRepository>()),
+  );
+  getIt.registerLazySingleton<GetCachedSessionUsecase>(
+    () => GetCachedSessionUsecase(getIt<AuthRepository>()),
+  );
+  getIt.registerLazySingleton<LogoutUsecase>(
+    () => LogoutUsecase(getIt<AuthRepository>()),
   );
 }

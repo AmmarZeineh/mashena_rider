@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
+import 'package:mashena_rider/features/auth/domain/entities/auth_session.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/login_usecase.dart';
 
 part 'login_event.dart';
@@ -23,7 +24,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     result.fold(
       (failure) => emit(LoginFailure(failure)),
-      (_) => emit(LoginSuccess()),
+      (session) => emit(LoginSuccess(session)),
     );
   }
 }
