@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_usecase.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/login_usecase.dart';
@@ -67,6 +68,10 @@ Future<void> configureDependencies() async {
   );
 
   getIt.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
+
+  getIt.registerLazySingleton<LocationService>(
+    () => GeolocatorLocationService(),
+  );
 
   // ApiClient فوق Dio
   getIt.registerLazySingleton<ApiClient>(

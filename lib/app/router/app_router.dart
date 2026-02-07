@@ -73,7 +73,7 @@ final class AppRouter {
 
       GoRoute(
         path: AppRoutes.homePath,
-        name: AppRoutes.homePath,
+        name: AppRoutes.home,
         builder: (context, state) => const HomeView(),
       ),
     ],
