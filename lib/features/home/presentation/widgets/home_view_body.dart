@@ -39,7 +39,6 @@ class _HomeViewBodyState extends State<HomeViewBody> {
         return Stack(
           children: [
             GoogleMap(
-              
               initialCameraPosition: const CameraPosition(
                 target: LatLng(33.5153, 36.2772), // fallback
                 zoom: 14,

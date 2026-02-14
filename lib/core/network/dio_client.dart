@@ -1,18 +1,20 @@
-import 'dart:developer';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+import 'package:mashena_rider/core/network/api_client.dart';
+import 'package:mashena_rider/core/network/api_exception.dart';
+import 'package:mashena_rider/core/network/auth_interceptor.dart';
 import 'package:mashena_rider/core/network/token_manager.dart';
 
-import 'api_exception.dart';
-
-final class ApiClient {
-  ApiClient({
+final class DioApiClient implements ApiClient {
+  DioApiClient({
     required TokenManager tokenManager,
-    Dio? dio,
     required String baseUrl,
+    required AuthInterceptor authInterceptor,
+
+    Dio? dio,
   }) : _tokenManager = tokenManager,
        _dio = dio ?? Dio() {
     _setup(baseUrl);
+    _dio.interceptors.add(authInterceptor);
   }
 
   final Dio _dio;
@@ -34,32 +36,22 @@ final class ApiClient {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await _tokenManager.getAccessToken();
-          if (token != null && token.isNotEmpty) {
+          if (token?.isNotEmpty ?? false) {
             options.headers['Authorization'] = 'Bearer $token';
           }
           handler.next(options);
         },
         onError: (error, handler) async {
           if (error.response?.statusCode == 401) {
-            // قرار: امسح التوكين وخلي الـ UI يوجّه للـ login
             await _tokenManager.clearTokens();
           }
           handler.next(error);
         },
       ),
     );
-
-    if (kDebugMode) {
-      _dio.interceptors.add(
-        LogInterceptor(
-          requestBody: true,
-          responseBody: true,
-          logPrint: (obj) => log(obj.toString()),
-        ),
-      );
-    }
   }
 
+  @override
   Future<dynamic> get(String path, {Map<String, dynamic>? query}) async {
     try {
       final res = await _dio.get(path, queryParameters: query);
@@ -69,6 +61,7 @@ final class ApiClient {
     }
   }
 
+  @override
   Future<dynamic> post(
     String path, {
     dynamic body,
@@ -82,6 +75,7 @@ final class ApiClient {
     }
   }
 
+  @override
   Future<dynamic> put(
     String path, {
     dynamic body,
@@ -95,6 +89,7 @@ final class ApiClient {
     }
   }
 
+  @override
   Future<dynamic> patch(
     String path, {
     dynamic body,
@@ -108,6 +103,7 @@ final class ApiClient {
     }
   }
 
+  @override
   Future<dynamic> delete(
     String path, {
     dynamic body,
@@ -121,6 +117,7 @@ final class ApiClient {
     }
   }
 
+  @override
   Future<dynamic> postFormData(
     String path, {
     required Map<String, dynamic> data,
@@ -132,9 +129,7 @@ final class ApiClient {
         path,
         data: form,
         queryParameters: query,
-        options: Options(
-          headers: const {'Content-Type': 'multipart/form-data'},
-        ),
+        options: Options(headers: {'Content-Type': 'multipart/form-data'}),
       );
       return _handle(res);
     } on DioException catch (e) {
@@ -145,7 +140,6 @@ final class ApiClient {
   dynamic _handle(Response response) {
     final code = response.statusCode ?? 0;
     if (code >= 200 && code < 300) return response.data;
-
     throw ApiException(
       ApiErrorCode.badResponse,
       statusCode: code,
@@ -177,24 +171,6 @@ final class ApiClient {
         );
       case DioExceptionType.unknown:
         return ApiException(ApiErrorCode.unknown, message: e.message);
-    }
-  }
-
-  String? extractServerMessage(dynamic data) {
-    if (data == null) return null;
-
-    try {
-      if (data is Map<String, dynamic>) {
-        const keys = ['message', 'error', 'msg', 'detail', 'details'];
-        for (final k in keys) {
-          final v = data[k];
-          if (v is String && v.isNotEmpty) return v;
-          if (v is List && v.isNotEmpty) return v.first.toString();
-        }
-      }
-      return data.toString();
-    } catch (_) {
-      return null;
     }
   }
 }

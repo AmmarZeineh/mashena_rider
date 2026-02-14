@@ -3,7 +3,6 @@ import 'package:dartz/dartz.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/core/network/api_exception.dart';
 import 'package:mashena_rider/core/network/api_failure_mapper.dart';
-import 'package:mashena_rider/core/network/dio_client.dart';
 import 'package:mashena_rider/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:mashena_rider/features/auth/data/mappers/login_user_mapper.dart';
 import 'package:mashena_rider/features/auth/data/mappers/user_mapper.dart';
@@ -19,11 +18,10 @@ import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  AuthRepositoryImpl(this._remote, this._apiClient, this._local);
+  AuthRepositoryImpl(this._remote, this._local);
   final AuthLocalDataSource _local;
 
   final AuthRemoteDataSource _remote;
-  final ApiClient _apiClient;
 
   @override
   Future<Either<Failure, User>> signup({
@@ -44,7 +42,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
       return Right(dto.toEntity());
     } on ApiException catch (e) {
-      return Left(mapApiExceptionToFailure(e, _apiClient));
+      return Left(mapApiExceptionToFailure(e));
     } catch (e) {
       return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
@@ -65,7 +63,7 @@ class AuthRepositoryImpl implements AuthRepository {
         AuthSession(accessToken: dto.accessToken, user: dto.user.toEntity()),
       );
     } on ApiException catch (e) {
-      return Left(mapApiExceptionToFailure(e, _apiClient));
+      return Left(mapApiExceptionToFailure(e));
     } catch (e) {
       return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
@@ -77,7 +75,7 @@ class AuthRepositoryImpl implements AuthRepository {
       await _remote.sendOtp(SendOtpRequestDto(email: email, phone: phone));
       return const Right(unit);
     } on ApiException catch (e) {
-      return Left(mapApiExceptionToFailure(e, _apiClient));
+      return Left(mapApiExceptionToFailure(e));
     } catch (e) {
       return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
@@ -95,7 +93,7 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       return const Right(unit);
     } on ApiException catch (e) {
-      return Left(mapApiExceptionToFailure(e, _apiClient));
+      return Left(mapApiExceptionToFailure(e));
     } catch (e) {
       return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }

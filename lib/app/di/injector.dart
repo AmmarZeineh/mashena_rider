@@ -1,64 +1,83 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mashena_rider/core/services/location_service.dart';
-import 'package:mashena_rider/features/auth/data/datasources/auth_local_data_source.dart';
-import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_usecase.dart';
-import 'package:mashena_rider/features/auth/domain/usecases/login_usecase.dart';
-import 'package:mashena_rider/features/auth/domain/usecases/logout_usecase.dart';
-import 'package:mashena_rider/features/auth/domain/usecases/verify_otp_usecase.dart';
-import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:mashena_rider/core/auth/auth_event.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:mashena_rider/app/config/env.dart';
+import 'package:mashena_rider/app/config/app_config.dart';
 
-// core
+// ======================
+// Core - Network
+// ======================
+import 'package:mashena_rider/core/network/api_client.dart';
 import 'package:mashena_rider/core/network/dio_client.dart';
+import 'package:mashena_rider/core/network/auth_interceptor.dart';
 import 'package:mashena_rider/core/network/network_info.dart';
+
+// ======================
+// Core - Auth
+// ======================
 import 'package:mashena_rider/core/network/token_manager.dart';
 import 'package:mashena_rider/core/network/token_manager_impl.dart';
+
+// ======================
+// Core - Storage & Services
+// ======================
 import 'package:mashena_rider/core/storage/local_storage.dart';
 import 'package:mashena_rider/core/storage/local_storage_impl.dart';
+import 'package:mashena_rider/core/services/location_service.dart';
 
-// onboarding
+// ======================
+// Features - Onboarding
+// ======================
 import 'package:mashena_rider/features/onboarding/domain/usecases/complete_onboarding_usecase.dart';
 import 'package:mashena_rider/features/onboarding/domain/usecases/get_onboarding_status_usecase.dart';
 
-// auth
+// ======================
+// Features - Auth (Data)
+// ======================
+import 'package:mashena_rider/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:mashena_rider/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:mashena_rider/features/auth/data/repositories/auth_repository_impl.dart';
+
+// ======================
+// Features - Auth (Domain)
+// ======================
 import 'package:mashena_rider/features/auth/domain/repositories/auth_repository.dart';
-import 'package:mashena_rider/features/auth/domain/usecases/resend_otp_usecase.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:mashena_rider/features/auth/domain/usecases/login_usecase.dart';
+import 'package:mashena_rider/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:mashena_rider/features/auth/domain/usecases/verify_otp_usecase.dart';
+import 'package:mashena_rider/features/auth/domain/usecases/resend_otp_usecase.dart';
+import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_usecase.dart';
+
+// ======================
+// Features - Auth (Presentation)
+// ======================
+import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
 Future<void> configureDependencies() async {
-  // ======================
-  // External
-  // ======================
+  // =====================================================
+  // 🔹 1. External Dependencies (Platform / SDK Level)
+  // =====================================================
+
   final prefs = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(prefs);
 
-  // Dio واحد للتطبيق كله
-  getIt.registerLazySingleton<Dio>(() {
-    final dio = Dio(
-      BaseOptions(
-        baseUrl: Env.baseUrl,
-        connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
-        sendTimeout: const Duration(seconds: 30),
-        headers: const {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      ),
-    );
-    return dio;
-  });
+  // =====================================================
+  // 🔹 2. App Configuration (Environment Driven Config)
+  // =====================================================
 
-  // ======================
-  // Core
-  // ======================
+  getIt.registerSingleton<AppConfig>(
+    kDebugMode ? AppConfig.development() : AppConfig.production(),
+  );
+
+  // =====================================================
+  // 🔹 3. Core - Storage & Utilities
+  // =====================================================
+
   getIt.registerLazySingleton<LocalStorage>(
     () => LocalStorageImpl(getIt<SharedPreferences>()),
   );
@@ -73,33 +92,68 @@ Future<void> configureDependencies() async {
     () => GeolocatorLocationService(),
   );
 
-  // ApiClient فوق Dio
-  getIt.registerLazySingleton<ApiClient>(
-    () => ApiClient(
+  getIt.registerLazySingleton<AuthEventBus>(() => AuthEventBus());
+
+  // =====================================================
+  // 🔹 4. Core - Networking Layer
+  // =====================================================
+
+  getIt.registerLazySingleton<Dio>(() {
+    final config = getIt<AppConfig>();
+
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: config.baseUrl,
+        connectTimeout: config.connectTimeout,
+        receiveTimeout: config.receiveTimeout,
+        sendTimeout: config.sendTimeout,
+        headers: const {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
+
+    return dio;
+  });
+
+  getIt.registerLazySingleton<AuthInterceptor>(
+    () => AuthInterceptor(
       tokenManager: getIt<TokenManager>(),
-      dio: getIt<Dio>(),
-      baseUrl: Env.baseUrl,
+      authEventBus: getIt<AuthEventBus>(),
+      baseUrl: getIt<AppConfig>().baseUrl,
     ),
   );
 
-  // ======================
-  // Features: Onboarding
-  // ======================
-  getIt.registerLazySingleton<CompleteOnboarding>(
+  getIt.registerLazySingleton<ApiClient>(
+    () => DioApiClient(
+      dio: getIt<Dio>(),
+      authInterceptor: getIt<AuthInterceptor>(),
+      tokenManager: getIt.get<TokenManager>(),
+      baseUrl: getIt.get<AppConfig>().baseUrl,
+    ),
+  );
+
+  // =====================================================
+  // 🔹 5. Features - Onboarding
+  // =====================================================
+
+  getIt.registerFactory<CompleteOnboarding>(
     () => CompleteOnboarding(getIt<LocalStorage>()),
   );
-  getIt.registerLazySingleton<GetOnboardingStatus>(
+
+  getIt.registerFactory<GetOnboardingStatus>(
     () => GetOnboardingStatus(getIt<LocalStorage>()),
   );
 
-  // ======================
-  // Features: Auth (Data)
-  // ======================
+  // =====================================================
+  // 🔹 6. Features - Auth (Data Layer)
+  // =====================================================
 
-  // Auth (Local)
   getIt.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSourceImpl(getIt<LocalStorage>(), getIt<TokenManager>()),
   );
+
   getIt.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(getIt<ApiClient>()),
   );
@@ -107,34 +161,43 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       getIt<AuthRemoteDataSource>(),
-      getIt<ApiClient>(),
-      getIt.get<AuthLocalDataSource>(),
+      getIt<AuthLocalDataSource>(),
     ),
   );
 
-  getIt.registerFactory<AuthCubit>(
-    () => AuthCubit(getIt<GetCachedSessionUsecase>(), getIt<LogoutUsecase>()),
-  );
+  // =====================================================
+  // 🔹 7. Features - Auth (Domain Layer / UseCases)
+  // =====================================================
 
-  // ======================
-  // Features: Auth (Domain)
-  // ======================
-  getIt.registerLazySingleton<SignupUsecase>(
+  getIt.registerFactory<SignupUsecase>(
     () => SignupUsecase(getIt<AuthRepository>()),
   );
-  getIt.registerLazySingleton<LoginUsecase>(
+
+  getIt.registerFactory<LoginUsecase>(
     () => LoginUsecase(getIt<AuthRepository>()),
   );
-  getIt.registerLazySingleton<VerifyOtpUsecase>(
+
+  getIt.registerFactory<VerifyOtpUsecase>(
     () => VerifyOtpUsecase(getIt<AuthRepository>()),
   );
-  getIt.registerLazySingleton<ResendOtpUsecase>(
+
+  getIt.registerFactory<ResendOtpUsecase>(
     () => ResendOtpUsecase(getIt<AuthRepository>()),
   );
-  getIt.registerLazySingleton<GetCachedSessionUsecase>(
+
+  getIt.registerFactory<GetCachedSessionUsecase>(
     () => GetCachedSessionUsecase(getIt<AuthRepository>()),
   );
-  getIt.registerLazySingleton<LogoutUsecase>(
+
+  getIt.registerFactory<LogoutUsecase>(
     () => LogoutUsecase(getIt<AuthRepository>()),
+  );
+
+  // =====================================================
+  // 🔹 8. Features - Auth (Presentation Layer)
+  // =====================================================
+
+  getIt.registerFactory<AuthCubit>(
+    () => AuthCubit(getIt<GetCachedSessionUsecase>(), getIt<LogoutUsecase>()),
   );
 }

@@ -1,8 +1,7 @@
 import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/core/network/api_exception.dart';
-import 'package:mashena_rider/core/network/dio_client.dart';
 
-Failure mapApiExceptionToFailure(ApiException e, ApiClient api) {
+Failure mapApiExceptionToFailure(ApiException e) {
   switch (e.code) {
     case ApiErrorCode.connectionTimeout:
     case ApiErrorCode.sendTimeout:
@@ -17,7 +16,7 @@ Failure mapApiExceptionToFailure(ApiException e, ApiClient api) {
 
     case ApiErrorCode.badResponse:
       final sc = e.statusCode;
-      final raw = api.extractServerMessage(e.data);
+      final raw = e.extractServerMessage();
 
       if (sc == 401) {
         return Failure(
@@ -39,12 +38,7 @@ Failure mapApiExceptionToFailure(ApiException e, ApiClient api) {
         return Failure(FailureCode.server, statusCode: sc, rawMessage: raw);
       }
 
-      return Failure(
-        FailureCode.unknown,
-        statusCode: sc,
-        args: [sc?.toString() ?? ''],
-        rawMessage: raw,
-      );
+      return Failure(FailureCode.unknown, statusCode: sc, rawMessage: raw);
 
     case ApiErrorCode.badCertificate:
     case ApiErrorCode.unknown:

@@ -1,5 +1,5 @@
 import 'package:mashena_rider/core/constants/app_backend_endpoints.dart';
-import 'package:mashena_rider/core/network/dio_client.dart';
+import 'package:mashena_rider/core/network/api_client.dart';
 import 'package:mashena_rider/features/auth/data/models/login_request_dto.dart';
 import 'package:mashena_rider/features/auth/data/models/login_response.dart';
 import 'package:mashena_rider/features/auth/data/models/send_otp_request_dto.dart';

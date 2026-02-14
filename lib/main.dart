@@ -17,7 +17,7 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(
     NotificationService.firebaseMessagingBackgroundHandler,
   );
-  await configureDependencies();
   await dotenv.load(fileName: '.env');
+  await configureDependencies();
   runApp(ScreenUtilInit(designSize: Size(428, 926), child: const App()));
 }
