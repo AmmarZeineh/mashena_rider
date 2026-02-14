@@ -21,6 +21,19 @@ class SEn extends S {
   String get commonCancel => 'Cancel';
 
   @override
+  String get enableLocationBannerTitle =>
+      'Enable location to detect your pickup point automatically';
+
+  @override
+  String get enableLocationButton => 'Enable';
+
+  @override
+  String get locationServiceOffTitle => 'Location service is turned off';
+
+  @override
+  String get openSettingsButton => 'Open Settings';
+
+  @override
   String get commonYes => 'Yes';
 
   @override

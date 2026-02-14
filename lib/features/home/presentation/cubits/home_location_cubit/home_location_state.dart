@@ -1,42 +1,38 @@
 part of 'home_location_cubit.dart';
 
-enum HomeUiState {
-  initial,
-  ready,
-  permissionNeeded,
-  permissionPermanentlyDenied,
-  locationServiceOff,
-}
-
+enum HomeUiState { initial, loading, ready, error }
 class HomeState {
-  final bool loading;
   final HomeUiState ui;
-  final LocationStatus? locationStatus;
+  final bool isLocationGranted;
+  final bool isLocationServiceEnabled;
   final Position? position;
 
   const HomeState({
-    required this.loading,
     required this.ui,
-    this.locationStatus,
+    required this.isLocationGranted,
+    required this.isLocationServiceEnabled,
     this.position,
   });
 
   const HomeState.initial()
-    : loading = false,
-      ui = HomeUiState.initial,
-      locationStatus = null,
-      position = null;
+      : ui = HomeUiState.initial,
+        isLocationGranted = false,
+        isLocationServiceEnabled = true,
+        position = null;
 
   HomeState copyWith({
-    bool? loading,
     HomeUiState? ui,
-    LocationStatus? locationStatus,
+    bool? isLocationGranted,
+    bool? isLocationServiceEnabled,
     Position? position,
   }) {
     return HomeState(
-      loading: loading ?? this.loading,
       ui: ui ?? this.ui,
-      locationStatus: locationStatus ?? this.locationStatus,
+      isLocationGranted:
+          isLocationGranted ?? this.isLocationGranted,
+      isLocationServiceEnabled:
+          isLocationServiceEnabled ??
+              this.isLocationServiceEnabled,
       position: position ?? this.position,
     );
   }

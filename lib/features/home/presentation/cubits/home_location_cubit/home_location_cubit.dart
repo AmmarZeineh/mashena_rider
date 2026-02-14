@@ -11,96 +11,44 @@ class HomeCubit extends Cubit<HomeState> {
   final LocationService _locationService;
 
   Future<void> init() async {
-    emit(state.copyWith(loading: true));
+    emit(state.copyWith(ui: HomeUiState.loading));
 
     final status = await _locationService.checkStatus();
-    if (!status.serviceEnabled) {
-      emit(
-        state.copyWith(
-          loading: false,
-          locationStatus: status,
-          ui: HomeUiState.locationServiceOff,
-        ),
-      );
-      return;
-    }
 
-    if (status.permission != LocationPermissionState.granted) {
-      emit(
-        state.copyWith(
-          loading: false,
-          locationStatus: status,
-          ui: HomeUiState.permissionNeeded,
-        ),
-      );
-      return;
-    }
-
-    final pos = await _locationService.getCurrentPosition();
     emit(
       state.copyWith(
-        loading: false,
-        locationStatus: status,
-        position: pos,
         ui: HomeUiState.ready,
+        isLocationGranted: status.permission == LocationPermissionState.granted,
+        isLocationServiceEnabled: status.serviceEnabled,
       ),
     );
+
+    if (status.permission == LocationPermissionState.granted &&
+        status.serviceEnabled) {
+      final pos = await _locationService.getCurrentPosition();
+      emit(state.copyWith(position: pos));
+    }
   }
 
   Future<void> requestPermission() async {
-    emit(state.copyWith(loading: true));
-
     final status = await _locationService.requestPermissionIfNeeded();
 
-    if (!status.serviceEnabled) {
-      emit(
-        state.copyWith(
-          loading: false,
-          locationStatus: status,
-          ui: HomeUiState.locationServiceOff,
-        ),
-      );
-      return;
-    }
-
-    if (status.permission == LocationPermissionState.deniedForever) {
-      emit(
-        state.copyWith(
-          loading: false,
-          locationStatus: status,
-          ui: HomeUiState.permissionPermanentlyDenied,
-        ),
-      );
-      return;
-    }
-
-    if (status.permission != LocationPermissionState.granted) {
-      emit(
-        state.copyWith(
-          loading: false,
-          locationStatus: status,
-          ui: HomeUiState.permissionNeeded,
-        ),
-      );
-      return;
-    }
-
-    final pos = await _locationService.getCurrentPosition();
     emit(
       state.copyWith(
-        loading: false,
-        locationStatus: status,
-        position: pos,
-        ui: HomeUiState.ready,
+        isLocationGranted: status.permission == LocationPermissionState.granted,
+        isLocationServiceEnabled: status.serviceEnabled,
       ),
     );
+
+    if (status.permission == LocationPermissionState.granted &&
+        status.serviceEnabled) {
+      final pos = await _locationService.getCurrentPosition();
+      emit(state.copyWith(position: pos));
+    }
   }
 
-  Future<void> openSettings() async {
-    await _locationService.openAppSettings();
-  }
+  Future<void> openSettings() => _locationService.openAppSettings();
 
-  Future<void> openLocationSettings() async {
-    await _locationService.openLocationSettings();
-  }
+  Future<void> openLocationSettings() =>
+      _locationService.openLocationSettings();
 }

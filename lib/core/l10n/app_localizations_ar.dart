@@ -21,6 +21,18 @@ class SAr extends S {
   String get commonCancel => 'إلغاء';
 
   @override
+  String get enableLocationBannerTitle => 'فعّل الموقع لتحديد موقعك تلقائيًا';
+
+  @override
+  String get enableLocationButton => 'تفعيل';
+
+  @override
+  String get locationServiceOffTitle => 'خدمة الموقع غير مفعّلة';
+
+  @override
+  String get openSettingsButton => 'فتح الإعدادات';
+
+  @override
   String get commonYes => 'نعم';
 
   @override

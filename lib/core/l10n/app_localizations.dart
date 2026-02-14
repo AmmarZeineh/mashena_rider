@@ -121,6 +121,30 @@ abstract class S {
   /// **'Cancel'**
   String get commonCancel;
 
+  /// No description provided for @enableLocationBannerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable location to detect your pickup point automatically'**
+  String get enableLocationBannerTitle;
+
+  /// No description provided for @enableLocationButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable'**
+  String get enableLocationButton;
+
+  /// No description provided for @locationServiceOffTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Location service is turned off'**
+  String get locationServiceOffTitle;
+
+  /// No description provided for @openSettingsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get openSettingsButton;
+
   /// No description provided for @commonYes.
   ///
   /// In en, this message translates to:
