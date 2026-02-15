@@ -100,6 +100,9 @@ class SEn extends S {
   String get enterYourEmailRegister => 'Enter your email to sign up';
 
   @override
+  String get enterDestination => 'Enter Destination';
+
+  @override
   String get authRegister => 'Create Account';
 
   @override

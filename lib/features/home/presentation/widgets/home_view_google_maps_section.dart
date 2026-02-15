@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
+import 'package:mashena_rider/core/maps/domain/controllers/app_map_controller.dart';
+import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
+import 'package:mashena_rider/core/maps/infrastructure/google_maps/google_map_widget.dart';
 import 'package:mashena_rider/features/home/presentation/cubits/home_location_cubit/home_location_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/permission_overlay.dart';
 
@@ -14,7 +16,7 @@ class HomeViewGoogleMapsSection extends StatefulWidget {
 }
 
 class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection> {
-  GoogleMapController? _mapController;
+  AppMapController? _mapController;
 
   @override
   void initState() {
@@ -30,9 +32,12 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection> {
       listenWhen: (prev, curr) => prev.position != curr.position,
       listener: (context, state) {
         if (state.position != null && _mapController != null) {
-          final p = state.position!;
-          _mapController!.animateCamera(
-            CameraUpdate.newLatLngZoom(LatLng(p.latitude, p.longitude), 16),
+          _mapController!.moveCamera(
+            MapLatLng(
+              latitude: state.position!.latitude,
+              longitude: state.position!.longitude,
+            ),
+            zoom: 16,
           );
         }
       },
@@ -40,14 +45,16 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection> {
         builder: (context, state) {
           return Stack(
             children: [
-              GoogleMap(
-                initialCameraPosition: const CameraPosition(
-                  target: LatLng(33.5153, 36.2772),
-                  zoom: 14,
+              GoogleMapWidget(
+                showMyLocation: state.isLocationGranted,
+                markers: [],
+                initialPosition: const MapLatLng(
+                  latitude: 33.5153,
+                  longitude: 36.2772,
                 ),
-                onMapCreated: (c) => _mapController = c,
-                myLocationEnabled: state.isLocationGranted,
-                myLocationButtonEnabled: state.isLocationGranted,
+                onMapCreated: (controller) {
+                  _mapController = controller;
+                },
               ),
 
               if (!state.isLocationGranted)

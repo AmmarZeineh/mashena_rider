@@ -271,6 +271,12 @@ abstract class S {
   /// **'Enter your email to sign up'**
   String get enterYourEmailRegister;
 
+  /// No description provided for @enterDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Destination'**
+  String get enterDestination;
+
   /// No description provided for @authRegister.
   ///
   /// In en, this message translates to:

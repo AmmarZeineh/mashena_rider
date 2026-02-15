@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mashena_rider/app/di/injector.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
+import 'package:mashena_rider/app/router/route_transitions.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_usecase.dart';
 import 'package:mashena_rider/features/home/presentation/views/home_view.dart';
+import 'package:mashena_rider/features/home/presentation/views/pick_address_view.dart';
 import 'package:mashena_rider/features/onboarding/domain/usecases/get_onboarding_status_usecase.dart';
 import 'package:mashena_rider/features/auth/presentation/views/login_view.dart';
 import 'package:mashena_rider/features/auth/presentation/views/signup_view.dart';
@@ -14,7 +16,10 @@ import 'package:mashena_rider/features/splash/presentation/views/splash_view.dar
 final class AppRouter {
   const AppRouter._();
 
+  static final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
   static final GoRouter router = GoRouter(
+    navigatorKey: _rootNavigatorKey,
     redirect: (context, state) async {
       final loc = state.matchedLocation;
 
@@ -75,6 +80,18 @@ final class AppRouter {
         path: AppRoutes.homePath,
         name: AppRoutes.home,
         builder: (context, state) => const HomeView(),
+      ),
+
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.pickAdressPath,
+        name: AppRoutes.pickAdress,
+        pageBuilder: (context, state) {
+          return bottomSlidePage(
+            key: state.pageKey,
+            child: const PickAddressView(),
+          );
+        },
       ),
     ],
     errorBuilder: (context, state) => _ErrorPage(error: state.error),

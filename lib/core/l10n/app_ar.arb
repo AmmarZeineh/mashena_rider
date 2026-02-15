@@ -83,6 +83,7 @@
   "enterYpurNumberRegister": "ادخل رقمك للتسجيل",
   "enterYourEmailLogin": "ادخل بريدك الالكتروني لتسجيل الدخول",
   "enterYourEmailRegister": "ادخل بريدك الالكتروني للتسجيل",
+  "enterDestination": "ادخل وجهة",
   "apiRequestCancelled": "تم إلغاء الطلب",
   "apiConnectionError": "خطأ في الاتصال",
   "apiCertificateError": "خطأ في الشهادة",

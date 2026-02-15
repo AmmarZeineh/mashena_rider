@@ -97,6 +97,9 @@ class SAr extends S {
   String get enterYourEmailRegister => 'ادخل بريدك الالكتروني للتسجيل';
 
   @override
+  String get enterDestination => 'ادخل وجهة';
+
+  @override
   String get authRegister => 'إنشاء حساب';
 
   @override

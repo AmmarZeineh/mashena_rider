@@ -29,6 +29,7 @@
   "enterYourNumberRegister": "Enter your number to sign up",
   "enterYourEmailLogin": "Enter your email to login",
   "enterYourEmailRegister": "Enter your email to sign up",
+  "enterDestination": "Enter Destination",
   "authRegister": "Create Account",
   "authLogout": "Logout",
   "authSendCode": "Send Code",
