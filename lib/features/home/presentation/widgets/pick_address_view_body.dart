@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
@@ -112,6 +113,12 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
     return BlocConsumer<PickAddressCubit, PickAddressState>(
       listener: (context, state) {
         _syncControllers(state);
+        
+        if (state.errorMessage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.errorMessage!)),
+          );
+        }
       },
       builder: (context, state) {
         final cubit = context.read<PickAddressCubit>();
@@ -119,10 +126,13 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
           _syncControllers(state); // Initial sync
         }
 
-        return SafeArea(
-          child: ListView(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            children: [
+        return Scaffold(
+          body: ModalProgressHUD(
+            inAsyncCall: state.isCreatingRideRequest,
+            child: SafeArea(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                children: [
               /// Top Section (Inputs)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -315,8 +325,10 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
               ],
             ],
           ),
-        );
-      },
+        ),
+      ),
     );
-  }
+  },
+);
+}
 }

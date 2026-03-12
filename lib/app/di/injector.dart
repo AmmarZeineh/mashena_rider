@@ -57,6 +57,9 @@ import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_u
 // Features - Auth (Presentation)
 // ======================
 import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:mashena_rider/features/home/domain/repositories/ride_repository.dart';
+import 'package:mashena_rider/features/home/domain/usecases/create_ride_request_usecase.dart';
+import 'package:mashena_rider/features/home/data/repositories/ride_repository_impl.dart';
 import 'package:mashena_rider/features/home/presentation/cubits/pick_address_cubit/pick_address_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -237,13 +240,26 @@ Future<void> configureDependencies() async {
   );
 
   // =====================================================
-  // 🔹 9. Features - Home (Presentation Layer)
+  // 🔹 9. Features - Home (Data & Domain)
+  // =====================================================
+
+  getIt.registerLazySingleton<RideRepository>(
+    () => RideRepositoryImpl(getIt<ApiClient>()),
+  );
+
+  getIt.registerFactory<CreateRideRequestUsecase>(
+    () => CreateRideRequestUsecase(getIt<RideRepository>()),
+  );
+
+  // =====================================================
+  // 🔹 10. Features - Home (Presentation Layer)
   // =====================================================
 
   getIt.registerFactory<PickAddressCubit>(
     () => PickAddressCubit(
       getIt<LocationService>(),
       getIt<NominatimService>(),
+      getIt<CreateRideRequestUsecase>(),
     ),
   );
 }
