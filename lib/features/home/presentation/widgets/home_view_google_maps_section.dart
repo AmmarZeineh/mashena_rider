@@ -15,16 +15,56 @@ class HomeViewGoogleMapsSection extends StatefulWidget {
       _HomeViewGoogleMapsSectionState();
 }
 
-class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection> {
+class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
+    with WidgetsBindingObserver {
   AppMapController? _mapController;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HomeCubit>().init();
     });
   }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// Re-check permission when the app comes back from settings.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      context.read<HomeCubit>().recheckStatus();
+    }
+  }
+
+  /// Handles the overlay button tap based on the current permission state.
+  // Future<void> _onPermissionOverlayPressed() async {
+  //   final cubit = context.read<HomeCubit>();
+  //   final locationService = getIt<LocationService>();
+
+  //   if (cubit.state.isDeniedForever) {
+  //     await LocationPermissionHelper.showDeniedForeverDialog(
+  //       context: context,
+  //       locationService: locationService,
+  //     );
+  //   } else {
+  //     final status = await LocationPermissionHelper.showRationaleAndRequest(
+  //       context: context,
+  //       locationService: locationService,
+  //     );
+  //     // Update cubit state with the new status.
+  //     if (status.isReady) {
+  //       cubit.requestPermission();
+  //     } else {
+  //       cubit.recheckStatus();
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,22 +97,10 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection> {
                 },
               ),
 
-              if (!state.isLocationGranted)
-                Positioned(
-                  top: 20,
-                  left: 16,
-                  right: 16,
-                  child: PermissionOverlay(
-                    title: S.of(context).enableLocationBannerTitle,
-                    buttonText: S.of(context).enableLocationButton,
-                    onPressed: () =>
-                        context.read<HomeCubit>().requestPermission(),
-                  ),
-                ),
-
+              // Location service turned off
               if (!state.isLocationServiceEnabled)
                 Positioned(
-                  top: 90,
+                  top: state.isLocationGranted ? 20 : 90,
                   left: 16,
                   right: 16,
                   child: PermissionOverlay(

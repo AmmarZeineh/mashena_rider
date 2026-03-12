@@ -131,5 +131,10 @@
         "type": "int"
       }
     }
-  }
+  },
+  "locationPermissionRationaleTitle": "الوصول إلى الموقع",
+  "locationPermissionRationaleBody": "يحتاج تطبيق مشينا إلى موقعك لعرض موقعك على الخريطة، وتحديد نقطة الالتقاط تلقائيًا، وربطك بالسائقين القريبين.",
+  "locationPermissionAllow": "السماح",
+  "locationPermissionDeniedForeverTitle": "إذن الموقع مطلوب",
+  "locationPermissionDeniedForeverBody": "لقد رفضت إذن الموقع بشكل دائم. يرجى فتح الإعدادات وتفعيله يدويًا."
 }

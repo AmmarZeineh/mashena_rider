@@ -39,7 +39,9 @@ class GeolocatorLocationService implements LocationService {
   @override
   Future<Position> getCurrentPosition() {
     return Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+      ),
     );
   }
 

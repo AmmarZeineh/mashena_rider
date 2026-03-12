@@ -27,9 +27,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Mashena needs your location to show nearby drivers and auto-detect your pickup point.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>نحتاج موقعك لعرض الخريطة حولك</string>
+	<string>Mashena needs your location to show nearby drivers and auto-detect your pickup point.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

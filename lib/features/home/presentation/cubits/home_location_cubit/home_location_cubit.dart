@@ -10,16 +10,20 @@ class HomeCubit extends Cubit<HomeState> {
 
   final LocationService _locationService;
 
+  /// Called once when the home screen loads.
+  /// Now requests permission (triggers the OS prompt) instead of just checking.
   Future<void> init() async {
     emit(state.copyWith(ui: HomeUiState.loading));
 
-    final status = await _locationService.checkStatus();
+    final status = await _locationService.requestPermissionIfNeeded();
 
     emit(
       state.copyWith(
         ui: HomeUiState.ready,
         isLocationGranted: status.permission == LocationPermissionState.granted,
         isLocationServiceEnabled: status.serviceEnabled,
+        isDeniedForever:
+            status.permission == LocationPermissionState.deniedForever,
       ),
     );
 
@@ -30,6 +34,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  /// Re-request permission (e.g. from the overlay or pick-address flow).
   Future<void> requestPermission() async {
     final status = await _locationService.requestPermissionIfNeeded();
 
@@ -37,6 +42,28 @@ class HomeCubit extends Cubit<HomeState> {
       state.copyWith(
         isLocationGranted: status.permission == LocationPermissionState.granted,
         isLocationServiceEnabled: status.serviceEnabled,
+        isDeniedForever:
+            status.permission == LocationPermissionState.deniedForever,
+      ),
+    );
+
+    if (status.permission == LocationPermissionState.granted &&
+        status.serviceEnabled) {
+      final pos = await _locationService.getCurrentPosition();
+      emit(state.copyWith(position: pos));
+    }
+  }
+
+  /// Re-check status (e.g. after returning from system settings).
+  Future<void> recheckStatus() async {
+    final status = await _locationService.checkStatus();
+
+    emit(
+      state.copyWith(
+        isLocationGranted: status.permission == LocationPermissionState.granted,
+        isLocationServiceEnabled: status.serviceEnabled,
+        isDeniedForever:
+            status.permission == LocationPermissionState.deniedForever,
       ),
     );
 

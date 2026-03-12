@@ -357,4 +357,21 @@ class SAr extends S {
   String validationMaxLength(int max) {
     return 'الحد الأقصى $max أحرف';
   }
+
+  @override
+  String get locationPermissionRationaleTitle => 'الوصول إلى الموقع';
+
+  @override
+  String get locationPermissionRationaleBody =>
+      'يحتاج تطبيق مشينا إلى موقعك لعرض موقعك على الخريطة، وتحديد نقطة الالتقاط تلقائيًا، وربطك بالسائقين القريبين.';
+
+  @override
+  String get locationPermissionAllow => 'السماح';
+
+  @override
+  String get locationPermissionDeniedForeverTitle => 'إذن الموقع مطلوب';
+
+  @override
+  String get locationPermissionDeniedForeverBody =>
+      'لقد رفضت إذن الموقع بشكل دائم. يرجى فتح الإعدادات وتفعيله يدويًا.';
 }

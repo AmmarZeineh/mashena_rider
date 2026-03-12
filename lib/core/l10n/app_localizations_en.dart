@@ -360,4 +360,22 @@ class SEn extends S {
   String validationMaxLength(int max) {
     return 'Maximum $max characters';
   }
+
+  @override
+  String get locationPermissionRationaleTitle => 'Location Access';
+
+  @override
+  String get locationPermissionRationaleBody =>
+      'Mashena needs your location to show your position on the map, auto-detect your pickup point, and connect you with nearby drivers.';
+
+  @override
+  String get locationPermissionAllow => 'Allow';
+
+  @override
+  String get locationPermissionDeniedForeverTitle =>
+      'Location Permission Required';
+
+  @override
+  String get locationPermissionDeniedForeverBody =>
+      'You have permanently denied location access. Please open Settings and enable it manually.';
 }

@@ -774,6 +774,36 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Maximum {max} characters'**
   String validationMaxLength(int max);
+
+  /// No description provided for @locationPermissionRationaleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Access'**
+  String get locationPermissionRationaleTitle;
+
+  /// No description provided for @locationPermissionRationaleBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Mashena needs your location to show your position on the map, auto-detect your pickup point, and connect you with nearby drivers.'**
+  String get locationPermissionRationaleBody;
+
+  /// No description provided for @locationPermissionAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get locationPermissionAllow;
+
+  /// No description provided for @locationPermissionDeniedForeverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Permission Required'**
+  String get locationPermissionDeniedForeverTitle;
+
+  /// No description provided for @locationPermissionDeniedForeverBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You have permanently denied location access. Please open Settings and enable it manually.'**
+  String get locationPermissionDeniedForeverBody;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {
