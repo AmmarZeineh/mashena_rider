@@ -136,5 +136,8 @@
   "locationPermissionRationaleBody": "يحتاج تطبيق مشينا إلى موقعك لعرض موقعك على الخريطة، وتحديد نقطة الالتقاط تلقائيًا، وربطك بالسائقين القريبين.",
   "locationPermissionAllow": "السماح",
   "locationPermissionDeniedForeverTitle": "إذن الموقع مطلوب",
-  "locationPermissionDeniedForeverBody": "لقد رفضت إذن الموقع بشكل دائم. يرجى فتح الإعدادات وتفعيله يدويًا."
+  "locationPermissionDeniedForeverBody": "لقد رفضت إذن الموقع بشكل دائم. يرجى فتح الإعدادات وتفعيله يدويًا.",
+  "mapDragToMovePin": "اسحب الخريطة لتحريك المؤشر",
+  "mapConfirmLocation": "تأكيد الموقع",
+  "homeNowYouCanAddMultipleStops": "الآن يمكنك إضافة عدة وجهات"
 }

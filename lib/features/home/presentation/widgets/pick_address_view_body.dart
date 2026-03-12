@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mashena_rider/app/router/app_routes.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
+import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/widgets/custom_header_button.dart';
-import 'package:mashena_rider/features/home/presentation/models/stop_input_model.dart';
+import 'package:mashena_rider/features/home/presentation/cubits/pick_address_cubit/pick_address_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/cubits/pick_address_cubit/pick_address_state.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/custom_divider.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/pick_location_circular_container.dart';
-import 'package:mashena_rider/features/home/presentation/widgets/pick_location_form_field.dart';
-import 'package:mashena_rider/features/home/presentation/widgets/pick_location_row.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/recent_address_tile_widget.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/saved_place_widget.dart';
 
@@ -17,131 +21,302 @@ class PickAddressViewBody extends StatefulWidget {
 }
 
 class _PickAddressViewBodyState extends State<PickAddressViewBody> {
-  final List<StopInputModel> _stops = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _stops.add(StopInputModel()); // أول stop
-  }
-
-  void _addStop() {
-    setState(() {
-      _stops.add(StopInputModel());
-    });
-  }
-
-  void _removeStop(int index) {
-    _stops[index].dispose();
-    setState(() {
-      _stops.removeAt(index);
-    });
-  }
+  final TextEditingController _pickupController = TextEditingController();
+  final List<TextEditingController> _destControllers = [];
 
   @override
   void dispose() {
-    for (final stop in _stops) {
-      stop.dispose();
+    _pickupController.dispose();
+    for (var c in _destControllers) {
+      c.dispose();
     }
     super.dispose();
   }
 
+  void _syncControllers(PickAddressState state) {
+    // Sync pickup text
+    if (state.pickupPlace != null &&
+        _pickupController.text != state.pickupPlace!.name) {
+      _pickupController.value = TextEditingValue(
+        text: state.pickupPlace!.name,
+        selection: TextSelection.collapsed(offset: state.pickupPlace!.name.length),
+      );
+    } else if (state.pickupPlace == null && _pickupController.text.isNotEmpty && state.searchQuery.isEmpty) {
+      // Clear if completely reset
+      // We check searchQuery isEmpty so we don't clear while the user is typing to search
+      _pickupController.clear();
+    }
+
+    // Expand controller list if needed
+    while (_destControllers.length < state.destinations.length) {
+      _destControllers.add(TextEditingController());
+    }
+    // Shrink if needed
+    while (_destControllers.length > state.destinations.length) {
+      _destControllers.removeLast().dispose();
+    }
+
+    // Sync destination texts
+    for (int i = 0; i < state.destinations.length; i++) {
+      final place = state.destinations[i];
+      if (place != null && _destControllers[i].text != place.name) {
+        _destControllers[i].value = TextEditingValue(
+          text: place.name,
+          selection: TextSelection.collapsed(offset: place.name.length),
+        );
+      }
+    }
+  }
+
+  Future<void> _openMapPicker(BuildContext context, int fieldIndex) async {
+    final cubit = context.read<PickAddressCubit>();
+    cubit.setActiveField(fieldIndex);
+
+    // Default to a central location if no place is selected
+    const defaultLoc = MapLatLng(latitude: 33.5153, longitude: 36.2772);
+    MapLatLng initialLoc = defaultLoc;
+
+    if (fieldIndex == 0 && cubit.state.pickupPlace != null) {
+      initialLoc = MapLatLng(
+        latitude: cubit.state.pickupPlace!.latitude,
+        longitude: cubit.state.pickupPlace!.longitude,
+      );
+    } else if (fieldIndex > 0) {
+      final destIndex = fieldIndex - 1;
+      if (cubit.state.destinations[destIndex] != null) {
+        initialLoc = MapLatLng(
+          latitude: cubit.state.destinations[destIndex]!.latitude,
+          longitude: cubit.state.destinations[destIndex]!.longitude,
+        );
+      }
+    }
+
+    final lang = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+    final result = await context.push<MapLatLng?>(
+      AppRoutes.pickFromMapPath,
+      extra: initialLoc,
+    );
+
+    if (result != null) {
+      cubit.confirmMapSelection(
+        result.latitude,
+        result.longitude,
+        language: lang,
+        index: fieldIndex,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        children: [
-          /// 🔹 Top Section
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomHeaderButton(),
-                const SizedBox(height: 16),
+    return BlocConsumer<PickAddressCubit, PickAddressState>(
+      listener: (context, state) {
+        _syncControllers(state);
+      },
+      builder: (context, state) {
+        final cubit = context.read<PickAddressCubit>();
+        if (_destControllers.isEmpty) {
+          _syncControllers(state); // Initial sync
+        }
 
-                PickLocationRow(
-                  address: 'Neemuch RD. Gopalbari, Bari Sad',
-                  isActive: true,
-                ),
+        return SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            children: [
+              /// Top Section (Inputs)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CustomHeaderButton(),
+                    const SizedBox(height: 16),
 
-                const SizedBox(height: 12),
-
-                /// Dynamic Stops
-                ..._stops.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final stop = entry.value;
-
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Row(
+                    // Pickup Field
+                    Row(
                       children: [
-                        PickLocationCircularContainer(isActive: false),
+                        PickLocationCircularContainer(
+                          isActive: state.pickupPlace != null,
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
-                          child: PickLocationFormField(
-                            controller: stop.controller,
-                            focusNode: stop.focusNode,
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (hasFocus) cubit.setActiveField(0);
+                            },
+                            child: TextField(
+                              controller: _pickupController,
+                              onChanged: (value) => cubit.onSearchChanged(
+                                value,
+                                language: WidgetsBinding.instance.platformDispatcher.locale.languageCode,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: S.of(context).homeCurrentLocation,
+                                filled: true,
+                                fillColor: Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainerHighest,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(28),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        if (_stops.length > 1)
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () => _removeStop(index),
-                          ),
+                        IconButton(
+                          icon: const Icon(Icons.map),
+                          onPressed: () => _openMapPicker(context, 0),
+                        ),
                       ],
                     ),
-                  );
-                }),
 
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: _addStop,
+                    const SizedBox(height: 12),
+
+                    // Destinations
+                    ...state.destinations.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final fieldIndex = index + 1;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          children: [
+                            PickLocationCircularContainer(
+                              isActive: state.destinations[index] != null,
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Focus(
+                                onFocusChange: (hasFocus) {
+                                  if (hasFocus) {
+                                    cubit.setActiveField(fieldIndex);
+                                  }
+                                },
+                                child: TextField(
+                                  controller: _destControllers[index],
+                                  onChanged: (value) => cubit.onSearchChanged(
+                                    value,
+                                    language: WidgetsBinding.instance.platformDispatcher.locale.languageCode,
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText: S.of(context).enterDestination,
+                                    filled: true,
+                                    fillColor: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceContainerHighest,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 12,
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(28),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.map),
+                              onPressed: () =>
+                                  _openMapPicker(context, fieldIndex),
+                            ),
+                            if (state.destinations.length > 1)
+                              IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () => cubit.removeDestination(index),
+                              ),
+                          ],
+                        ),
+                      );
+                    }),
+
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: cubit.addDestination,
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Text(
+                      S.of(context).homeNowYouCanAddMultipleStops,
+                      style: AppTextStyles.w400_12.copyWith(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 16),
+              const CustomDivider(),
+              const SizedBox(height: 16),
+
+              /// Results or Saved/Recent
+              if (state.searchQuery.isNotEmpty) ...[
+                if (state.isSearching)
+                  const Center(child: CircularProgressIndicator())
+                else if (state.searchResults.isNotEmpty)
+                  ...state.searchResults.map(
+                    (place) => ListTile(
+                      leading: const Icon(Icons.location_on_outlined),
+                      title: Text(place.name),
+                      subtitle: Text(place.address),
+                      onTap: () {
+                        cubit.selectPlace(place);
+                        // Unfocus keyboard
+                        FocusScope.of(context).unfocus();
+                      },
+                    ),
+                  )
+                else
+                  const Center(child: Text("No results found"))
+              ] else if (state.activeFieldIndex == 0 &&
+                  state.pickupPlace == null) ...[
+                ListTile(
+                  leading: const Icon(Icons.my_location),
+                  title: Text(S.of(context).homeCurrentLocation),
+                  onTap: () {
+                    cubit.useDeviceLocation(
+                      language: WidgetsBinding.instance.platformDispatcher.locale.languageCode,
+                    );
+                    FocusScope.of(context).unfocus();
+                  },
+                ),
+              ] else ...[
+                // Default saved places
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: const [
+                      SavedPlaceTile(
+                        title: "Home",
+                        subtitle: "Neemuch RD. Gopalbari, Bari Sadri Rajasthan",
+                      ),
+                      SizedBox(height: 16),
+                      SavedPlaceTile(
+                        title: "Work",
+                        subtitle: "Jawahar Lal Nehru Marg, D-Block",
+                      ),
+                      SizedBox(height: 24),
+                      RecentTile("250 west, industrial area"),
+                      RecentTile("4 number gali pratap nagar"),
+                      RecentTile("Neemuch RD. Gopalbari, Bari Sad"),
+                      RecentTile("Jawahar Lal Nehru Marg, D-Block"),
+                    ],
                   ),
                 ),
-
-                const SizedBox(height: 8),
-
-                Text(
-                  "Now you can add multiple stops",
-                  style: AppTextStyles.w400_12.copyWith(color: Colors.grey),
-                ),
               ],
-            ),
+            ],
           ),
-
-          const SizedBox(height: 16),
-          const CustomDivider(),
-          const SizedBox(height: 16),
-
-          /// 🔹 Saved + Recent
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: const [
-                SavedPlaceTile(
-                  title: "Home",
-                  subtitle: "Neemuch RD. Gopalbari, Bari Sadri Rajasthan",
-                ),
-                SizedBox(height: 16),
-                SavedPlaceTile(
-                  title: "Work",
-                  subtitle: "Jawahar Lal Nehru Marg, D-Block",
-                ),
-                SizedBox(height: 24),
-                RecentTile("250 west, industrial area"),
-                RecentTile("4 number gali pratap nagar"),
-                RecentTile("Neemuch RD. Gopalbari, Bari Sad"),
-                RecentTile("Jawahar Lal Nehru Marg, D-Block"),
-              ],
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

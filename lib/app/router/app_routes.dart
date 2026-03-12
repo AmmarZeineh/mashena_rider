@@ -7,6 +7,7 @@ class AppRoutes {
   static const verification = 'verification';
   static const home = 'home';
   static const pickAdress = 'pickAddress';
+  static const pickFromMap = 'pickFromMap';
 
   // route paths (للـ URL)
   static const onboardingPath = '/onboarding';
@@ -16,4 +17,5 @@ class AppRoutes {
   static const signupPath = '/signup';
   static const homePath = '/home';
   static const pickAdressPath = '/pickAddress';
+  static const pickFromMapPath = '/pickFromMap';
 }

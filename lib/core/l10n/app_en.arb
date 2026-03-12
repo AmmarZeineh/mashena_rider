@@ -136,5 +136,8 @@
   "locationPermissionRationaleBody": "Mashena needs your location to show your position on the map, auto-detect your pickup point, and connect you with nearby drivers.",
   "locationPermissionAllow": "Allow",
   "locationPermissionDeniedForeverTitle": "Location Permission Required",
-  "locationPermissionDeniedForeverBody": "You have permanently denied location access. Please open Settings and enable it manually."
+  "locationPermissionDeniedForeverBody": "You have permanently denied location access. Please open Settings and enable it manually.",
+  "mapDragToMovePin": "Drag map to move pin",
+  "mapConfirmLocation": "Confirm Location",
+  "homeNowYouCanAddMultipleStops": "Now you can add multiple stops"
 }

@@ -378,4 +378,13 @@ class SEn extends S {
   @override
   String get locationPermissionDeniedForeverBody =>
       'You have permanently denied location access. Please open Settings and enable it manually.';
+
+  @override
+  String get mapDragToMovePin => 'Drag map to move pin';
+
+  @override
+  String get mapConfirmLocation => 'Confirm Location';
+
+  @override
+  String get homeNowYouCanAddMultipleStops => 'Now you can add multiple stops';
 }

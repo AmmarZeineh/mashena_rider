@@ -804,6 +804,24 @@ abstract class S {
   /// In en, this message translates to:
   /// **'You have permanently denied location access. Please open Settings and enable it manually.'**
   String get locationPermissionDeniedForeverBody;
+
+  /// No description provided for @mapDragToMovePin.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag map to move pin'**
+  String get mapDragToMovePin;
+
+  /// No description provided for @mapConfirmLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Location'**
+  String get mapConfirmLocation;
+
+  /// No description provided for @homeNowYouCanAddMultipleStops.
+  ///
+  /// In en, this message translates to:
+  /// **'Now you can add multiple stops'**
+  String get homeNowYouCanAddMultipleStops;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

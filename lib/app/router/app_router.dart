@@ -10,6 +10,8 @@ import 'package:mashena_rider/features/onboarding/domain/usecases/get_onboarding
 import 'package:mashena_rider/features/auth/presentation/views/login_view.dart';
 import 'package:mashena_rider/features/auth/presentation/views/signup_view.dart';
 import 'package:mashena_rider/features/auth/presentation/views/verification_view.dart';
+import 'package:mashena_rider/features/home/presentation/views/pick_from_map_view.dart';
+import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/features/onboarding/presentation/views/onboarding_view.dart';
 import 'package:mashena_rider/features/splash/presentation/views/splash_view.dart';
 
@@ -90,6 +92,17 @@ final class AppRouter {
           return bottomSlidePage(
             key: state.pageKey,
             child: const PickAddressView(),
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.pickFromMapPath,
+        name: AppRoutes.pickFromMap,
+        builder: (context, state) {
+          final initialLocation = state.extra as MapLatLng?;
+          return PickFromMapView(
+            initialLocation: initialLocation ?? const MapLatLng(latitude: 33.5153, longitude: 36.2772),
           );
         },
       ),

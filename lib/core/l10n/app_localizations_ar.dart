@@ -374,4 +374,13 @@ class SAr extends S {
   @override
   String get locationPermissionDeniedForeverBody =>
       'لقد رفضت إذن الموقع بشكل دائم. يرجى فتح الإعدادات وتفعيله يدويًا.';
+
+  @override
+  String get mapDragToMovePin => 'اسحب الخريطة لتحريك المؤشر';
+
+  @override
+  String get mapConfirmLocation => 'تأكيد الموقع';
+
+  @override
+  String get homeNowYouCanAddMultipleStops => 'الآن يمكنك إضافة عدة وجهات';
 }

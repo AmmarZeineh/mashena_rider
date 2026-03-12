@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/maps/domain/controllers/app_map_controller.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
-import 'package:mashena_rider/core/maps/infrastructure/google_maps/google_map_widget.dart';
+import 'package:mashena_rider/core/maps/infrastructure/flutter_map/flutter_map_widget.dart';
 import 'package:mashena_rider/features/home/presentation/cubits/home_location_cubit/home_location_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/permission_overlay.dart';
 
@@ -85,9 +85,9 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
         builder: (context, state) {
           return Stack(
             children: [
-              GoogleMapWidget(
+              FlutterMapWidget(
                 showMyLocation: state.isLocationGranted,
-                markers: [],
+                markers: const [],
                 initialPosition: const MapLatLng(
                   latitude: 33.5153,
                   longitude: 36.2772,

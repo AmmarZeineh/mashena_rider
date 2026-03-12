@@ -26,6 +26,8 @@ import 'package:mashena_rider/core/network/token_manager_impl.dart';
 import 'package:mashena_rider/core/storage/local_storage.dart';
 import 'package:mashena_rider/core/storage/local_storage_impl.dart';
 import 'package:mashena_rider/core/services/location_service.dart';
+import 'package:mashena_rider/core/services/nominatim_service.dart';
+import 'package:mashena_rider/core/services/osrm_route_service.dart';
 
 // ======================
 // Features - Onboarding
@@ -55,6 +57,7 @@ import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_u
 // Features - Auth (Presentation)
 // ======================
 import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/cubits/pick_address_cubit/pick_address_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -93,6 +96,38 @@ Future<void> configureDependencies() async {
   );
 
   getIt.registerLazySingleton<AuthEventBus>(() => AuthEventBus());
+
+  getIt.registerLazySingleton<NominatimService>(
+    () {
+      // Create a clean Dio instance without AuthInterceptors for external APIs
+      final nominatimDio = Dio(
+        BaseOptions(
+          connectTimeout: const Duration(seconds: 15),
+          receiveTimeout: const Duration(seconds: 15),
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'com.mashena.rider', // Recommended by OSM
+          },
+        ),
+      );
+      return NominatimService(nominatimDio);
+    },
+  );
+
+  getIt.registerLazySingleton<OSRMRouteService>(
+    () {
+      final osrmDio = Dio(
+        BaseOptions(
+          connectTimeout: const Duration(seconds: 15),
+          receiveTimeout: const Duration(seconds: 15),
+          headers: {
+            'Accept': 'application/json',
+          },
+        ),
+      );
+      return OSRMRouteService(osrmDio);
+    },
+  );
 
   // =====================================================
   // 🔹 4. Core - Networking Layer
@@ -199,5 +234,16 @@ Future<void> configureDependencies() async {
 
   getIt.registerFactory<AuthCubit>(
     () => AuthCubit(getIt<GetCachedSessionUsecase>(), getIt<LogoutUsecase>()),
+  );
+
+  // =====================================================
+  // 🔹 9. Features - Home (Presentation Layer)
+  // =====================================================
+
+  getIt.registerFactory<PickAddressCubit>(
+    () => PickAddressCubit(
+      getIt<LocationService>(),
+      getIt<NominatimService>(),
+    ),
   );
 }
