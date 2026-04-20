@@ -5,7 +5,7 @@ part 'ride_location_model.freezed.dart';
 part 'ride_location_model.g.dart';
 
 @freezed
-class RideLocationModel with _$RideLocationModel {
+abstract class RideLocationModel with _$RideLocationModel {
   const factory RideLocationModel({
     required double lat,
     required double lng,

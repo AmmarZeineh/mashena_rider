@@ -383,4 +383,31 @@ class SAr extends S {
 
   @override
   String get homeNowYouCanAddMultipleStops => 'الآن يمكنك إضافة عدة وجهات';
+
+  @override
+  String get rideAvailableRides => 'الرحلات المتاحة';
+
+  @override
+  String get rideBookRide => 'احجز رحلة';
+
+  @override
+  String get rideNoTypesAvailable => 'لا توجد أنواع رحلات متاحة الآن.';
+
+  @override
+  String rideDistanceKm(String distance) {
+    return '$distance كم';
+  }
+
+  @override
+  String rideDurationMin(String duration) {
+    return '$duration دقيقة';
+  }
+
+  @override
+  String rideStopsCount(int count) {
+    return '$count محطة';
+  }
+
+  @override
+  String get ridePersonCapacity => '4+1 شخص';
 }

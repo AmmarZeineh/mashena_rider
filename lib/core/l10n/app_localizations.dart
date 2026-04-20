@@ -822,6 +822,48 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Now you can add multiple stops'**
   String get homeNowYouCanAddMultipleStops;
+
+  /// No description provided for @rideAvailableRides.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Rides'**
+  String get rideAvailableRides;
+
+  /// No description provided for @rideBookRide.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Ride'**
+  String get rideBookRide;
+
+  /// No description provided for @rideNoTypesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No ride types available for this trip right now.'**
+  String get rideNoTypesAvailable;
+
+  /// No description provided for @rideDistanceKm.
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} km'**
+  String rideDistanceKm(String distance);
+
+  /// No description provided for @rideDurationMin.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} min'**
+  String rideDurationMin(String duration);
+
+  /// No description provided for @rideStopsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} stop(s)'**
+  String rideStopsCount(int count);
+
+  /// No description provided for @ridePersonCapacity.
+  ///
+  /// In en, this message translates to:
+  /// **'4+1 Person'**
+  String get ridePersonCapacity;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

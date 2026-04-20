@@ -139,5 +139,27 @@
   "locationPermissionDeniedForeverBody": "لقد رفضت إذن الموقع بشكل دائم. يرجى فتح الإعدادات وتفعيله يدويًا.",
   "mapDragToMovePin": "اسحب الخريطة لتحريك المؤشر",
   "mapConfirmLocation": "تأكيد الموقع",
-  "homeNowYouCanAddMultipleStops": "الآن يمكنك إضافة عدة وجهات"
+  "homeNowYouCanAddMultipleStops": "الآن يمكنك إضافة عدة وجهات",
+  "rideAvailableRides": "الرحلات المتاحة",
+  "rideBookRide": "احجز رحلة",
+  "rideNoTypesAvailable": "لا توجد أنواع رحلات متاحة الآن.",
+  "rideDistanceKm": "{distance} كم",
+  "@rideDistanceKm": {
+    "placeholders": {
+      "distance": { "type": "String" }
+    }
+  },
+  "rideDurationMin": "{duration} دقيقة",
+  "@rideDurationMin": {
+    "placeholders": {
+      "duration": { "type": "String" }
+    }
+  },
+  "rideStopsCount": "{count} محطة",
+  "@rideStopsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ridePersonCapacity": "4+1 شخص"
 }

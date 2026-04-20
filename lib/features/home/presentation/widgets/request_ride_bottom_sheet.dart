@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/utils/app_sizes.dart';
+import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
+import 'package:mashena_rider/features/home/presentation/widgets/car_type_bottom_sheet.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/custom_divider.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/custom_drag_handle.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/pick_location_row.dart';
@@ -18,8 +20,19 @@ class _RequestRideBottomSheetState extends State<RequestRideBottomSheet> {
   final DraggableScrollableController _controller =
       DraggableScrollableController();
 
-  void _openPickAddress(BuildContext context) {
-    context.push(AppRoutes.pickAdressPath);
+  Future<void> _openPickAddress(BuildContext context) async {
+    final result = await context.push<RideEstimateResponse?>(
+      AppRoutes.pickAdressPath,
+    );
+
+    if (!context.mounted || result == null) return;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => CarTypeBottomSheet(estimateResponse: result),
+    );
   }
 
   @override
@@ -48,9 +61,7 @@ class _RequestRideBottomSheetState extends State<RequestRideBottomSheet> {
         ],
         builder: (context, scrollController) {
           return GestureDetector(
-            onTap: () {
-              _openPickAddress(context);
-            },
+            onTap: () => _openPickAddress(context),
             child: Material(
               elevation: 20,
               borderRadius: const BorderRadius.vertical(

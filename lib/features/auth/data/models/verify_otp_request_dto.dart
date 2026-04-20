@@ -4,7 +4,7 @@ part 'verify_otp_request_dto.freezed.dart';
 part 'verify_otp_request_dto.g.dart';
 
 @freezed
-class VerifyOtpRequestDto with _$VerifyOtpRequestDto {
+abstract class VerifyOtpRequestDto with _$VerifyOtpRequestDto {
   const factory VerifyOtpRequestDto({
     String? email,
     String? phone,

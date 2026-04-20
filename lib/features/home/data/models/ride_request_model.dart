@@ -6,7 +6,7 @@ part 'ride_request_model.freezed.dart';
 part 'ride_request_model.g.dart';
 
 @freezed
-class RideRequestModel with _$RideRequestModel {
+abstract class RideRequestModel with _$RideRequestModel {
   const factory RideRequestModel({
     required RideLocationModel pickup,
     required RideLocationModel destination,

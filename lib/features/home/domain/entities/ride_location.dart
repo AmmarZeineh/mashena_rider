@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'ride_location.freezed.dart';
 
 @freezed
-class RideLocation with _$RideLocation {
+abstract class RideLocation with _$RideLocation {
   const factory RideLocation({
     required double lat,
     required double lng,

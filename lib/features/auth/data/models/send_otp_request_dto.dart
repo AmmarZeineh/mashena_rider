@@ -4,7 +4,7 @@ part 'send_otp_request_dto.freezed.dart';
 part 'send_otp_request_dto.g.dart';
 
 @freezed
-class SendOtpRequestDto with _$SendOtpRequestDto {
+abstract class SendOtpRequestDto with _$SendOtpRequestDto {
   const factory SendOtpRequestDto({String? email, String? phone}) =
       _SendOtpRequestDto;
 

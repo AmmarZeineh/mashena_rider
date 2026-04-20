@@ -139,5 +139,33 @@
   "locationPermissionDeniedForeverBody": "You have permanently denied location access. Please open Settings and enable it manually.",
   "mapDragToMovePin": "Drag map to move pin",
   "mapConfirmLocation": "Confirm Location",
-  "homeNowYouCanAddMultipleStops": "Now you can add multiple stops"
+  "homeNowYouCanAddMultipleStops": "Now you can add multiple stops",
+  "rideAvailableRides": "Available Rides",
+  "rideBookRide": "Book Ride",
+  "rideNoTypesAvailable": "No ride types available for this trip right now.",
+  "rideDistanceKm": "{distance} km",
+  "@rideDistanceKm": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "rideDurationMin": "{duration} min",
+  "@rideDurationMin": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "rideStopsCount": "{count} stop(s)",
+  "@rideStopsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ridePersonCapacity": "4+1 Person"
 }

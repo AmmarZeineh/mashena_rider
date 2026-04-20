@@ -4,7 +4,7 @@ import 'ride_location.dart';
 part 'ride_request.freezed.dart';
 
 @freezed
-class RideRequest with _$RideRequest {
+abstract class RideRequest with _$RideRequest {
   const factory RideRequest({
     required RideLocation pickup,
     required RideLocation destination,

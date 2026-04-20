@@ -387,4 +387,32 @@ class SEn extends S {
 
   @override
   String get homeNowYouCanAddMultipleStops => 'Now you can add multiple stops';
+
+  @override
+  String get rideAvailableRides => 'Available Rides';
+
+  @override
+  String get rideBookRide => 'Book Ride';
+
+  @override
+  String get rideNoTypesAvailable =>
+      'No ride types available for this trip right now.';
+
+  @override
+  String rideDistanceKm(String distance) {
+    return '$distance km';
+  }
+
+  @override
+  String rideDurationMin(String duration) {
+    return '$duration min';
+  }
+
+  @override
+  String rideStopsCount(int count) {
+    return '$count stop(s)';
+  }
+
+  @override
+  String get ridePersonCapacity => '4+1 Person';
 }

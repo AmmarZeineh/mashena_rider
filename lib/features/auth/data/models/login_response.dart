@@ -5,7 +5,7 @@ part 'login_response.freezed.dart';
 part 'login_response.g.dart';
 
 @freezed
-class LoginResponseDto with _$LoginResponseDto {
+abstract class LoginResponseDto with _$LoginResponseDto {
   const factory LoginResponseDto({
     required String accessToken,
     required LoginUserDto user,
