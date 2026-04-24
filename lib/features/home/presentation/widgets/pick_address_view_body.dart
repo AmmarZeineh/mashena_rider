@@ -9,6 +9,7 @@ import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/widgets/custom_header_button.dart';
 import 'package:mashena_rider/features/home/presentation/cubits/pick_address_cubit/pick_address_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/cubits/pick_address_cubit/pick_address_state.dart';
+import 'package:mashena_rider/features/home/presentation/models/confirmed_ride_flow_result.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/custom_divider.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/pick_location_circular_container.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/recent_address_tile_widget.dart';
@@ -128,7 +129,25 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
         // the CarTypeBottomSheet.
         if (!state.isCreatingRideRequest &&
             state.rideEstimateResponse != null) {
-          context.pop(state.rideEstimateResponse);
+          final pickupPlace = state.pickupPlace;
+          final destinations = state.destinations;
+          if (pickupPlace == null || destinations.isEmpty) return;
+          final destinationPlace = destinations.last;
+          if (destinationPlace == null) return;
+
+          context.pop(
+            ConfirmedRideFlowResult(
+              pickup: MapLatLng(
+                latitude: pickupPlace.latitude,
+                longitude: pickupPlace.longitude,
+              ),
+              destination: MapLatLng(
+                latitude: destinationPlace.latitude,
+                longitude: destinationPlace.longitude,
+              ),
+              estimateResponse: state.rideEstimateResponse!,
+            ),
+          );
         }
       },
       builder: (context, state) {

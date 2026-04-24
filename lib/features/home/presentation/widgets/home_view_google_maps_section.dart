@@ -87,7 +87,8 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
             children: [
               FlutterMapWidget(
                 showMyLocation: state.isLocationGranted,
-                markers: const [],
+                markers: state.markers,
+                polylines: state.polylines,
                 initialPosition: const MapLatLng(
                   latitude: 33.5153,
                   longitude: 36.2772,

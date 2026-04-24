@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:mashena_rider/core/network/api_client.dart';
 import 'package:mashena_rider/core/network/api_exception.dart';
+import 'package:mashena_rider/core/network/api_logging_interceptor.dart';
 import 'package:mashena_rider/core/network/auth_interceptor.dart';
 import 'package:mashena_rider/core/network/token_manager.dart';
 
@@ -14,6 +15,7 @@ final class DioApiClient implements ApiClient {
   }) : _tokenManager = tokenManager,
        _dio = dio ?? Dio() {
     _setup(baseUrl);
+    _dio.interceptors.add(ApiLoggingInterceptor());
     _dio.interceptors.add(authInterceptor);
   }
 

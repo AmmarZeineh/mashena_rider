@@ -56,8 +56,7 @@ class RideEstimatesSection extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 10),
               child: _RideEstimateTile(
                 estimate: estimate,
-                isSelected:
-                    selectedEstimate?.vehicleTypeId == estimate.vehicleTypeId,
+                isSelected: _isSameEstimate(selectedEstimate, estimate),
                 onTap: () => onEstimateSelected(estimate),
               ),
             ),
@@ -72,6 +71,21 @@ class RideEstimatesSection extends StatelessWidget {
     }
 
     return value.toStringAsFixed(1);
+  }
+
+  static bool _isSameEstimate(
+    RideEstimate? selectedEstimate,
+    RideEstimate estimate,
+  ) {
+    if (selectedEstimate == null) return false;
+
+    if (selectedEstimate.vehicleTypeId > 0 && estimate.vehicleTypeId > 0) {
+      return selectedEstimate.vehicleTypeId == estimate.vehicleTypeId;
+    }
+
+    return selectedEstimate.name == estimate.name &&
+        selectedEstimate.estimatedFare == estimate.estimatedFare &&
+        selectedEstimate.currency == estimate.currency;
   }
 }
 

@@ -36,8 +36,20 @@ class RideEstimateResponseModel {
     this.estimates = const [],
   });
 
-  factory RideEstimateResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$RideEstimateResponseModelFromJson(json);
+  factory RideEstimateResponseModel.fromJson(Map<String, dynamic> json) {
+    final data = (json['data'] is Map<String, dynamic>)
+        ? json['data'] as Map<String, dynamic>
+        : json;
+    final normalized = Map<String, dynamic>.from(data);
+    normalized['ride_request_id'] =
+        data['ride_request_id'] ?? data['rideRequestId'] ?? data['id'];
+    normalized['distance_km'] = data['distance_km'] ?? data['distanceKm'];
+    normalized['duration_min'] = data['duration_min'] ?? data['durationMin'];
+    normalized['stops_count'] = data['stops_count'] ?? data['stopsCount'];
+    normalized['estimates'] = data['estimates'] ?? data['vehicle_types'];
+
+    return _$RideEstimateResponseModelFromJson(normalized);
+  }
 
   @JsonKey(fromJson: _readInt)
   final int rideRequestId;

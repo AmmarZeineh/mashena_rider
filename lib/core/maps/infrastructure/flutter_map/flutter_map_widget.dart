@@ -22,7 +22,7 @@ class FlutterMapWidget extends AppMap {
 
 class _FlutterMapWidgetState extends State<FlutterMapWidget> {
   late final MapController _mapController;
-  
+
   @override
   void initState() {
     super.initState();
@@ -65,21 +65,38 @@ class _FlutterMapWidgetState extends State<FlutterMapWidget> {
         ),
         if (widget.polylines.isNotEmpty)
           PolylineLayer(
-            polylines: widget.polylines.map((p) => Polyline(
-              points: p.points.map((pt) => pt.toLatLng()).toList(),
-              color: p.color,
-              strokeWidth: p.width.toDouble(),
-            )).toList(),
+            polylines: widget.polylines
+                .map(
+                  (p) => Polyline(
+                    points: p.points.map((pt) => pt.toLatLng()).toList(),
+                    color: p.color,
+                    strokeWidth: p.width.toDouble(),
+                  ),
+                )
+                .toList(),
           ),
         if (widget.markers.isNotEmpty)
           MarkerLayer(
-            markers: widget.markers.map((m) => Marker(
-              point: m.position.toLatLng(),
-              width: 80,
-              height: 80,
-              // We don't have exact anchor control mapped in AppMap, centering for now
-              child: Image.asset(m.iconPath),
-            )).toList(),
+            markers: widget.markers.map((m) {
+              final Widget child;
+              if (m.iconWidget != null) {
+                child = m.iconWidget!;
+              } else if (m.iconPath != null) {
+                child = Image.asset(m.iconPath!);
+              } else {
+                child = const Icon(
+                  Icons.location_on,
+                  color: Colors.red,
+                  size: 36,
+                );
+              }
+              return Marker(
+                point: m.position.toLatLng(),
+                width: 48,
+                height: 48,
+                child: child,
+              );
+            }).toList(),
           ),
       ],
     );

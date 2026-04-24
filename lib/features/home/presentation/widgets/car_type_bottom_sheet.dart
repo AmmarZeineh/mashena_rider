@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
+import 'package:mashena_rider/features/home/presentation/cubits/home_location_cubit/home_location_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/book_ride_button.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/ride_list.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/trip_stats_row.dart';
@@ -55,18 +57,32 @@ class _CarTypeBottomSheetState extends State<CarTypeBottomSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const _DragHandle(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  localizations.rideAvailableRides,
-                  style: textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        localizations.rideAvailableRides,
+                        style: textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        context.read<HomeCubit>().clearRideFlow();
+                      },
+                      icon: const Icon(Icons.close),
+                      style: IconButton.styleFrom(
+                        backgroundColor: colorScheme.surfaceContainerHighest,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 12),
                 TripStatsRow(response: widget.estimateResponse),
@@ -86,27 +102,6 @@ class _CarTypeBottomSheetState extends State<CarTypeBottomSheet> {
             label: localizations.rideBookRide,
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _DragHandle extends StatelessWidget {
-  const _DragHandle();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 12),
-      child: Center(
-        child: Container(
-          width: 40,
-          height: 4,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.outlineVariant,
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
       ),
     );
   }

@@ -31,8 +31,7 @@ String? _readImageUrl(Object? value) {
   return null;
 }
 
-String _readStringOrEmpty(Object? value) =>
-    (value as String?)?.trim() ?? '';
+String _readStringOrEmpty(Object? value) => (value as String?)?.trim() ?? '';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class RideEstimateModel {
@@ -44,8 +43,25 @@ class RideEstimateModel {
     this.imageUrl,
   });
 
-  factory RideEstimateModel.fromJson(Map<String, dynamic> json) =>
-      _$RideEstimateModelFromJson(json);
+  factory RideEstimateModel.fromJson(Map<String, dynamic> json) {
+    final normalized = Map<String, dynamic>.from(json);
+    normalized['vehicle_type_id'] =
+        json['vehicle_type_id'] ?? json['vehicleTypeId'] ?? json['id'];
+    normalized['name'] =
+        json['name'] ?? json['vehicle_name'] ?? json['vehicleTypeName'];
+    normalized['currency'] = json['currency'] ?? json['currency_code'];
+    normalized['estimated_fare'] =
+        json['estimated_fare'] ??
+        json['estimatedFare'] ??
+        json['estimated_price'] ??
+        json['estimatedPrice'] ??
+        json['fare'] ??
+        json['price'];
+    normalized['image_url'] =
+        json['image_url'] ?? json['imageUrl'] ?? json['image'];
+
+    return _$RideEstimateModelFromJson(normalized);
+  }
 
   @JsonKey(fromJson: _readInt)
   final int vehicleTypeId;
