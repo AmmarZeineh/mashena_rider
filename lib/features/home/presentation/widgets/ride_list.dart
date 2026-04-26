@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/ride_tile.dart';
@@ -23,7 +23,7 @@ class RideList extends StatelessWidget {
     if (estimates.isEmpty) {
       final textTheme = Theme.of(context).textTheme;
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
         child: Text(
           emptyLabel,
           style: textTheme.bodyMedium?.copyWith(
@@ -34,13 +34,13 @@ class RideList extends StatelessWidget {
       );
     }
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: 170.h),
+    return SizedBox(
+      height: 110.h, // Fixed height for horizontal list
       child: ListView.separated(
-        shrinkWrap: true,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         itemCount: estimates.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 10),
+        separatorBuilder: (_, _) => SizedBox(width: 12.w),
         itemBuilder: (context, index) {
           final estimate = estimates[index];
           return RideTile(

@@ -9,6 +9,7 @@ import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/widgets/custom_header_button.dart';
 import 'package:mashena_rider/features/home/presentation/cubits/pick_address_cubit/pick_address_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/cubits/pick_address_cubit/pick_address_state.dart';
+import 'package:mashena_rider/features/home/domain/entities/place_entity.dart';
 import 'package:mashena_rider/features/home/presentation/models/confirmed_ride_flow_result.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/custom_divider.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/pick_location_circular_container.dart';
@@ -145,6 +146,8 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
                 latitude: destinationPlace.latitude,
                 longitude: destinationPlace.longitude,
               ),
+              pickupPlace: pickupPlace,
+              destinationPlaces: destinations.whereType<PlaceEntity>().toList(),
               estimateResponse: state.rideEstimateResponse!,
             ),
           );

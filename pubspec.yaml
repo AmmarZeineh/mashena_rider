@@ -54,6 +54,7 @@ dependencies:
   go_router: ^17.0.1
   google_fonts: ^7.1.0
   google_maps: ^8.2.0
+  google_polyline_algorithm: ^3.1.0
   intl: any
   json_annotation: ^4.9.0
   latlong2: ^0.9.1

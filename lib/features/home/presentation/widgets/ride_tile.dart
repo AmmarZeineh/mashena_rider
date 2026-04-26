@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate.dart';
@@ -17,76 +18,110 @@ class RideTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
     final localizations = S.of(context);
 
-    final borderColor = isSelected
-        ? AppColors.primaryColor
-        : AppColors.borderColor;
-    final bgColor = isSelected
-        ? Color.alphaBlend(
-            AppColors.primaryColor.withAlpha(18),
-            colorScheme.surface,
-          )
-        : colorScheme.surface;
-
-    return Material(
-      color: bgColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: BorderSide(color: borderColor, width: isSelected ? 1.5 : 1),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          child: Row(
-            children: [
-              VehicleImage(imageUrl: estimate.imageUrl),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      estimate.name.isEmpty
-                          ? localizations.ridePersonCapacity
-                          : estimate.name,
-                      style: textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+      width: 220.w, // Wider for horizontal layout
+      margin: EdgeInsets.symmetric(vertical: 8.h),
+      transform: isSelected
+          ? Matrix4.diagonal3Values(1.02, 1.02, 1.0)
+          : Matrix4.identity(),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20.r),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.r),
+              color: isSelected
+                  ? colorScheme.primaryContainer
+                  : colorScheme.surface,
+              gradient: isSelected
+                  ? LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        colorScheme.primaryContainer,
+                        colorScheme.primaryContainer.withValues(alpha: 0.8),
+                      ],
+                    )
+                  : null,
+              boxShadow: isSelected
+                  ? [
+                      BoxShadow(
+                        color: colorScheme.primary.withValues(alpha: 0.15),
+                        blurRadius: 10.r,
+                        offset: Offset(0, 4.h),
                       ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      localizations.ridePersonCapacity,
-                      style: textTheme.labelMedium?.copyWith(
-                        color: AppColors.textGrey,
-                        fontWeight: FontWeight.w400,
+                    ]
+                  : [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.03),
+                        blurRadius: 6.r,
+                        offset: Offset(0, 2.h),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+              border: Border.all(
+                color: isSelected ? colorScheme.primary : Colors.transparent,
+                width: 1.5.w,
               ),
-              const SizedBox(width: 8),
-              Text(
-                _formatFare(estimate),
-                style: textTheme.titleMedium?.copyWith(
-                  color: isSelected
-                      ? AppColors.primaryColor
-                      : colorScheme.onSurface,
-                  fontWeight: FontWeight.w700,
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            child: Row(
+              children: [
+                // Car Image - Larger
+                VehicleImage(imageUrl: estimate.imageUrl),
+                SizedBox(width: 12.w),
+                // Info Column
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        estimate.name.isEmpty
+                            ? localizations.ridePersonCapacity
+                            : estimate.name,
+                        style: textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.sp,
+                          color: isSelected
+                              ? colorScheme.onPrimaryContainer
+                              : null,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        _formatFare(estimate),
+                        style: textTheme.titleMedium?.copyWith(
+                          color: isSelected
+                              ? colorScheme.primary
+                              : colorScheme.onSurface,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w800,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  /// Formats the fare with its currency symbol.
   static String _formatFare(RideEstimate estimate) {
     final fare = estimate.estimatedFare;
     final formatted = fare.truncateToDouble() == fare
@@ -104,37 +139,34 @@ class VehicleImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final hasUrl = _isNetworkUrl(imageUrl);
 
     return Container(
-      width: 64,
-      height: 48,
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(10),
-      ),
+      width: 80.w, // Increased size
+      height: 60.h, // Increased size
       clipBehavior: Clip.antiAlias,
+      decoration: const BoxDecoration(),
       child: hasUrl
           ? Image.network(
               imageUrl!,
               fit: BoxFit.contain,
               loadingBuilder: (_, child, progress) {
                 if (progress == null) return child;
-                return const Center(
+                return Center(
                   child: SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    width: 20.w,
+                    height: 20.h,
+                    child: CircularProgressIndicator(strokeWidth: 2.w),
                   ),
                 );
               },
               errorBuilder: (_, _, _) =>
-                  const Icon(Icons.directions_car_outlined),
+                  Icon(Icons.directions_car_outlined, size: 40.r),
             )
-          : const Icon(
+          : Icon(
               Icons.directions_car_outlined,
               color: AppColors.textGrey,
+              size: 40.r,
             ),
     );
   }

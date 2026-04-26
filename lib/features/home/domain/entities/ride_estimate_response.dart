@@ -1,3 +1,4 @@
+import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'ride_estimate.dart';
 
 class RideEstimateResponse {
@@ -7,6 +8,8 @@ class RideEstimateResponse {
     required this.durationMin,
     required this.stopsCount,
     required this.estimates,
+    this.polyline,
+    this.stops = const [],
   });
 
   final int rideRequestId;
@@ -14,4 +17,6 @@ class RideEstimateResponse {
   final double durationMin;
   final int stopsCount;
   final List<RideEstimate> estimates;
+  final String? polyline;
+  final List<MapLatLng> stops;
 }

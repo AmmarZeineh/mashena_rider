@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/features/home/data/models/ride_estimate_model.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
 
@@ -26,6 +27,20 @@ List<RideEstimateModel> _readEstimates(Object? value) {
   return const [];
 }
 
+List<MapLatLng> _readStops(Object? value) {
+  if (value is List) {
+    return value.map((e) {
+      if (e is Map) {
+        final lat = (e['lat'] ?? e['latitude'] ?? 0) as num;
+        final lng = (e['lng'] ?? e['longitude'] ?? 0) as num;
+        return MapLatLng(latitude: lat.toDouble(), longitude: lng.toDouble());
+      }
+      return const MapLatLng(latitude: 0, longitude: 0);
+    }).toList();
+  }
+  return const [];
+}
+
 @JsonSerializable(fieldRename: FieldRename.snake)
 class RideEstimateResponseModel {
   const RideEstimateResponseModel({
@@ -34,6 +49,8 @@ class RideEstimateResponseModel {
     required this.durationMin,
     required this.stopsCount,
     this.estimates = const [],
+    this.polyline,
+    this.stops = const [],
   });
 
   factory RideEstimateResponseModel.fromJson(Map<String, dynamic> json) {
@@ -47,6 +64,7 @@ class RideEstimateResponseModel {
     normalized['duration_min'] = data['duration_min'] ?? data['durationMin'];
     normalized['stops_count'] = data['stops_count'] ?? data['stopsCount'];
     normalized['estimates'] = data['estimates'] ?? data['vehicle_types'];
+    normalized['polyline'] = data['polyline'] ?? data['geometry'] ?? data['route'];
 
     return _$RideEstimateResponseModelFromJson(normalized);
   }
@@ -66,6 +84,11 @@ class RideEstimateResponseModel {
   @JsonKey(fromJson: _readEstimates)
   final List<RideEstimateModel> estimates;
 
+  final String? polyline;
+
+  @JsonKey(fromJson: _readStops, includeToJson: false)
+  final List<MapLatLng> stops;
+
   Map<String, dynamic> toJson() => _$RideEstimateResponseModelToJson(this);
 
   RideEstimateResponse toEntity() {
@@ -75,6 +98,8 @@ class RideEstimateResponseModel {
       durationMin: durationMin,
       stopsCount: stopsCount,
       estimates: estimates.map((estimate) => estimate.toEntity()).toList(),
+      polyline: polyline,
+      stops: stops,
     );
   }
 }

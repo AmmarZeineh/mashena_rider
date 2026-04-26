@@ -9,6 +9,7 @@ import 'package:mashena_rider/features/home/domain/entities/ride_estimate.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_location.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_request.dart';
 import 'package:mashena_rider/features/home/domain/usecases/create_ride_request_usecase.dart';
+import 'package:mashena_rider/features/home/presentation/models/confirmed_ride_flow_result.dart';
 import 'pick_address_state.dart';
 
 class PickAddressCubit extends Cubit<PickAddressState> {
@@ -22,6 +23,20 @@ class PickAddressCubit extends Cubit<PickAddressState> {
   final NominatimService _placesService;
   final CreateRideRequestUsecase _createRideRequest;
   Timer? _debounce;
+
+  void initialize(ConfirmedRideFlowResult? initialData) {
+    if (initialData == null) return;
+    emit(
+      state.copyWith(
+        pickupPlace: initialData.pickupPlace,
+        destinations: initialData.destinationPlaces,
+        rideEstimateResponse: initialData.estimateResponse,
+        selectedRideEstimate: initialData.estimateResponse.estimates.isEmpty
+            ? null
+            : initialData.estimateResponse.estimates.first,
+      ),
+    );
+  }
 
   void setActiveField(int index) {
     emit(state.copyWith(activeFieldIndex: index, searchResults: []));

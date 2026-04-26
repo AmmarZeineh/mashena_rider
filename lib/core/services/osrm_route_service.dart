@@ -7,10 +7,12 @@ class OSRMRouteService {
 
   OSRMRouteService(this._dio);
 
-  Future<List<MapLatLng>> getRoute(MapLatLng origin, MapLatLng destination) async {
+  Future<List<MapLatLng>> getRoute(List<MapLatLng> points) async {
+    if (points.length < 2) return [];
     try {
+      final coordinates = points.map((p) => '${p.longitude},${p.latitude}').join(';');
       final response = await _dio.get(
-        'https://router.project-osrm.org/route/v1/driving/${origin.longitude},${origin.latitude};${destination.longitude},${destination.latitude}',
+        'https://router.project-osrm.org/route/v1/driving/$coordinates',
         queryParameters: {
           'geometries': 'geojson',
           'overview': 'full',
