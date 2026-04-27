@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/core/services/location_status.dart';
 import 'package:mashena_rider/core/services/nominatim_service.dart';
@@ -36,6 +37,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
             : initialData.estimateResponse.estimates.first,
       ),
     );
+    _validateDistances();
   }
 
   void setActiveField(int index) {
@@ -52,6 +54,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
         selectedRideEstimate: null,
       ),
     );
+    _validateDistances();
   }
 
   void removeDestination(int index) {
@@ -65,6 +68,46 @@ class PickAddressCubit extends Cubit<PickAddressState> {
         selectedRideEstimate: null,
       ),
     );
+    _validateDistances();
+  }
+
+  void reorderAllStops(int oldIndex, int newIndex) {
+    var index = newIndex;
+    if (oldIndex < index) {
+      index -= 1;
+    }
+
+    final allStops = [state.pickupPlace, ...state.destinations];
+    final item = allStops.removeAt(oldIndex);
+    allStops.insert(index, item);
+
+    emit(
+      state.copyWith(
+        pickupPlace: allStops.first,
+        destinations: allStops.sublist(1).cast<PlaceEntity?>(),
+        rideEstimateResponse: null,
+        selectedRideEstimate: null,
+      ),
+    );
+    _validateDistances();
+  }
+
+  void reorderDestinations(int oldIndex, int newIndex) {
+    var index = newIndex;
+    if (oldIndex < index) {
+      index -= 1;
+    }
+    final newDestinations = List<PlaceEntity?>.from(state.destinations);
+    final item = newDestinations.removeAt(oldIndex);
+    newDestinations.insert(index, item);
+    emit(
+      state.copyWith(
+        destinations: newDestinations,
+        rideEstimateResponse: null,
+        selectedRideEstimate: null,
+      ),
+    );
+    _validateDistances();
   }
 
   Future<void> useDeviceLocation({String? language}) async {
@@ -96,6 +139,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
           selectedRideEstimate: null,
         ),
       );
+      _validateDistances();
     } catch (e) {
       if (kDebugMode) {
         print('PickAddressCubit useDeviceLocation error: $e');
@@ -166,7 +210,43 @@ class PickAddressCubit extends Cubit<PickAddressState> {
           selectedRideEstimate: null,
         ),
       );
+      _validateDistances();
     }
+  }
+
+  void _validateDistances() {
+    final pickup = state.pickupPlace;
+    final dests = state.destinations.whereType<PlaceEntity>().toList();
+
+    if (pickup == null || dests.isEmpty) {
+      emit(state.copyWith(warningMessage: null));
+      return;
+    }
+
+    final List<PlaceEntity> points = [pickup, ...dests];
+    const distanceTool = Distance();
+
+    for (int i = 0; i < points.length - 1; i++) {
+      final p1 = points[i];
+      final p2 = points[i + 1];
+      final meters = distanceTool.as(
+        LengthUnit.Meter,
+        LatLng(p1.latitude, p1.longitude),
+        LatLng(p2.latitude, p2.longitude),
+      );
+
+      if (meters < 50) {
+        emit(
+          state.copyWith(
+            warningMessage:
+                "Some stops are very close to each other. Please check your route.",
+          ),
+        );
+        return;
+      }
+    }
+
+    emit(state.copyWith(warningMessage: null));
   }
 
   void selectRideEstimate(RideEstimate estimate) {

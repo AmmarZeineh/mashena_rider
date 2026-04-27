@@ -175,124 +175,106 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
                         const CustomHeaderButton(),
                         const SizedBox(height: 16),
 
-                        // Pickup Field
-                        Row(
-                          children: [
-                            PickLocationCircularContainer(
-                              isActive: state.pickupPlace != null,
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Focus(
-                                onFocusChange: (hasFocus) {
-                                  if (hasFocus) cubit.setActiveField(0);
-                                },
-                                child: TextField(
-                                  controller: _pickupController,
-                                  onChanged: (value) => cubit.onSearchChanged(
-                                    value,
-                                    language: WidgetsBinding
-                                        .instance
-                                        .platformDispatcher
-                                        .locale
-                                        .languageCode,
-                                  ),
-                                  decoration: InputDecoration(
-                                    hintText: S.of(context).homeCurrentLocation,
-                                    filled: true,
-                                    fillColor: Theme.of(
-                                      context,
-                                    ).colorScheme.surfaceContainerHighest,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 12,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(28),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.map),
-                              onPressed: () => _openMapPicker(context, 0),
-                            ),
-                          ],
-                        ),
-
+                        // Removed standalone Pickup Field (now in reorderable list)
                         const SizedBox(height: 12),
 
                         // Destinations
-                        ...state.destinations.asMap().entries.map((entry) {
-                          final index = entry.key;
-                          final fieldIndex = index + 1;
+                        Theme(
+                          data: Theme.of(context).copyWith(
+                            canvasColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                          ),
+                          child: ReorderableListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: 1 + state.destinations.length,
+                            onReorder: cubit.reorderAllStops,
+                            itemBuilder: (context, index) {
+                              final isPickup = index == 0;
+                              final fieldIndex =
+                                  index; // 0 for pickup, 1+ for dests
 
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: Row(
-                              children: [
-                                PickLocationCircularContainer(
-                                  isActive: state.destinations[index] != null,
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Focus(
-                                    onFocusChange: (hasFocus) {
-                                      if (hasFocus) {
-                                        cubit.setActiveField(fieldIndex);
-                                      }
-                                    },
-                                    child: TextField(
-                                      controller: _destControllers[index],
-                                      onChanged: (value) =>
-                                          cubit.onSearchChanged(
-                                            value,
-                                            language: WidgetsBinding
-                                                .instance
-                                                .platformDispatcher
-                                                .locale
-                                                .languageCode,
-                                          ),
-                                      decoration: InputDecoration(
-                                        hintText: S
-                                            .of(context)
-                                            .enterDestination,
-                                        filled: true,
-                                        fillColor: Theme.of(
-                                          context,
-                                        ).colorScheme.surfaceContainerHighest,
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 12,
+                              return Padding(
+                                key: ValueKey('stop_$index'),
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.drag_indicator,
+                                      color: Colors.grey,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    PickLocationCircularContainer(
+                                      isActive: isPickup
+                                          ? state.pickupPlace != null
+                                          : state.destinations[index - 1] !=
+                                                null,
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Focus(
+                                        onFocusChange: (hasFocus) {
+                                          if (hasFocus) {
+                                            cubit.setActiveField(fieldIndex);
+                                          }
+                                        },
+                                        child: TextField(
+                                          controller: isPickup
+                                              ? _pickupController
+                                              : _destControllers[index - 1],
+                                          onChanged: (value) =>
+                                              cubit.onSearchChanged(
+                                                value,
+                                                language: WidgetsBinding
+                                                    .instance
+                                                    .platformDispatcher
+                                                    .locale
+                                                    .languageCode,
+                                              ),
+                                          decoration: InputDecoration(
+                                            hintText: isPickup
+                                                ? S
+                                                      .of(context)
+                                                      .homeCurrentLocation
+                                                : S
+                                                      .of(context)
+                                                      .enterDestination,
+                                            filled: true,
+                                            fillColor: Theme.of(context)
+                                                .colorScheme
+                                                .surfaceContainerHighest,
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                  horizontal: 16,
+                                                  vertical: 12,
+                                                ),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(28),
+                                              borderSide: BorderSide.none,
                                             ),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            28,
                                           ),
-                                          borderSide: BorderSide.none,
                                         ),
                                       ),
                                     ),
-                                  ),
+                                    IconButton(
+                                      icon: const Icon(Icons.map),
+                                      onPressed: () =>
+                                          _openMapPicker(context, fieldIndex),
+                                    ),
+                                    if (!isPickup &&
+                                        state.destinations.length > 1)
+                                      IconButton(
+                                        icon: const Icon(Icons.close),
+                                        onPressed: () =>
+                                            cubit.removeDestination(index - 1),
+                                      ),
+                                  ],
                                 ),
-                                IconButton(
-                                  icon: const Icon(Icons.map),
-                                  onPressed: () =>
-                                      _openMapPicker(context, fieldIndex),
-                                ),
-                                if (state.destinations.length > 1)
-                                  IconButton(
-                                    icon: const Icon(Icons.close),
-                                    onPressed: () =>
-                                        cubit.removeDestination(index),
-                                  ),
-                              ],
-                            ),
-                          );
-                        }),
+                              );
+                            },
+                          ),
+                        ),
 
                         Align(
                           alignment: Alignment.centerRight,
@@ -310,6 +292,38 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
                             color: Colors.grey,
                           ),
                         ),
+
+                        if (state.warningMessage != null) ...[
+                          const SizedBox(height: 12),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.orange.withValues(alpha: 0.3),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.warning_amber_rounded,
+                                  color: Colors.orange,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    state.warningMessage!,
+                                    style: AppTextStyles.w400_12.copyWith(
+                                      color: Colors.orange[800],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
 
                         const SizedBox(height: 16),
 

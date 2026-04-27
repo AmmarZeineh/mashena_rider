@@ -19,6 +19,7 @@ abstract class PickAddressState with _$PickAddressState {
     RideEstimateResponse? rideEstimateResponse,
     RideEstimate? selectedRideEstimate,
     String? errorMessage,
+    String? warningMessage,
   }) = _PickAddressState;
 
   factory PickAddressState.initial() => const PickAddressState();
