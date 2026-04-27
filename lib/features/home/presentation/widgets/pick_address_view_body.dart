@@ -12,9 +12,12 @@ import 'package:mashena_rider/features/home/presentation/cubits/pick_address_cub
 import 'package:mashena_rider/features/home/domain/entities/place_entity.dart';
 import 'package:mashena_rider/features/home/presentation/models/confirmed_ride_flow_result.dart';
 import 'package:mashena_rider/features/home/presentation/widgets/custom_divider.dart';
-import 'package:mashena_rider/features/home/presentation/widgets/pick_location_circular_container.dart';
-import 'package:mashena_rider/features/home/presentation/widgets/recent_address_tile_widget.dart';
-import 'package:mashena_rider/features/home/presentation/widgets/saved_place_widget.dart';
+import 'confirmation_button.dart';
+import 'current_location_tile.dart';
+import 'proximity_warning.dart';
+import 'saved_places_section.dart';
+import 'search_results_section.dart';
+import 'stops_reorderable_list.dart';
 
 class PickAddressViewBody extends StatefulWidget {
   const PickAddressViewBody({super.key});
@@ -36,8 +39,123 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
     super.dispose();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<PickAddressCubit, PickAddressState>(
+      listener: _onStateChanged,
+      builder: (context, state) {
+        final cubit = context.read<PickAddressCubit>();
+        if (_destControllers.isEmpty) {
+          _syncControllers(state);
+        }
+
+        return Scaffold(
+          body: ModalProgressHUD(
+            inAsyncCall: state.isCreatingRideRequest,
+            child: SafeArea(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                children: [
+                  _buildInputSection(context, state, cubit),
+                  const SizedBox(height: 16),
+                  const CustomDivider(),
+                  const SizedBox(height: 16),
+                  _buildBottomSection(context, state, cubit),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Handles state transitions (navigation, errors).
+  void _onStateChanged(BuildContext context, PickAddressState state) {
+    _syncControllers(state);
+
+    if (state.errorMessage != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+    }
+
+    if (!state.isCreatingRideRequest && state.rideEstimateResponse != null) {
+      _navigateToRideEstimates(context, state);
+    }
+  }
+
+  /// Builds the top section with input fields and confirmation button.
+  Widget _buildInputSection(
+    BuildContext context,
+    PickAddressState state,
+    PickAddressCubit cubit,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const CustomHeaderButton(),
+          const SizedBox(height: 16),
+          const SizedBox(height: 12),
+          StopsReorderableList(
+            state: state,
+            cubit: cubit,
+            pickupController: _pickupController,
+            destControllers: _destControllers,
+            onOpenMap: _openMapPicker,
+          ),
+          _buildAddStopButton(cubit),
+          const SizedBox(height: 8),
+          _buildHelpText(context),
+          if (state.warningMessage != null)
+            ProximityWarning(message: state.warningMessage!),
+          const SizedBox(height: 16),
+          ConfirmationButton(
+            isEnabled: state.isReadyToConfirm,
+            onPressed: cubit.confirmRide,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Builds the bottom section (Search results or Saved/Recent).
+  Widget _buildBottomSection(
+    BuildContext context,
+    PickAddressState state,
+    PickAddressCubit cubit,
+  ) {
+    if (state.searchQuery.isNotEmpty) {
+      return SearchResultsSection(state: state, cubit: cubit);
+    }
+
+    if (state.activeFieldIndex == 0 && state.pickupPlace == null) {
+      return CurrentLocationTile(cubit: cubit);
+    }
+
+    return const SavedPlacesSection();
+  }
+
+  Widget _buildAddStopButton(PickAddressCubit cubit) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: IconButton(
+        icon: const Icon(Icons.add),
+        onPressed: cubit.addDestination,
+      ),
+    );
+  }
+
+  Widget _buildHelpText(BuildContext context) {
+    return Text(
+      S.of(context).homeNowYouCanAddMultipleStops,
+      style: AppTextStyles.w400_12.copyWith(color: Colors.grey),
+    );
+  }
+
   void _syncControllers(PickAddressState state) {
-    // Sync pickup text
     if (state.pickupPlace != null &&
         _pickupController.text != state.pickupPlace!.name) {
       _pickupController.value = TextEditingValue(
@@ -49,21 +167,16 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
     } else if (state.pickupPlace == null &&
         _pickupController.text.isNotEmpty &&
         state.searchQuery.isEmpty) {
-      // Clear if completely reset
-      // We check searchQuery isEmpty so we don't clear while the user is typing to search
       _pickupController.clear();
     }
 
-    // Expand controller list if needed
     while (_destControllers.length < state.destinations.length) {
       _destControllers.add(TextEditingController());
     }
-    // Shrink if needed
     while (_destControllers.length > state.destinations.length) {
       _destControllers.removeLast().dispose();
     }
 
-    // Sync destination texts
     for (int i = 0; i < state.destinations.length; i++) {
       final place = state.destinations[i];
       if (place != null && _destControllers[i].text != place.name) {
@@ -79,7 +192,6 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
     final cubit = context.read<PickAddressCubit>();
     cubit.setActiveField(fieldIndex);
 
-    // Default to a central location if no place is selected
     const defaultLoc = MapLatLng(latitude: 33.5153, longitude: 36.2772);
     MapLatLng initialLoc = defaultLoc;
 
@@ -90,10 +202,11 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
       );
     } else if (fieldIndex > 0) {
       final destIndex = fieldIndex - 1;
-      if (cubit.state.destinations[destIndex] != null) {
+      final dest = cubit.state.destinations[destIndex];
+      if (dest != null) {
         initialLoc = MapLatLng(
-          latitude: cubit.state.destinations[destIndex]!.latitude,
-          longitude: cubit.state.destinations[destIndex]!.longitude,
+          latitude: dest.latitude,
+          longitude: dest.longitude,
         );
       }
     }
@@ -114,304 +227,27 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<PickAddressCubit, PickAddressState>(
-      listener: (context, state) {
-        _syncControllers(state);
+  void _navigateToRideEstimates(BuildContext context, PickAddressState state) {
+    final pickupPlace = state.pickupPlace;
+    final destinations = state.destinations;
+    if (pickupPlace == null || destinations.isEmpty) return;
+    final destinationPlace = destinations.last;
+    if (destinationPlace == null) return;
 
-        if (state.errorMessage != null) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-        }
-
-        // Pop with the estimate response so the caller (HomeView) can show
-        // the CarTypeBottomSheet.
-        if (!state.isCreatingRideRequest &&
-            state.rideEstimateResponse != null) {
-          final pickupPlace = state.pickupPlace;
-          final destinations = state.destinations;
-          if (pickupPlace == null || destinations.isEmpty) return;
-          final destinationPlace = destinations.last;
-          if (destinationPlace == null) return;
-
-          context.pop(
-            ConfirmedRideFlowResult(
-              pickup: MapLatLng(
-                latitude: pickupPlace.latitude,
-                longitude: pickupPlace.longitude,
-              ),
-              destination: MapLatLng(
-                latitude: destinationPlace.latitude,
-                longitude: destinationPlace.longitude,
-              ),
-              pickupPlace: pickupPlace,
-              destinationPlaces: destinations.whereType<PlaceEntity>().toList(),
-              estimateResponse: state.rideEstimateResponse!,
-            ),
-          );
-        }
-      },
-      builder: (context, state) {
-        final cubit = context.read<PickAddressCubit>();
-        if (_destControllers.isEmpty) {
-          _syncControllers(state); // Initial sync
-        }
-
-        return Scaffold(
-          body: ModalProgressHUD(
-            inAsyncCall: state.isCreatingRideRequest,
-            child: SafeArea(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                children: [
-                  /// Top Section (Inputs)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const CustomHeaderButton(),
-                        const SizedBox(height: 16),
-
-                        // Removed standalone Pickup Field (now in reorderable list)
-                        const SizedBox(height: 12),
-
-                        // Destinations
-                        Theme(
-                          data: Theme.of(context).copyWith(
-                            canvasColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                          ),
-                          child: ReorderableListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 1 + state.destinations.length,
-                            onReorder: cubit.reorderAllStops,
-                            itemBuilder: (context, index) {
-                              final isPickup = index == 0;
-                              final fieldIndex =
-                                  index; // 0 for pickup, 1+ for dests
-
-                              return Padding(
-                                key: ValueKey('stop_$index'),
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.drag_indicator,
-                                      color: Colors.grey,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    PickLocationCircularContainer(
-                                      isActive: isPickup
-                                          ? state.pickupPlace != null
-                                          : state.destinations[index - 1] !=
-                                                null,
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: Focus(
-                                        onFocusChange: (hasFocus) {
-                                          if (hasFocus) {
-                                            cubit.setActiveField(fieldIndex);
-                                          }
-                                        },
-                                        child: TextField(
-                                          controller: isPickup
-                                              ? _pickupController
-                                              : _destControllers[index - 1],
-                                          onChanged: (value) =>
-                                              cubit.onSearchChanged(
-                                                value,
-                                                language: WidgetsBinding
-                                                    .instance
-                                                    .platformDispatcher
-                                                    .locale
-                                                    .languageCode,
-                                              ),
-                                          decoration: InputDecoration(
-                                            hintText: isPickup
-                                                ? S
-                                                      .of(context)
-                                                      .homeCurrentLocation
-                                                : S
-                                                      .of(context)
-                                                      .enterDestination,
-                                            filled: true,
-                                            fillColor: Theme.of(context)
-                                                .colorScheme
-                                                .surfaceContainerHighest,
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                  horizontal: 16,
-                                                  vertical: 12,
-                                                ),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(28),
-                                              borderSide: BorderSide.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.map),
-                                      onPressed: () =>
-                                          _openMapPicker(context, fieldIndex),
-                                    ),
-                                    if (!isPickup &&
-                                        state.destinations.length > 1)
-                                      IconButton(
-                                        icon: const Icon(Icons.close),
-                                        onPressed: () =>
-                                            cubit.removeDestination(index - 1),
-                                      ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed: cubit.addDestination,
-                          ),
-                        ),
-
-                        const SizedBox(height: 8),
-
-                        Text(
-                          S.of(context).homeNowYouCanAddMultipleStops,
-                          style: AppTextStyles.w400_12.copyWith(
-                            color: Colors.grey,
-                          ),
-                        ),
-
-                        if (state.warningMessage != null) ...[
-                          const SizedBox(height: 12),
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.orange.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: Colors.orange.withValues(alpha: 0.3),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.warning_amber_rounded,
-                                  color: Colors.orange,
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    state.warningMessage!,
-                                    style: AppTextStyles.w400_12.copyWith(
-                                      color: Colors.orange[800],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-
-                        const SizedBox(height: 16),
-
-                        // Confirm ride button
-                        SizedBox(
-                          width: double.infinity,
-                          child: FilledButton.icon(
-                            onPressed: state.isReadyToConfirm
-                                ? () => cubit.confirmRide()
-                                : null,
-                            icon: const Icon(Icons.check_circle_outline),
-                            label: Text(S.of(context).commonConfirm),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
-                  const CustomDivider(),
-                  const SizedBox(height: 16),
-
-                  /// Results or Saved/Recent
-                  if (state.searchQuery.isNotEmpty) ...[
-                    if (state.isSearching)
-                      const Center(child: CircularProgressIndicator())
-                    else if (state.searchResults.isNotEmpty)
-                      ...state.searchResults.map(
-                        (place) => ListTile(
-                          leading: const Icon(Icons.location_on_outlined),
-                          title: Text(place.name),
-                          subtitle: Text(place.address),
-                          onTap: () {
-                            cubit.selectPlace(place);
-                            // Unfocus keyboard
-                            FocusScope.of(context).unfocus();
-                          },
-                        ),
-                      )
-                    else
-                      const Center(child: Text("No results found")),
-                  ] else if (state.activeFieldIndex == 0 &&
-                      state.pickupPlace == null) ...[
-                    ListTile(
-                      leading: const Icon(Icons.my_location),
-                      title: Text(S.of(context).homeCurrentLocation),
-                      onTap: () {
-                        cubit.useDeviceLocation(
-                          language: WidgetsBinding
-                              .instance
-                              .platformDispatcher
-                              .locale
-                              .languageCode,
-                        );
-                        FocusScope.of(context).unfocus();
-                      },
-                    ),
-                  ] else ...[
-                    // Default saved places
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Column(
-                        children: const [
-                          SavedPlaceTile(
-                            title: "Home",
-                            subtitle:
-                                "Neemuch RD. Gopalbari, Bari Sadri Rajasthan",
-                          ),
-                          SizedBox(height: 16),
-                          SavedPlaceTile(
-                            title: "Work",
-                            subtitle: "Jawahar Lal Nehru Marg, D-Block",
-                          ),
-                          SizedBox(height: 24),
-                          RecentTile("250 west, industrial area"),
-                          RecentTile("4 number gali pratap nagar"),
-                          RecentTile("Neemuch RD. Gopalbari, Bari Sad"),
-                          RecentTile("Jawahar Lal Nehru Marg, D-Block"),
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+    context.pop(
+      ConfirmedRideFlowResult(
+        pickup: MapLatLng(
+          latitude: pickupPlace.latitude,
+          longitude: pickupPlace.longitude,
+        ),
+        destination: MapLatLng(
+          latitude: destinationPlace.latitude,
+          longitude: destinationPlace.longitude,
+        ),
+        pickupPlace: pickupPlace,
+        destinationPlaces: destinations.whereType<PlaceEntity>().toList(),
+        estimateResponse: state.rideEstimateResponse!,
+      ),
     );
   }
 }
