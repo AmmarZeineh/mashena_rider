@@ -101,37 +101,31 @@ Future<void> configureDependencies() async {
 
   getIt.registerLazySingleton<AuthEventBus>(() => AuthEventBus());
 
-  getIt.registerLazySingleton<NominatimService>(
-    () {
-      // Create a clean Dio instance without AuthInterceptors for external APIs
-      final nominatimDio = Dio(
-        BaseOptions(
-          connectTimeout: const Duration(seconds: 15),
-          receiveTimeout: const Duration(seconds: 15),
-          headers: {
-            'Accept': 'application/json',
-            'User-Agent': 'com.mashena.rider', // Recommended by OSM
-          },
-        ),
-      );
-      return NominatimService(nominatimDio);
-    },
-  );
+  getIt.registerLazySingleton<NominatimService>(() {
+    // Create a clean Dio instance without AuthInterceptors for external APIs
+    final nominatimDio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 15),
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'com.mashena.rider', // Recommended by OSM
+        },
+      ),
+    );
+    return NominatimService(nominatimDio);
+  });
 
-  getIt.registerLazySingleton<OSRMRouteService>(
-    () {
-      final osrmDio = Dio(
-        BaseOptions(
-          connectTimeout: const Duration(seconds: 15),
-          receiveTimeout: const Duration(seconds: 15),
-          headers: {
-            'Accept': 'application/json',
-          },
-        ),
-      );
-      return OSRMRouteService(osrmDio);
-    },
-  );
+  getIt.registerLazySingleton<OSRMRouteService>(() {
+    final osrmDio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 15),
+        headers: {'Accept': 'application/json'},
+      ),
+    );
+    return OSRMRouteService(osrmDio);
+  });
 
   // =====================================================
   // 🔹 4. Core - Networking Layer
