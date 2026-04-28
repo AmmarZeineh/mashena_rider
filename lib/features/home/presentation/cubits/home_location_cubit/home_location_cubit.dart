@@ -4,14 +4,19 @@ import 'package:mashena_rider/core/maps/domain/entities/map_marker.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_polyline.dart';
 import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/core/services/location_status.dart';
+import 'package:mashena_rider/features/home/domain/usecases/submit_ride_request_usecase.dart';
 import 'package:mashena_rider/features/home/presentation/models/confirmed_ride_flow_result.dart';
 
 part 'home_location_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit(this._locationService) : super(const HomeState.initial());
+  HomeCubit(
+    this._locationService,
+    this._submitRideRequest,
+  ) : super(const HomeState.initial());
 
   final LocationService _locationService;
+  final SubmitRideRequestUsecase _submitRideRequest;
 
   /// Called once when the home screen loads.
   /// Now requests permission (triggers the OS prompt) instead of just checking.
@@ -100,5 +105,35 @@ class HomeCubit extends Cubit<HomeState> {
   /// Clears route, markers, and confirmed ride — back to idle.
   void clearRideFlow() {
     emit(state.copyWith(polylines: [], markers: [], clearConfirmedRide: true));
+  }
+
+  Future<void> submitRideSelection(int vehicleTypeId) async {
+    final result = state.confirmedRideResult;
+    if (result == null) return;
+
+    emit(
+      state.copyWith(
+        isSubmittingRide: true,
+        clearBookingError: true,
+        rideSubmittedSuccessfully: false,
+      ),
+    );
+
+    final response = await _submitRideRequest(
+      rideRequestId: result.estimateResponse.rideRequestId,
+      vehicleTypeId: vehicleTypeId,
+    );
+
+    response.fold(
+      (error) => emit(
+        state.copyWith(isSubmittingRide: false, bookingErrorMessage: error),
+      ),
+      (_) => emit(
+        state.copyWith(
+          isSubmittingRide: false,
+          rideSubmittedSuccessfully: true,
+        ),
+      ),
+    );
   }
 }

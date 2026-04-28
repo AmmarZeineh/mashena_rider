@@ -11,6 +11,9 @@ class HomeState {
   final List<MapPolyline> polylines;
   final List<MapMarker> markers;
   final ConfirmedRideFlowResult? confirmedRideResult;
+  final bool isSubmittingRide;
+  final bool rideSubmittedSuccessfully;
+  final String? bookingErrorMessage;
 
   const HomeState({
     required this.ui,
@@ -21,6 +24,9 @@ class HomeState {
     this.polylines = const [],
     this.markers = const [],
     this.confirmedRideResult,
+    this.isSubmittingRide = false,
+    this.rideSubmittedSuccessfully = false,
+    this.bookingErrorMessage,
   });
 
   const HomeState.initial()
@@ -31,7 +37,10 @@ class HomeState {
       position = null,
       polylines = const [],
       markers = const [],
-      confirmedRideResult = null;
+      confirmedRideResult = null,
+      isSubmittingRide = false,
+      rideSubmittedSuccessfully = false,
+      bookingErrorMessage = null;
 
   HomeState copyWith({
     HomeUiState? ui,
@@ -43,6 +52,10 @@ class HomeState {
     List<MapMarker>? markers,
     ConfirmedRideFlowResult? confirmedRideResult,
     bool clearConfirmedRide = false,
+    bool? isSubmittingRide,
+    bool? rideSubmittedSuccessfully,
+    String? bookingErrorMessage,
+    bool clearBookingError = false,
   }) {
     return HomeState(
       ui: ui ?? this.ui,
@@ -56,6 +69,12 @@ class HomeState {
       confirmedRideResult: clearConfirmedRide
           ? null
           : (confirmedRideResult ?? this.confirmedRideResult),
+      isSubmittingRide: isSubmittingRide ?? this.isSubmittingRide,
+      rideSubmittedSuccessfully:
+          rideSubmittedSuccessfully ?? this.rideSubmittedSuccessfully,
+      bookingErrorMessage: clearBookingError
+          ? null
+          : (bookingErrorMessage ?? this.bookingErrorMessage),
     );
   }
 }

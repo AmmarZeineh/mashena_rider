@@ -6,4 +6,9 @@ abstract interface class RideRepository {
   Future<Either<String, RideEstimateResponse>> createRideRequest(
     RideRequest request,
   );
+
+  Future<Either<String, void>> submitRideRequest({
+    required int rideRequestId,
+    required int vehicleTypeId,
+  });
 }

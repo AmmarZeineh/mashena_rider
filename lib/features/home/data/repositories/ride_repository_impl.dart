@@ -35,4 +35,23 @@ class RideRepositoryImpl implements RideRepository {
       return Left(e.toString());
     }
   }
+
+  @override
+  Future<Either<String, void>> submitRideRequest({
+    required int rideRequestId,
+    required int vehicleTypeId,
+  }) async {
+    try {
+      await _apiClient.post(
+        BackendEndpoints.submitRideRequest,
+        body: {
+          'rideRequestId': rideRequestId,
+          'vehicleTypeId': vehicleTypeId,
+        },
+      );
+      return const Right(null);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
 }

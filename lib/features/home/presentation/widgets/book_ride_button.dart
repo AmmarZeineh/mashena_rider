@@ -7,10 +7,14 @@ class BookRideButton extends StatelessWidget {
     super.key,
     required this.selected,
     required this.label,
+    this.onPressed,
+    this.isLoading = false,
   });
 
   final RideEstimate? selected;
   final String label;
+  final VoidCallback? onPressed;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +30,7 @@ class BookRideButton extends StatelessWidget {
       child: SizedBox(
         height: 56,
         child: FilledButton(
-          onPressed: selected == null
-              ? null
-              : () => Navigator.of(context).pop(selected),
+          onPressed: (selected == null || isLoading) ? null : onPressed,
           style: FilledButton.styleFrom(
             backgroundColor: AppColors.primaryColor,
             disabledBackgroundColor: AppColors.primaryColor.withAlpha(80),
@@ -36,13 +38,22 @@ class BookRideButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(28),
             ),
           ),
-          child: Text(
-            label,
-            style: textTheme.titleMedium?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+          child: isLoading
+              ? const SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2.5,
+                  ),
+                )
+              : Text(
+                  label,
+                  style: textTheme.titleMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
         ),
       ),
     );

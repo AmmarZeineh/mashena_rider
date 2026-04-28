@@ -38,31 +38,56 @@ class _RideBookingOverlayState extends State<RideBookingOverlay> {
     final localizations = S.of(context);
     final estimates = widget.rideResult.estimateResponse.estimates;
 
-    return Stack(
-      children: [
-        // Top floating card for Trip Stats and Edit Action
-        Align(
-          alignment: Alignment.topCenter,
-          child: SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: EdgeInsets.only(top: 16.h, left: 16.w, right: 16.w),
-              child: _TopEditCard(rideResult: widget.rideResult),
+    return BlocConsumer<HomeCubit, HomeState>(
+      listener: (context, state) {
+        if (state.rideSubmittedSuccessfully) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Ride booked successfully!')),
+          );
+          // Handle navigation or flow cleanup if needed
+        }
+        if (state.bookingErrorMessage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.bookingErrorMessage!)),
+          );
+        }
+      },
+      builder: (context, state) {
+        return Stack(
+          children: [
+            // Top floating card for Trip Stats and Edit Action
+            Align(
+              alignment: Alignment.topCenter,
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 16.h, left: 16.w, right: 16.w),
+                  child: _TopEditCard(rideResult: widget.rideResult),
+                ),
+              ),
             ),
-          ),
-        ),
-        // Bottom section for horizontal car list and book button
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: _BottomCarSelection(
-            estimates: estimates,
-            selected: _selected,
-            onSelect: _select,
-            emptyLabel: localizations.rideNoTypesAvailable,
-            bookLabel: localizations.rideBookRide,
-          ),
-        ),
-      ],
+            // Bottom section for horizontal car list and book button
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: _BottomCarSelection(
+                estimates: estimates,
+                selected: _selected,
+                onSelect: _select,
+                emptyLabel: localizations.rideNoTypesAvailable,
+                bookLabel: localizations.rideBookRide,
+                isLoading: state.isSubmittingRide,
+                onBookPressed: () {
+                  if (_selected != null) {
+                    context.read<HomeCubit>().submitRideSelection(
+                      _selected!.vehicleTypeId,
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -126,6 +151,8 @@ class _BottomCarSelection extends StatelessWidget {
     required this.onSelect,
     required this.emptyLabel,
     required this.bookLabel,
+    this.onBookPressed,
+    this.isLoading = false,
   });
 
   final List<RideEstimate> estimates;
@@ -133,6 +160,8 @@ class _BottomCarSelection extends StatelessWidget {
   final ValueChanged<RideEstimate> onSelect;
   final String emptyLabel;
   final String bookLabel;
+  final VoidCallback? onBookPressed;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +194,8 @@ class _BottomCarSelection extends StatelessWidget {
           BookRideButton(
             selected: selected,
             label: bookLabel,
+            onPressed: onBookPressed,
+            isLoading: isLoading,
           ),
         ],
       ),
