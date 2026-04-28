@@ -44,6 +44,36 @@ class PickAddressCubit extends Cubit<PickAddressState> {
     emit(state.copyWith(activeFieldIndex: index, searchResults: []));
   }
 
+  void clearField(int index) {
+    if (index == 0) {
+      emit(
+        state.copyWith(
+          pickupPlace: null,
+          searchQuery: '',
+          searchResults: [],
+          rideEstimateResponse: null,
+          selectedRideEstimate: null,
+        ),
+      );
+    } else {
+      final destIndex = index - 1;
+      final newDestinations = List<PlaceEntity?>.from(state.destinations);
+      if (destIndex >= 0 && destIndex < newDestinations.length) {
+        newDestinations[destIndex] = null;
+      }
+      emit(
+        state.copyWith(
+          destinations: newDestinations,
+          searchQuery: '',
+          searchResults: [],
+          rideEstimateResponse: null,
+          selectedRideEstimate: null,
+        ),
+      );
+    }
+    _validateDistances();
+  }
+
   void addDestination() {
     final newDestinations = List<PlaceEntity?>.from(state.destinations)
       ..add(null);
@@ -134,6 +164,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
       emit(
         state.copyWith(
           pickupPlace: pickupPlace,
+          searchQuery: '',
           isReversingGeocode: false,
           rideEstimateResponse: null,
           selectedRideEstimate: null,
@@ -191,6 +222,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
       emit(
         state.copyWith(
           pickupPlace: place,
+          searchQuery: '',
           searchResults: [],
           rideEstimateResponse: null,
           selectedRideEstimate: null,
@@ -205,6 +237,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
       emit(
         state.copyWith(
           destinations: newDestinations,
+          searchQuery: '',
           searchResults: [],
           rideEstimateResponse: null,
           selectedRideEstimate: null,

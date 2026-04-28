@@ -156,17 +156,23 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
   }
 
   void _syncControllers(PickAddressState state) {
+    // Only sync if the user is not actively typing in this field
+    final isPickupActive = state.activeFieldIndex == 0;
+    final isSearching = state.searchQuery.isNotEmpty;
+
     if (state.pickupPlace != null &&
         _pickupController.text != state.pickupPlace!.name) {
-      _pickupController.value = TextEditingValue(
-        text: state.pickupPlace!.name,
-        selection: TextSelection.collapsed(
-          offset: state.pickupPlace!.name.length,
-        ),
-      );
+      if (!isPickupActive || !isSearching) {
+        _pickupController.value = TextEditingValue(
+          text: state.pickupPlace!.name,
+          selection: TextSelection.collapsed(
+            offset: state.pickupPlace!.name.length,
+          ),
+        );
+      }
     } else if (state.pickupPlace == null &&
         _pickupController.text.isNotEmpty &&
-        state.searchQuery.isEmpty) {
+        !isSearching) {
       _pickupController.clear();
     }
 
@@ -179,11 +185,19 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
 
     for (int i = 0; i < state.destinations.length; i++) {
       final place = state.destinations[i];
+      final isThisDestActive = state.activeFieldIndex == i + 1;
+
       if (place != null && _destControllers[i].text != place.name) {
-        _destControllers[i].value = TextEditingValue(
-          text: place.name,
-          selection: TextSelection.collapsed(offset: place.name.length),
-        );
+        if (!isThisDestActive || !isSearching) {
+          _destControllers[i].value = TextEditingValue(
+            text: place.name,
+            selection: TextSelection.collapsed(offset: place.name.length),
+          );
+        }
+      } else if (place == null &&
+          _destControllers[i].text.isNotEmpty &&
+          (!isThisDestActive || !isSearching)) {
+        _destControllers[i].clear();
       }
     }
   }

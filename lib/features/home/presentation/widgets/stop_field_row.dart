@@ -43,14 +43,27 @@ class StopFieldRow extends StatelessWidget {
               },
               child: TextField(
                 controller: controller,
-                onChanged: (value) => cubit.onSearchChanged(
-                  value,
-                  language: WidgetsBinding
-                      .instance
-                      .platformDispatcher
-                      .locale
-                      .languageCode,
-                ),
+                onChanged: (value) {
+                  final placeName = isPickup
+                      ? state.pickupPlace?.name
+                      : state.destinations[index - 1]?.name;
+
+                  // If deleting and we had a place, clear everything
+                  if (placeName != null && value.length < placeName.length) {
+                    cubit.clearField(index);
+                    controller.clear();
+                    return;
+                  }
+
+                  cubit.onSearchChanged(
+                    value,
+                    language: WidgetsBinding
+                        .instance
+                        .platformDispatcher
+                        .locale
+                        .languageCode,
+                  );
+                },
                 decoration: InputDecoration(
                   hintText: isPickup
                       ? S.of(context).homeCurrentLocation

@@ -28,7 +28,6 @@ class SearchResultsSection extends StatelessWidget {
             (place) => ListTile(
               leading: const Icon(Icons.location_on_outlined),
               title: Text(place.name),
-              subtitle: Text(place.address),
               onTap: () {
                 cubit.selectPlace(place);
                 FocusScope.of(context).unfocus();
