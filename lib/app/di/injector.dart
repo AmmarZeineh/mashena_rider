@@ -265,7 +265,6 @@ Future<void> configureDependencies() async {
       getIt<LocationService>(),
       getIt<NominatimService>(),
       getIt<CreateRideRequestUsecase>(),
-      getIt<SubmitRideRequestUsecase>(),
     ),
   );
 }
