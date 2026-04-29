@@ -120,7 +120,7 @@ class HomeCubit extends Cubit<HomeState> {
     );
 
     final response = await _submitRideRequest(
-      rideRequestId: result.estimateResponse.rideRequestId,
+      request: result.request,
       vehicleTypeId: vehicleTypeId,
     );
 
@@ -128,7 +128,7 @@ class HomeCubit extends Cubit<HomeState> {
       (error) => emit(
         state.copyWith(isSubmittingRide: false, bookingErrorMessage: error),
       ),
-      (_) => emit(
+      (submissionResult) => emit(
         state.copyWith(
           isSubmittingRide: false,
           rideSubmittedSuccessfully: true,

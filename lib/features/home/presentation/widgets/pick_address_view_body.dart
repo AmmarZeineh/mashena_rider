@@ -261,6 +261,7 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
         pickupPlace: pickupPlace,
         destinationPlaces: destinations.whereType<PlaceEntity>().toList(),
         estimateResponse: state.rideEstimateResponse!,
+        request: state.rideRequest!,
       ),
     );
   }

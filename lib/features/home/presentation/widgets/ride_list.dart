@@ -34,22 +34,17 @@ class RideList extends StatelessWidget {
       );
     }
 
-    return SizedBox(
-      height: 110.h, // Fixed height for horizontal list
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        itemCount: estimates.length,
-        separatorBuilder: (_, _) => SizedBox(width: 12.w),
-        itemBuilder: (context, index) {
-          final estimate = estimates[index];
-          return RideTile(
-            estimate: estimate,
-            isSelected: _isSameEstimate(selected, estimate),
-            onTap: () => onSelect(estimate),
-          );
-        },
-      ),
+    return ListView.builder(
+      itemCount: estimates.length,
+      padding: EdgeInsets.only(bottom: 16.h),
+      itemBuilder: (context, index) {
+        final estimate = estimates[index];
+        return RideTile(
+          estimate: estimate,
+          isSelected: _isSameEstimate(selected, estimate),
+          onTap: () => onSelect(estimate),
+        );
+      },
     );
   }
 

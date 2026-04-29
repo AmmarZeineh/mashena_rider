@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mashena_rider/core/l10n/app_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mashena_rider/core/theme/app_colors.dart';
+import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
 
 class TripStatsRow extends StatelessWidget {
@@ -9,27 +11,81 @@ class TripStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = S.of(context);
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Row(
       children: [
-        StatChip(
-          icon: Icons.route_outlined,
-          label: localizations.rideDistanceKm(_formatNum(response.distanceKm)),
+        _buildStat(
+          context,
+          icon: Icons.speed_rounded,
+          value: _formatNum(response.distanceKm),
+          unit: 'km',
+          color: colorScheme.primary,
         ),
-        StatChip(
-          icon: Icons.schedule_outlined,
-          label: localizations.rideDurationMin(
-            _formatNum(response.durationMin),
-          ),
+        _buildDivider(context),
+        _buildStat(
+          context,
+          icon: Icons.access_time_rounded,
+          value: _formatNum(response.durationMin),
+          unit: 'min',
+          color: colorScheme.secondary,
         ),
-        if (response.stopsCount > 0)
-          StatChip(
-            icon: Icons.alt_route,
-            label: localizations.rideStopsCount(response.stopsCount),
+        if (response.stopsCount > 0) ...[
+          _buildDivider(context),
+          _buildStat(
+            context,
+            icon: Icons.place_rounded,
+            value: response.stopsCount.toString(),
+            unit: 'stops',
+            color: colorScheme.tertiary,
           ),
+        ],
       ],
+    );
+  }
+
+  Widget _buildStat(
+    BuildContext context, {
+    required IconData icon,
+    required String value,
+    required String unit,
+    required Color color,
+  }) {
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 18.sp, color: color.withValues(alpha: 0.7)),
+          SizedBox(width: 8.w),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: value,
+                  style: AppTextStyles.w800_16.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                TextSpan(
+                  text: ' $unit',
+                  style: AppTextStyles.w500_12.copyWith(
+                    color: AppColors.textGrey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDivider(BuildContext context) {
+    return Container(
+      height: 24.h,
+      width: 1.w,
+      color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.5),
     );
   }
 
@@ -37,39 +93,4 @@ class TripStatsRow extends StatelessWidget {
   static String _formatNum(double value) => value.truncateToDouble() == value
       ? value.toStringAsFixed(0)
       : value.toStringAsFixed(1);
-}
-
-class StatChip extends StatelessWidget {
-  const StatChip({super.key, required this.icon, required this.label});
-
-  final IconData icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: colorScheme.onSurfaceVariant),
-          const SizedBox(width: 5),
-          Text(
-            label,
-            style: textTheme.labelMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

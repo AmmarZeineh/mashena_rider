@@ -6,6 +6,8 @@ part 'ride_location_model.g.dart';
 
 @freezed
 abstract class RideLocationModel with _$RideLocationModel {
+  const RideLocationModel._();
+
   const factory RideLocationModel({
     required double lat,
     required double lng,
@@ -19,5 +21,11 @@ abstract class RideLocationModel with _$RideLocationModel {
         lat: entity.lat,
         lng: entity.lng,
         address: entity.address,
+      );
+
+  RideLocation toEntity() => RideLocation(
+        lat: lat,
+        lng: lng,
+        address: address,
       );
 }

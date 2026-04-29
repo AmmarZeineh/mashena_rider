@@ -2,7 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:mashena_rider/core/constants/app_backend_endpoints.dart';
 import 'package:mashena_rider/core/network/api_client.dart';
 import 'package:mashena_rider/features/home/data/models/ride_estimate_response_model.dart';
+import 'package:mashena_rider/features/home/data/models/ride_submission_response_model.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
+import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import '../../domain/entities/ride_request.dart';
 import '../../domain/repositories/ride_repository.dart';
 import '../models/ride_request_model.dart';
@@ -37,19 +39,31 @@ class RideRepositoryImpl implements RideRepository {
   }
 
   @override
-  Future<Either<String, void>> submitRideRequest({
-    required int rideRequestId,
+  Future<Either<String, RideSubmissionResponse>> submitRideRequest({
+    required RideRequest request,
     required int vehicleTypeId,
   }) async {
     try {
-      await _apiClient.post(
+      final model = RideRequestModel.fromEntity(request);
+      final body = {
+        ...model.toJson(),
+        'vehicleTypeId': vehicleTypeId,
+      };
+
+      final response = await _apiClient.post(
         BackendEndpoints.submitRideRequest,
-        body: {
-          'rideRequestId': rideRequestId,
-          'vehicleTypeId': vehicleTypeId,
-        },
+        body: body,
       );
-      return const Right(null);
+
+      if (response is! Map) {
+        return const Left('Invalid ride submission response');
+      }
+
+      final result = RideSubmissionResponseModel.fromJson(
+        Map<String, dynamic>.from(response),
+      ).toEntity();
+
+      return Right(result);
     } catch (e) {
       return Left(e.toString());
     }

@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mashena_rider/features/home/domain/entities/place_entity.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
+import 'package:mashena_rider/features/home/domain/entities/ride_request.dart';
 
 part 'pick_address_state.freezed.dart';
 
@@ -17,6 +18,7 @@ abstract class PickAddressState with _$PickAddressState {
     @Default(false) bool isReversingGeocode,
     @Default(false) bool isCreatingRideRequest,
     RideEstimateResponse? rideEstimateResponse,
+    RideRequest? rideRequest,
     RideEstimate? selectedRideEstimate,
     String? errorMessage,
     String? warningMessage,

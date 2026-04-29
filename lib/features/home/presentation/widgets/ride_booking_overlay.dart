@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
+import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate.dart';
 import 'package:mashena_rider/features/home/presentation/cubits/home_location_cubit/home_location_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/utils/ride_flow_helper.dart';
@@ -47,9 +48,9 @@ class _RideBookingOverlayState extends State<RideBookingOverlay> {
           // Handle navigation or flow cleanup if needed
         }
         if (state.bookingErrorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.bookingErrorMessage!)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.bookingErrorMessage!)));
         }
       },
       builder: (context, state) {
@@ -101,44 +102,68 @@ class _TopEditCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Material(
-      elevation: 8,
-      borderRadius: BorderRadius.circular(16.r),
-      color: colorScheme.surface,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        child: Row(
-          children: [
-            Expanded(child: TripStatsRow(response: rideResult.estimateResponse)),
-            SizedBox(width: 12.w),
-            Container(
-              decoration: BoxDecoration(
-                color: colorScheme.primaryContainer,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                onPressed: () => RideFlowHelper.openPickAddressAndDrawRoute(
-                  context,
-                  initialResult: rideResult,
-                ),
-                icon: Icon(Icons.edit, color: colorScheme.onPrimaryContainer),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                onPressed: () {
-                  context.read<HomeCubit>().clearRideFlow();
-                },
-                icon: Icon(Icons.close, color: colorScheme.onSurfaceVariant),
-              ),
-            ),
-          ],
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+          width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(12.w),
+      child: Row(
+        children: [
+          Expanded(child: TripStatsRow(response: rideResult.estimateResponse)),
+          SizedBox(width: 8.w),
+          _CircularAction(
+            icon: Icons.edit_location_alt_rounded,
+            color: colorScheme.primary,
+            onPressed: () => RideFlowHelper.openPickAddressAndDrawRoute(
+              context,
+              initialResult: rideResult,
+            ),
+          ),
+          SizedBox(width: 8.w),
+          _CircularAction(
+            icon: Icons.close_rounded,
+            color: colorScheme.error,
+            onPressed: () => context.read<HomeCubit>().clearRideFlow(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CircularAction extends StatelessWidget {
+  const _CircularAction({
+    required this.icon,
+    required this.color,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final Color color;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: color.withValues(alpha: 0.1),
+      shape: const CircleBorder(),
+      clipBehavior: Clip.antiAlias,
+      child: IconButton(
+        onPressed: onPressed,
+        icon: Icon(icon, color: color, size: 20.sp),
+        visualDensity: VisualDensity.compact,
       ),
     );
   }
@@ -170,12 +195,12 @@ class _BottomCarSelection extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(20),
-            blurRadius: 24,
-            offset: const Offset(0, -4),
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 30,
+            offset: const Offset(0, -5),
           ),
         ],
       ),
@@ -183,19 +208,36 @@ class _BottomCarSelection extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 24),
-          RideList(
-            estimates: estimates,
-            selected: selected,
-            onSelect: onSelect,
-            emptyLabel: emptyLabel,
+          SizedBox(height: 16),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
+            child: Text(
+              'Select Vehicle',
+              style: AppTextStyles.w800_16.copyWith(
+                fontSize: 20.sp,
+                letterSpacing: -0.5,
+              ),
+            ),
           ),
-          const SizedBox(height: 16),
-          BookRideButton(
-            selected: selected,
-            label: bookLabel,
-            onPressed: onBookPressed,
-            isLoading: isLoading,
+
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.25,
+            child: RideList(
+              estimates: estimates,
+              selected: selected,
+              onSelect: onSelect,
+              emptyLabel: emptyLabel,
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.h),
+            child: BookRideButton(
+              selected: selected,
+              label: bookLabel,
+              onPressed: onBookPressed,
+              isLoading: isLoading,
+            ),
           ),
         ],
       ),

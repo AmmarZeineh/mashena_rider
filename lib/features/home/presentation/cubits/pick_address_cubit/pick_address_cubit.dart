@@ -329,6 +329,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
       state.copyWith(
         isCreatingRideRequest: true,
         rideEstimateResponse: null,
+        rideRequest: null,
         selectedRideEstimate: null,
         errorMessage: null,
       ),
@@ -345,6 +346,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
           state.copyWith(
             isCreatingRideRequest: false,
             rideEstimateResponse: estimateResponse,
+            rideRequest: request,
             selectedRideEstimate: estimateResponse.estimates.isEmpty
                 ? null
                 : estimateResponse.estimates.first,

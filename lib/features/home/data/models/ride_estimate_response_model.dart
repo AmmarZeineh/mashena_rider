@@ -1,21 +1,34 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/features/home/data/models/ride_estimate_model.dart';
+import 'package:mashena_rider/features/home/data/models/ride_location_model.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
 
 part 'ride_estimate_response_model.g.dart';
 
-int _readInt(Object? value) {
+int? _readIntOptional(Object? value) {
+  if (value == null) return null;
   if (value is int) return value;
   if (value is num) return value.toInt();
-  if (value is String) return int.tryParse(value) ?? 0;
-  return 0;
+  if (value is String) return int.tryParse(value);
+  return null;
+}
+
+int _readInt(Object? value) {
+  return _readIntOptional(value) ?? 0;
 }
 
 double _readDouble(Object? value) {
   if (value is num) return value.toDouble();
   if (value is String) return double.tryParse(value) ?? 0;
   return 0;
+}
+
+bool _readBool(Object? value) {
+  if (value is bool) return value;
+  if (value is String) return value.toLowerCase() == 'true';
+  if (value is num) return value != 0;
+  return false;
 }
 
 List<RideEstimateModel> _readEstimates(Object? value) {
@@ -44,10 +57,13 @@ List<MapLatLng> _readStops(Object? value) {
 @JsonSerializable(fieldRename: FieldRename.snake)
 class RideEstimateResponseModel {
   const RideEstimateResponseModel({
-    required this.rideRequestId,
+    this.rideRequestId,
     required this.distanceKm,
     required this.durationMin,
     required this.stopsCount,
+    required this.isNight,
+    this.pickup,
+    this.destination,
     this.estimates = const [],
     this.polyline,
     this.stops = const [],
@@ -63,14 +79,15 @@ class RideEstimateResponseModel {
     normalized['distance_km'] = data['distance_km'] ?? data['distanceKm'];
     normalized['duration_min'] = data['duration_min'] ?? data['durationMin'];
     normalized['stops_count'] = data['stops_count'] ?? data['stopsCount'];
+    normalized['is_night'] = data['is_night'] ?? data['isNight'];
     normalized['estimates'] = data['estimates'] ?? data['vehicle_types'];
     normalized['polyline'] = data['polyline'] ?? data['geometry'] ?? data['route'];
 
     return _$RideEstimateResponseModelFromJson(normalized);
   }
 
-  @JsonKey(fromJson: _readInt)
-  final int rideRequestId;
+  @JsonKey(fromJson: _readIntOptional)
+  final int? rideRequestId;
 
   @JsonKey(fromJson: _readDouble)
   final double distanceKm;
@@ -80,6 +97,12 @@ class RideEstimateResponseModel {
 
   @JsonKey(fromJson: _readInt)
   final int stopsCount;
+
+  @JsonKey(fromJson: _readBool)
+  final bool isNight;
+
+  final RideLocationModel? pickup;
+  final RideLocationModel? destination;
 
   @JsonKey(fromJson: _readEstimates)
   final List<RideEstimateModel> estimates;
@@ -97,6 +120,9 @@ class RideEstimateResponseModel {
       distanceKm: distanceKm,
       durationMin: durationMin,
       stopsCount: stopsCount,
+      isNight: isNight,
+      pickup: pickup?.toEntity(),
+      destination: destination?.toEntity(),
       estimates: estimates.map((estimate) => estimate.toEntity()).toList(),
       polyline: polyline,
       stops: stops,

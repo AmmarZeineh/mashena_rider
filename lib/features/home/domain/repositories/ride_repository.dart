@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
+import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import '../entities/ride_request.dart';
 
 abstract interface class RideRepository {
@@ -7,8 +8,8 @@ abstract interface class RideRepository {
     RideRequest request,
   );
 
-  Future<Either<String, void>> submitRideRequest({
-    required int rideRequestId,
+  Future<Either<String, RideSubmissionResponse>> submitRideRequest({
+    required RideRequest request,
     required int vehicleTypeId,
   });
 }

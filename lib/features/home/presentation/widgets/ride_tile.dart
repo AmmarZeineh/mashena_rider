@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
+import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate.dart';
 
 class RideTile extends StatelessWidget {
@@ -20,99 +21,99 @@ class RideTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
     final localizations = S.of(context);
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-      width: 220.w, // Wider for horizontal layout
-      margin: EdgeInsets.symmetric(vertical: 8.h),
-      transform: isSelected
-          ? Matrix4.diagonal3Values(1.02, 1.02, 1.0)
-          : Matrix4.identity(),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutCubic,
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(20.r),
-          child: Container(
+          borderRadius: BorderRadius.circular(16.r),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.r),
+              borderRadius: BorderRadius.circular(16.r),
               color: isSelected
-                  ? colorScheme.primaryContainer
+                  ? AppColors.primaryColor.withValues(alpha: 0.08)
                   : colorScheme.surface,
-              gradient: isSelected
-                  ? LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        colorScheme.primaryContainer,
-                        colorScheme.primaryContainer.withValues(alpha: 0.8),
-                      ],
-                    )
-                  : null,
+              border: Border.all(
+                color: isSelected
+                    ? AppColors.primaryColor
+                    : AppColors.borderColor.withValues(alpha: 0.5),
+                width: isSelected ? 2.w : 1.w,
+              ),
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: colorScheme.primary.withValues(alpha: 0.15),
-                        blurRadius: 10.r,
+                        color: AppColors.primaryColor.withValues(alpha: 0.1),
+                        blurRadius: 12.r,
                         offset: Offset(0, 4.h),
                       ),
                     ]
-                  : [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.03),
-                        blurRadius: 6.r,
-                        offset: Offset(0, 2.h),
-                      ),
-                    ],
-              border: Border.all(
-                color: isSelected ? colorScheme.primary : Colors.transparent,
-                width: 1.5.w,
-              ),
+                  : [],
             ),
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             child: Row(
               children: [
-                // Car Image - Larger
-                VehicleImage(imageUrl: estimate.imageUrl),
-                SizedBox(width: 12.w),
-                // Info Column
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        estimate.name.isEmpty
-                            ? localizations.ridePersonCapacity
-                            : estimate.name,
-                        style: textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14.sp,
-                          color: isSelected
-                              ? colorScheme.onPrimaryContainer
-                              : null,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        _formatFare(estimate),
-                        style: textTheme.titleMedium?.copyWith(
-                          color: isSelected
-                              ? colorScheme.primary
-                              : colorScheme.onSurface,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w800,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                // Vehicle Image with background
+                Container(
+                  width: 64.w,
+                  height: 64.w,
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.5,
+                    ),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
+                  padding: EdgeInsets.all(8.w),
+                  child: VehicleImage(imageUrl: estimate.imageUrl),
+                ),
+                SizedBox(width: 16.w),
+                // Info
+                Expanded(
+                  child: Text(
+                    estimate.name.isEmpty
+                        ? localizations.ridePersonCapacity
+                        : estimate.name,
+                    style: AppTextStyles.w700_16.copyWith(
+                      color: isSelected
+                          ? AppColors.primaryColor
+                          : colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                // Price
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      _formatFare(estimate),
+                      style: AppTextStyles.w700_18.copyWith(
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                    if (isSelected)
+                      Container(
+                        margin: EdgeInsets.only(top: 4.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 2.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor,
+                          borderRadius: BorderRadius.circular(4.r),
+                        ),
+                        child: Text(
+                          'SELECTED',
+                          style: AppTextStyles.w700_12.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ],
             ),
@@ -141,11 +142,7 @@ class VehicleImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasUrl = _isNetworkUrl(imageUrl);
 
-    return Container(
-      width: 80.w, // Increased size
-      height: 60.h, // Increased size
-      clipBehavior: Clip.antiAlias,
-      decoration: const BoxDecoration(),
+    return Center(
       child: hasUrl
           ? Image.network(
               imageUrl!,
@@ -154,19 +151,26 @@ class VehicleImage extends StatelessWidget {
                 if (progress == null) return child;
                 return Center(
                   child: SizedBox(
-                    width: 20.w,
-                    height: 20.h,
-                    child: CircularProgressIndicator(strokeWidth: 2.w),
+                    width: 16.w,
+                    height: 16.w,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.w,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
                   ),
                 );
               },
               errorBuilder: (_, _, _) =>
-                  Icon(Icons.directions_car_outlined, size: 40.r),
+                  Icon(Icons.directions_car_filled_rounded, size: 32.r),
             )
           : Icon(
-              Icons.directions_car_outlined,
-              color: AppColors.textGrey,
-              size: 40.r,
+              Icons.directions_car_filled_rounded,
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+              size: 32.r,
             ),
     );
   }
