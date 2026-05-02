@@ -3,6 +3,7 @@ import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/maps/infrastructure/flutter_map/flutter_map_widget.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
+import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/widgets/custom_elevated_button.dart';
 
 class PickFromMapView extends StatefulWidget {
@@ -49,9 +50,12 @@ class _PickFromMapViewState extends State<PickFromMapView> {
             top: MediaQuery.of(context).padding.top + 10,
             left: 16,
             child: CircleAvatar(
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               child: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
@@ -69,7 +73,7 @@ class _PickFromMapViewState extends State<PickFromMapView> {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.black87,
+                    color: Theme.of(context).colorScheme.onSurface,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   transform: Matrix4.translationValues(
@@ -79,7 +83,9 @@ class _PickFromMapViewState extends State<PickFromMapView> {
                   ),
                   child: Text(
                     S.of(context).mapDragToMovePin,
-                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                    style: AppTextStyles.w500_12.copyWith(
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
                   ),
                 ),
                 AnimatedContainer(
