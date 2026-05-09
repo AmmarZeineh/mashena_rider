@@ -29,103 +29,164 @@ abstract class RideFlowHelper {
 
     final homeCubit = context.read<HomeCubit>();
 
-    // 1. Determine Route Points (prefer backend polyline, fallback to OSRM)
-    List<MapLatLng> routePoints = [];
-    final backendPolyline = result.estimateResponse.polyline;
+    // Start loading state
+    homeCubit.setFetchingRoute(true);
 
-    if (backendPolyline != null && backendPolyline.isNotEmpty) {
-      try {
-        final decoded = decodePolyline(backendPolyline);
-        routePoints = decoded.map((coord) {
-          return MapLatLng(
-            latitude: coord[0].toDouble(),
-            longitude: coord[1].toDouble(),
-          );
-        }).toList();
-      } catch (_) {
-        // Fallback if decode fails
+    try {
+      // 1. Determine Route Points (prefer backend polyline, fallback to OSRM)
+      List<MapLatLng> routePoints = [];
+      final backendPolyline = result.estimateResponse.polyline;
+
+      if (backendPolyline != null && backendPolyline.isNotEmpty) {
+        try {
+          final decoded = decodePolyline(backendPolyline);
+          routePoints = decoded.map((coord) {
+            return MapLatLng(
+              latitude: coord[0].toDouble(),
+              longitude: coord[1].toDouble(),
+            );
+          }).toList();
+        } catch (_) {
+          // Fallback if decode fails
+        }
       }
-    }
 
-    if (routePoints.isEmpty) {
-      try {
+      if (routePoints.isEmpty) {
         final routeService = getIt<OSRMRouteService>();
         routePoints = await routeService.getRoute([
           result.pickup,
           ...result.estimateResponse.stops,
           result.destination,
         ]);
-      } catch (_) {
-        // Route drawing is best-effort
+      }
+
+      // Check if cubit is still open and context is mounted before emitting
+      if (!homeCubit.isClosed && context.mounted) {
+        // 2. Set Polylines
+        if (routePoints.isNotEmpty) {
+          homeCubit.setPolylines([
+            MapPolyline(
+              id: 'ride_route_border',
+              points: routePoints,
+              color: AppColors.primaryColor.withValues(alpha: 0.2),
+              width: 14,
+            ),
+            MapPolyline(
+              id: 'ride_route',
+              points: routePoints,
+              color: AppColors.primaryColor,
+              width: 7,
+            ),
+          ]);
+        }
+
+        // 3. Set Markers (Pickup + Stops + Destination)
+        final markers = <MapMarker>[
+          MapMarker(
+            id: 'pickup',
+            position: result.pickup,
+            iconWidget: PointMarker(
+              color: const Color(0xFF34A853),
+              icon: Icons.trip_origin,
+              label: S.of(context).homeCurrentLocation,
+            ),
+          ),
+        ];
+
+        // Add Stop Markers
+        for (int i = 0; i < result.estimateResponse.stops.length; i++) {
+          markers.add(
+            MapMarker(
+              id: 'stop_$i',
+              position: result.estimateResponse.stops[i],
+              iconWidget: const PointMarker(
+                color: Colors.orange,
+                icon: Icons.stop_circle_outlined,
+              ),
+            ),
+          );
+        }
+
+        // Add Destination Marker
+        markers.add(
+          MapMarker(
+            id: 'destination',
+            position: result.destination,
+            iconWidget: const PointMarker(
+              color: Colors.red,
+              icon: Icons.location_on,
+            ),
+          ),
+        );
+
+        homeCubit.setMarkers(markers);
+        homeCubit.setConfirmedRide(result);
+      }
+    } catch (e) {
+      // Handle or log error
+    } finally {
+      if (!homeCubit.isClosed) {
+        homeCubit.setFetchingRoute(false);
+
+        // Show a helpful message if route drawing failed but we have results
+        if (homeCubit.state.polylines.isEmpty &&
+            homeCubit.state.confirmedRideResult != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Map route currently unavailable. Markers show your trip stops.',
+              ),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
       }
     }
+  }
 
-    if (!context.mounted) return;
+  /// Draws an amber driver→pickup route on the map when the ride is confirmed.
+  ///
+  /// Since real-time driver tracking is not yet available, a simulated driver
+  /// position is placed approximately 0.4 km north of the pickup point.
+  static void drawDriverRoute(BuildContext context, MapLatLng pickupLatLng) {
+    final homeCubit = context.read<HomeCubit>();
 
-    // 2. Set Polylines
-    if (routePoints.isNotEmpty) {
-      homeCubit.setPolylines([
-        MapPolyline(
-          id: 'ride_route_border',
-          points: routePoints,
-          color: AppColors.primaryColor.withValues(alpha: 0.2),
-          width: 14,
-        ),
-        MapPolyline(
-          id: 'ride_route',
-          points: routePoints,
-          color: AppColors.primaryColor,
-          width: 7,
-        ),
-      ]);
-    }
-
-    // 3. Set Markers (Pickup + Stops + Destination)
-    final markers = <MapMarker>[
-      MapMarker(
-        id: 'pickup',
-        position: result.pickup,
-        iconWidget: PointMarker(
-          color: const Color(0xFF34A853),
-          icon: Icons.trip_origin,
-          label: S.of(context).homeCurrentLocation,
-        ),
-      ),
-    ];
-
-    // Add Stop Markers
-    for (int i = 0; i < result.estimateResponse.stops.length; i++) {
-      markers.add(
-        MapMarker(
-          id: 'stop_$i',
-          position: result.estimateResponse.stops[i],
-          iconWidget: PointMarker(
-            color: Colors.orange,
-            icon: Icons.stop_circle_outlined,
-          ),
-        ),
-      );
-    }
-
-    // Add Destination Marker
-    markers.add(
-      MapMarker(
-        id: 'destination',
-        position: result.destination,
-        iconWidget: const PointMarker(
-          color: Colors.red,
-          icon: Icons.location_on,
-        ),
-      ),
+    // Simulated driver location: ~0.004 degrees north of pickup (~444 m).
+    final driverLatLng = MapLatLng(
+      latitude: pickupLatLng.latitude + 0.004,
+      longitude: pickupLatLng.longitude + 0.001,
     );
 
-    homeCubit.setMarkers(markers);
+    // Append the driver→pickup polyline (amber, thinner).
+    final updatedPolylines = List<MapPolyline>.from(homeCubit.state.polylines)
+      ..add(
+        MapPolyline(
+          id: 'driver_to_pickup_border',
+          points: [driverLatLng, pickupLatLng],
+          color: Colors.amber.withValues(alpha: 0.3),
+          width: 10,
+        ),
+      )
+      ..add(
+        MapPolyline(
+          id: 'driver_to_pickup',
+          points: [driverLatLng, pickupLatLng],
+          color: Colors.amber,
+          width: 4,
+        ),
+      );
+    homeCubit.setPolylines(updatedPolylines);
 
-    if (!context.mounted) return;
-
-    // Set state so HomeViewBody shows RideBookingOverlay
-    // persistently in the Stack (non-modal = map stays interactive)
-    homeCubit.setConfirmedRide(result);
+    // Append a car marker at the driver position.
+    final updatedMarkers = List<MapMarker>.from(homeCubit.state.markers)
+      ..add(
+        MapMarker(
+          id: 'driver',
+          position: driverLatLng,
+          iconWidget: _DriverMarker(),
+        ),
+      );
+    homeCubit.setMarkers(updatedMarkers);
   }
 }
 
@@ -177,6 +238,47 @@ class PointMarker extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Animated car icon used to mark the driver position on the map.
+class _DriverMarker extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: Colors.amber.withValues(alpha: 0.18),
+            shape: BoxShape.circle,
+          ),
+        ),
+        Container(
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            color: Colors.amber,
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 2.5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.amber.withValues(alpha: 0.55),
+                blurRadius: 10,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: const Icon(
+            Icons.directions_car_filled_rounded,
+            color: Colors.white,
+            size: 16,
+          ),
         ),
       ],
     );

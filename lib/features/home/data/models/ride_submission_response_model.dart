@@ -45,7 +45,8 @@ class RideSubmissionResponseModel {
     normalized['is_night'] = data['is_night'] ?? data['isNight'];
     normalized['distance_km'] = data['distance_km'] ?? data['distanceKm'];
     normalized['duration_min'] = data['duration_min'] ?? data['durationMin'];
-    normalized['estimated_fare'] = data['estimated_fare'] ?? data['estimatedFare'];
+    normalized['estimated_fare'] =
+        data['estimated_fare'] ?? data['estimatedFare'];
 
     return _$RideSubmissionResponseModelFromJson(normalized);
   }

@@ -14,6 +14,10 @@ class HomeState {
   final bool isSubmittingRide;
   final bool rideSubmittedSuccessfully;
   final String? bookingErrorMessage;
+  final bool isFetchingRoute;
+
+  /// Populated once the ride submission API succeeds.
+  final RideSubmissionResponse? submissionResponse;
 
   const HomeState({
     required this.ui,
@@ -27,6 +31,8 @@ class HomeState {
     this.isSubmittingRide = false,
     this.rideSubmittedSuccessfully = false,
     this.bookingErrorMessage,
+    this.submissionResponse,
+    this.isFetchingRoute = false,
   });
 
   const HomeState.initial()
@@ -40,7 +46,9 @@ class HomeState {
       confirmedRideResult = null,
       isSubmittingRide = false,
       rideSubmittedSuccessfully = false,
-      bookingErrorMessage = null;
+      bookingErrorMessage = null,
+      submissionResponse = null,
+      isFetchingRoute = false;
 
   HomeState copyWith({
     HomeUiState? ui,
@@ -56,6 +64,9 @@ class HomeState {
     bool? rideSubmittedSuccessfully,
     String? bookingErrorMessage,
     bool clearBookingError = false,
+    RideSubmissionResponse? submissionResponse,
+    bool clearSubmissionResponse = false,
+    bool? isFetchingRoute,
   }) {
     return HomeState(
       ui: ui ?? this.ui,
@@ -75,6 +86,10 @@ class HomeState {
       bookingErrorMessage: clearBookingError
           ? null
           : (bookingErrorMessage ?? this.bookingErrorMessage),
+      submissionResponse: clearSubmissionResponse
+          ? null
+          : (submissionResponse ?? this.submissionResponse),
+      isFetchingRoute: isFetchingRoute ?? this.isFetchingRoute,
     );
   }
 }

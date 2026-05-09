@@ -17,8 +17,8 @@ abstract class RideRequestModel with _$RideRequestModel {
       _$RideRequestModelFromJson(json);
 
   factory RideRequestModel.fromEntity(RideRequest entity) => RideRequestModel(
-        pickup: RideLocationModel.fromEntity(entity.pickup),
-        destination: RideLocationModel.fromEntity(entity.destination),
-        stops: entity.stops.map((e) => RideLocationModel.fromEntity(e)).toList(),
-      );
+    pickup: RideLocationModel.fromEntity(entity.pickup),
+    destination: RideLocationModel.fromEntity(entity.destination),
+    stops: entity.stops.map((e) => RideLocationModel.fromEntity(e)).toList(),
+  );
 }

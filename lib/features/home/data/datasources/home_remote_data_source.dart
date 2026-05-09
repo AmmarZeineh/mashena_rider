@@ -1,6 +1,3 @@
-abstract class HomeRemoteDataSource {
-}
+abstract class HomeRemoteDataSource {}
 
-class HomeRemoteDataSourceImpl
-    implements HomeRemoteDataSource {
-}
+class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {}

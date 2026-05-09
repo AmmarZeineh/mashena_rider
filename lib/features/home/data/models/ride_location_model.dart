@@ -17,15 +17,12 @@ abstract class RideLocationModel with _$RideLocationModel {
   factory RideLocationModel.fromJson(Map<String, dynamic> json) =>
       _$RideLocationModelFromJson(json);
 
-  factory RideLocationModel.fromEntity(RideLocation entity) => RideLocationModel(
+  factory RideLocationModel.fromEntity(RideLocation entity) =>
+      RideLocationModel(
         lat: entity.lat,
         lng: entity.lng,
         address: entity.address,
       );
 
-  RideLocation toEntity() => RideLocation(
-        lat: lat,
-        lng: lng,
-        address: address,
-      );
+  RideLocation toEntity() => RideLocation(lat: lat, lng: lng, address: address);
 }

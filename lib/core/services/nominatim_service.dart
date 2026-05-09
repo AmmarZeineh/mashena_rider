@@ -8,7 +8,8 @@ class NominatimService {
 
   /// Language code used for all Nominatim queries.
   /// Defaults to the device language. Call [setLanguage] to change.
-  String _languageCode = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+  String _languageCode =
+      WidgetsBinding.instance.platformDispatcher.locale.languageCode;
 
   NominatimService(this._dio);
 
@@ -17,7 +18,10 @@ class NominatimService {
     _languageCode = languageCode;
   }
 
-  Future<List<PlaceEntity>> searchPlaces(String query, {String? language}) async {
+  Future<List<PlaceEntity>> searchPlaces(
+    String query, {
+    String? language,
+  }) async {
     try {
       final response = await _dio.get(
         'https://nominatim.openstreetmap.org/search',
@@ -54,7 +58,11 @@ class NominatimService {
     }
   }
 
-  Future<PlaceEntity> reverseGeocode(double lat, double lng, {String? language}) async {
+  Future<PlaceEntity> reverseGeocode(
+    double lat,
+    double lng, {
+    String? language,
+  }) async {
     try {
       final response = await _dio.get(
         'https://nominatim.openstreetmap.org/reverse',

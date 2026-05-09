@@ -8,7 +8,7 @@ class MapPolyline {
   final int width;
 
   const MapPolyline({
-    required this.id, 
+    required this.id,
     required this.points,
     this.color = Colors.blue,
     this.width = 5,

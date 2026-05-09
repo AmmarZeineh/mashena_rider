@@ -3,11 +3,7 @@ import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 
 class CustomElevatedButton extends StatelessWidget {
-  const CustomElevatedButton({
-    super.key,
-    required this.title,
-    this.onPressed,
-  });
+  const CustomElevatedButton({super.key, required this.title, this.onPressed});
 
   final String title;
   final VoidCallback? onPressed;

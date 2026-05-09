@@ -40,12 +40,12 @@ class _RideBookingOverlayState extends State<RideBookingOverlay> {
     final estimates = widget.rideResult.estimateResponse.estimates;
 
     return BlocConsumer<HomeCubit, HomeState>(
+      listenWhen: (previous, current) =>
+          previous.rideSubmittedSuccessfully != current.rideSubmittedSuccessfully,
       listener: (context, state) {
         if (state.rideSubmittedSuccessfully) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Ride booked successfully!')),
-          );
-          // Handle navigation or flow cleanup if needed
+          // Draw the simulated driver route on the map
+          RideFlowHelper.drawDriverRoute(context, widget.rideResult.pickup);
         }
         if (state.bookingErrorMessage != null) {
           ScaffoldMessenger.of(

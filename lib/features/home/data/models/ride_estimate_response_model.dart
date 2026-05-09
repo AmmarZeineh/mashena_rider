@@ -81,7 +81,8 @@ class RideEstimateResponseModel {
     normalized['stops_count'] = data['stops_count'] ?? data['stopsCount'];
     normalized['is_night'] = data['is_night'] ?? data['isNight'];
     normalized['estimates'] = data['estimates'] ?? data['vehicle_types'];
-    normalized['polyline'] = data['polyline'] ?? data['geometry'] ?? data['route'];
+    normalized['polyline'] =
+        data['polyline'] ?? data['geometry'] ?? data['route'];
 
     return _$RideEstimateResponseModelFromJson(normalized);
   }

@@ -25,9 +25,7 @@ final class Validators {
     if (!isNotEmpty(p1) || !isNotEmpty(p2)) {
       return ValidationError.requiredField;
     }
-    return p1 == p2
-        ? null
-        : ValidationError.passwordsNotMatch;
+    return p1 == p2 ? null : ValidationError.passwordsNotMatch;
   }
 
   static bool hasUpperCase(String v) => RegExp(r'[A-Z]').hasMatch(v);

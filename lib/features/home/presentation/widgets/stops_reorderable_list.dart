@@ -39,7 +39,9 @@ class StopsReorderableList extends StatelessWidget {
             isPickup: isPickup,
             state: state,
             cubit: cubit,
-            controller: isPickup ? pickupController : destControllers[index - 1],
+            controller: isPickup
+                ? pickupController
+                : destControllers[index - 1],
             onOpenMap: () => onOpenMap(context, index),
           );
         },

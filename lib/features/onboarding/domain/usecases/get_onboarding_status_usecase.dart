@@ -6,6 +6,5 @@ class GetOnboardingStatus {
 
   final LocalStorage _storage;
 
-  bool call() =>
-      _storage.getBool(AppConstants.isOnboardingSeenKey) ?? false;
+  bool call() => _storage.getBool(AppConstants.isOnboardingSeenKey) ?? false;
 }

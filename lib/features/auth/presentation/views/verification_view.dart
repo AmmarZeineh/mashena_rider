@@ -15,9 +15,7 @@ class VerificationView extends StatelessWidget {
       body: SafeArea(
         child: BlocProvider(
           create: (context) => VerifyOtpBloc(getIt<VerifyOtpUsecase>()),
-          child: VerificationViewBody(
-            resendOtp: getIt<ResendOtpUsecase>(),
-          ),
+          child: VerificationViewBody(resendOtp: getIt<ResendOtpUsecase>()),
         ),
       ),
     );

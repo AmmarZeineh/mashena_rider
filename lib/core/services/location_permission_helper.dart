@@ -63,9 +63,7 @@ class LocationPermissionHelper {
           ),
           content: Text(
             s.locationPermissionRationaleBody,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: cs.onSurface,
-            ),
+            style: theme.textTheme.bodyMedium?.copyWith(color: cs.onSurface),
           ),
           actions: [
             TextButton(
@@ -121,9 +119,7 @@ class LocationPermissionHelper {
           ),
           content: Text(
             s.locationPermissionDeniedForeverBody,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: cs.onSurface,
-            ),
+            style: theme.textTheme.bodyMedium?.copyWith(color: cs.onSurface),
           ),
           actions: [
             TextButton(

@@ -4,16 +4,15 @@ import 'package:mashena_rider/core/maps/domain/entities/map_marker.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_polyline.dart';
 import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/core/services/location_status.dart';
+import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import 'package:mashena_rider/features/home/domain/usecases/submit_ride_request_usecase.dart';
 import 'package:mashena_rider/features/home/presentation/models/confirmed_ride_flow_result.dart';
 
 part 'home_location_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit(
-    this._locationService,
-    this._submitRideRequest,
-  ) : super(const HomeState.initial());
+  HomeCubit(this._locationService, this._submitRideRequest)
+    : super(const HomeState.initial());
 
   final LocationService _locationService;
   final SubmitRideRequestUsecase _submitRideRequest;
@@ -102,9 +101,21 @@ class HomeCubit extends Cubit<HomeState> {
     emit(state.copyWith(confirmedRideResult: result));
   }
 
+  void setFetchingRoute(bool isFetching) {
+    emit(state.copyWith(isFetchingRoute: isFetching));
+  }
+
   /// Clears route, markers, and confirmed ride — back to idle.
   void clearRideFlow() {
-    emit(state.copyWith(polylines: [], markers: [], clearConfirmedRide: true));
+    emit(
+      state.copyWith(
+        polylines: [],
+        markers: [],
+        clearConfirmedRide: true,
+        clearSubmissionResponse: true,
+        rideSubmittedSuccessfully: false,
+      ),
+    );
   }
 
   Future<void> submitRideSelection(int vehicleTypeId) async {
@@ -132,6 +143,7 @@ class HomeCubit extends Cubit<HomeState> {
         state.copyWith(
           isSubmittingRide: false,
           rideSubmittedSuccessfully: true,
+          submissionResponse: submissionResult,
         ),
       ),
     );

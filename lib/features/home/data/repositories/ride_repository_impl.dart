@@ -45,10 +45,7 @@ class RideRepositoryImpl implements RideRepository {
   }) async {
     try {
       final model = RideRequestModel.fromEntity(request);
-      final body = {
-        ...model.toJson(),
-        'vehicleTypeId': vehicleTypeId,
-      };
+      final body = {...model.toJson(), 'vehicleTypeId': vehicleTypeId};
 
       final response = await _apiClient.post(
         BackendEndpoints.submitRideRequest,

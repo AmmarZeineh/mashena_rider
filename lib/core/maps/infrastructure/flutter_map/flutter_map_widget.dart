@@ -61,7 +61,11 @@ class _FlutterMapWidgetState extends State<FlutterMapWidget> {
       children: [
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.mashena.rider',
+          tileProvider: NetworkTileProvider(
+            headers: {
+              'User-Agent': 'MashenaRiderApp/1.0 (com.mashena.rider; contact@mashena.com)',
+            },
+          ),
         ),
         if (widget.polylines.isNotEmpty)
           PolylineLayer(

@@ -85,7 +85,9 @@ class TripStatsRow extends StatelessWidget {
     return Container(
       height: 24.h,
       width: 1.w,
-      color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.5),
+      color: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.5),
     );
   }
 

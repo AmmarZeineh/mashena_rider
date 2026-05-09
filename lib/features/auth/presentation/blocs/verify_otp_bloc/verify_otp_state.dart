@@ -14,4 +14,3 @@ final class VerifyOtpFailure extends VerifyOtpState {
   const VerifyOtpFailure(this.failure);
   final Failure failure;
 }
-
