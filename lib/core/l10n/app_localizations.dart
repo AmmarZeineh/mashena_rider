@@ -864,6 +864,12 @@ abstract class S {
   /// In en, this message translates to:
   /// **'4+1 Person'**
   String get ridePersonCapacity;
+
+  /// No description provided for @homeMapRouteUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Map route currently unavailable. Markers show your trip stops.'**
+  String get homeMapRouteUnavailable;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

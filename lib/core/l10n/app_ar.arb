@@ -161,5 +161,6 @@
       "count": { "type": "int" }
     }
   },
-  "ridePersonCapacity": "4+1 شخص"
+  "ridePersonCapacity": "4+1 شخص",
+  "homeMapRouteUnavailable": "مسار الخريطة غير متاح حالياً. العلامات توضح توقفات رحلتك."
 }

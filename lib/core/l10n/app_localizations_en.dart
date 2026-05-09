@@ -415,4 +415,8 @@ class SEn extends S {
 
   @override
   String get ridePersonCapacity => '4+1 Person';
+
+  @override
+  String get homeMapRouteUnavailable =>
+      'Map route currently unavailable. Markers show your trip stops.';
 }

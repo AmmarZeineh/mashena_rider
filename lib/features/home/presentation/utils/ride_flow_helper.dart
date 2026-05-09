@@ -13,6 +13,7 @@ import 'package:mashena_rider/features/home/presentation/models/confirmed_ride_f
 
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
+import 'package:mashena_rider/core/utils/app_toast.dart';
 
 abstract class RideFlowHelper {
   /// Opens the address picker and handles the confirmed ride result.
@@ -129,15 +130,13 @@ abstract class RideFlowHelper {
         homeCubit.setFetchingRoute(false);
 
         // Show a helpful message if route drawing failed but we have results
-        if (homeCubit.state.polylines.isEmpty &&
+        if (context.mounted &&
+            homeCubit.state.polylines.isEmpty &&
             homeCubit.state.confirmedRideResult != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Map route currently unavailable. Markers show your trip stops.',
-              ),
-              duration: Duration(seconds: 3),
-            ),
+          AppToast.show(
+            context,
+            message: S.of(context).homeMapRouteUnavailable,
+            type: AppToastType.warning,
           );
         }
       }

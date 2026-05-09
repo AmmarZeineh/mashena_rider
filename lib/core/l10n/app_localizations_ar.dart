@@ -410,4 +410,8 @@ class SAr extends S {
 
   @override
   String get ridePersonCapacity => '4+1 شخص';
+
+  @override
+  String get homeMapRouteUnavailable =>
+      'مسار الخريطة غير متاح حالياً. العلامات توضح توقفات رحلتك.';
 }

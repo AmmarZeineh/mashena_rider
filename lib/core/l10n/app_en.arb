@@ -167,5 +167,6 @@
       }
     }
   },
-  "ridePersonCapacity": "4+1 Person"
+  "ridePersonCapacity": "4+1 Person",
+  "homeMapRouteUnavailable": "Map route currently unavailable. Markers show your trip stops."
 }
