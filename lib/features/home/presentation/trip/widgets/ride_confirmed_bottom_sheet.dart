@@ -12,7 +12,7 @@ import 'ride_confirmed_sheet_components/confirmed_badge.dart';
 import 'ride_confirmed_sheet_components/driver_card.dart';
 import 'ride_confirmed_sheet_components/trip_details.dart';
 
-class RideConfirmedBottomSheet extends StatelessWidget {
+class RideConfirmedBottomSheet extends StatefulWidget {
   const RideConfirmedBottomSheet({
     super.key,
     required this.rideResult,
@@ -23,65 +23,112 @@ class RideConfirmedBottomSheet extends StatelessWidget {
   final RideSubmissionResponse submissionResponse;
 
   @override
+  State<RideConfirmedBottomSheet> createState() =>
+      _RideConfirmedBottomSheetState();
+}
+
+class _RideConfirmedBottomSheetState extends State<RideConfirmedBottomSheet> {
+  bool _isMinimized = false;
+
+  void _handleVerticalDragEnd(DragEndDetails details) {
+    if (details.primaryVelocity != null) {
+      if (details.primaryVelocity! > 300) {
+        // Swiped down
+        if (!_isMinimized) {
+          setState(() => _isMinimized = true);
+        }
+      } else if (details.primaryVelocity! < -300) {
+        // Swiped up
+        if (_isMinimized) {
+          setState(() => _isMinimized = false);
+        }
+      }
+    }
+  }
+
+  void _handleTap() {
+    if (_isMinimized) {
+      setState(() => _isMinimized = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Container(
-        decoration: BoxDecoration(
-          color: colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 30,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(height: 12.h),
-            const CustomDragHandle(),
-            SizedBox(height: 16.h),
-
-            // Confirmed Status Badge
-            const Center(child: ConfirmedBadge()),
-
-            SizedBox(height: 24.h),
-
-            // Simulated Driver Card
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: const DriverCard(),
-            ),
-
-            SizedBox(height: 24.h),
-
-            // Trip Details
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: TripDetails(submissionResponse: submissionResponse),
-            ),
-
-            SizedBox(height: 32.h),
-
-            // Cancel Button
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 24.w,
-              ).copyWith(bottom: MediaQuery.of(context).padding.bottom + 16.h),
-              child: CancelRideButton(
-                onPressed: () {
-                  context.read<HomeCubit>().clearRideFlow();
-                },
-                label: S.of(context).rideCancelRide,
+      child: GestureDetector(
+        onVerticalDragEnd: _handleVerticalDragEnd,
+        onTap: _handleTap,
+        child: Container(
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 30,
+                offset: const Offset(0, -5),
               ),
+            ],
+          ),
+          child: AnimatedSize(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
+            alignment: Alignment.topCenter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: 12.h),
+                const CustomDragHandle(),
+                SizedBox(height: 16.h),
+
+                // Confirmed Status Badge
+                const Center(child: ConfirmedBadge()),
+
+                if (!_isMinimized) ...[
+                  SizedBox(height: 24.h),
+
+                  // Simulated Driver Card
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    child: const DriverCard(),
+                  ),
+
+                  SizedBox(height: 24.h),
+
+                  // Trip Details
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    child: TripDetails(
+                      submissionResponse: widget.submissionResponse,
+                    ),
+                  ),
+
+                  SizedBox(height: 32.h),
+
+                  // Cancel Button
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w).copyWith(
+                      bottom: MediaQuery.of(context).padding.bottom + 16.h,
+                    ),
+                    child: CancelRideButton(
+                      onPressed: () {
+                        context.read<HomeCubit>().clearRideFlow();
+                      },
+                      label: S.of(context).rideCancelRide,
+                    ),
+                  ),
+                ] else ...[
+                  SizedBox(
+                    height: MediaQuery.of(context).padding.bottom + 16.h,
+                  ),
+                ],
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
