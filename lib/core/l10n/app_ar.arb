@@ -15,6 +15,7 @@
   "commonSkip": "تخطي",
   "commonConfirm": "تأكيد",
   "commonSave": "حفظ",
+  "commonSelected": "مختار",
   "commonLoading": "جاري التحميل...",
   "commonError": "حدث خطأ ما",
   "commonRetry": "إعادة المحاولة",
@@ -162,5 +163,18 @@
     }
   },
   "ridePersonCapacity": "4+1 شخص",
-  "homeMapRouteUnavailable": "مسار الخريطة غير متاح حالياً. العلامات توضح توقفات رحلتك."
+  "homeMapRouteUnavailable": "مسار الخريطة غير متاح حالياً. العلامات توضح توقفات رحلتك.",
+  "rideConfirmed": "تم تأكيد الرحلة",
+  "driverRating": "التقييم",
+  "driverTrips": "الرحلات",
+  "driverYears": "سنوات",
+  "driverVehicleDetails": "تفاصيل المركبة",
+  "driverLicensePlate": "رقم اللوحة",
+  "commonClose": "إغلاق",
+  "rideEstFare": "السعر التقديري",
+  "rideDistance": "المسافة",
+  "rideDuration": "المدة",
+  "commonPleaseWait": "يرجى الانتظار",
+  "rideLookingForDrivers": "جارٍ البحث عن سائقين قريبين...",
+  "rideTakesFewMoments": "يستغرق هذا عادة بضع لحظات"
 }

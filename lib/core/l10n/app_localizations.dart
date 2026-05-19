@@ -187,6 +187,12 @@ abstract class S {
   /// **'Save'**
   String get commonSave;
 
+  /// No description provided for @commonSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get commonSelected;
+
   /// No description provided for @commonLoading.
   ///
   /// In en, this message translates to:
@@ -870,6 +876,84 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Map route currently unavailable. Markers show your trip stops.'**
   String get homeMapRouteUnavailable;
+
+  /// No description provided for @rideConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride Confirmed'**
+  String get rideConfirmed;
+
+  /// No description provided for @driverRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get driverRating;
+
+  /// No description provided for @driverTrips.
+  ///
+  /// In en, this message translates to:
+  /// **'Trips'**
+  String get driverTrips;
+
+  /// No description provided for @driverYears.
+  ///
+  /// In en, this message translates to:
+  /// **'Years'**
+  String get driverYears;
+
+  /// No description provided for @driverVehicleDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle Details'**
+  String get driverVehicleDetails;
+
+  /// No description provided for @driverLicensePlate.
+  ///
+  /// In en, this message translates to:
+  /// **'License Plate'**
+  String get driverLicensePlate;
+
+  /// No description provided for @commonClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get commonClose;
+
+  /// No description provided for @rideEstFare.
+  ///
+  /// In en, this message translates to:
+  /// **'Est. Fare'**
+  String get rideEstFare;
+
+  /// No description provided for @rideDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get rideDistance;
+
+  /// No description provided for @rideDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get rideDuration;
+
+  /// No description provided for @commonPleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait'**
+  String get commonPleaseWait;
+
+  /// No description provided for @rideLookingForDrivers.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for nearby drivers...'**
+  String get rideLookingForDrivers;
+
+  /// No description provided for @rideTakesFewMoments.
+  ///
+  /// In en, this message translates to:
+  /// **'This usually takes a few moments'**
+  String get rideTakesFewMoments;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

@@ -15,6 +15,7 @@
   "commonSkip": "Skip",
   "commonConfirm": "Confirm",
   "commonSave": "Save",
+  "commonSelected": "Selected",
   "commonLoading": "Loading...",
   "commonError": "Something went wrong",
   "commonRetry": "Retry",
@@ -168,5 +169,18 @@
     }
   },
   "ridePersonCapacity": "4+1 Person",
-  "homeMapRouteUnavailable": "Map route currently unavailable. Markers show your trip stops."
+  "homeMapRouteUnavailable": "Map route currently unavailable. Markers show your trip stops.",
+  "rideConfirmed": "Ride Confirmed",
+  "driverRating": "Rating",
+  "driverTrips": "Trips",
+  "driverYears": "Years",
+  "driverVehicleDetails": "Vehicle Details",
+  "driverLicensePlate": "License Plate",
+  "commonClose": "Close",
+  "rideEstFare": "Est. Fare",
+  "rideDistance": "Distance",
+  "rideDuration": "Duration",
+  "commonPleaseWait": "Please wait",
+  "rideLookingForDrivers": "Looking for nearby drivers...",
+  "rideTakesFewMoments": "This usually takes a few moments"
 }

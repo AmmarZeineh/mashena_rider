@@ -55,6 +55,9 @@ class SEn extends S {
   String get commonSave => 'Save';
 
   @override
+  String get commonSelected => 'Selected';
+
+  @override
   String get commonLoading => 'Loading...';
 
   @override
@@ -419,4 +422,43 @@ class SEn extends S {
   @override
   String get homeMapRouteUnavailable =>
       'Map route currently unavailable. Markers show your trip stops.';
+
+  @override
+  String get rideConfirmed => 'Ride Confirmed';
+
+  @override
+  String get driverRating => 'Rating';
+
+  @override
+  String get driverTrips => 'Trips';
+
+  @override
+  String get driverYears => 'Years';
+
+  @override
+  String get driverVehicleDetails => 'Vehicle Details';
+
+  @override
+  String get driverLicensePlate => 'License Plate';
+
+  @override
+  String get commonClose => 'Close';
+
+  @override
+  String get rideEstFare => 'Est. Fare';
+
+  @override
+  String get rideDistance => 'Distance';
+
+  @override
+  String get rideDuration => 'Duration';
+
+  @override
+  String get commonPleaseWait => 'Please wait';
+
+  @override
+  String get rideLookingForDrivers => 'Looking for nearby drivers...';
+
+  @override
+  String get rideTakesFewMoments => 'This usually takes a few moments';
 }

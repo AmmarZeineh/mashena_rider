@@ -61,7 +61,7 @@ import 'package:mashena_rider/features/home/domain/repositories/ride_repository.
 import 'package:mashena_rider/features/home/domain/usecases/create_ride_request_usecase.dart';
 import 'package:mashena_rider/features/home/domain/usecases/submit_ride_request_usecase.dart';
 import 'package:mashena_rider/features/home/data/repositories/ride_repository_impl.dart';
-import 'package:mashena_rider/features/home/presentation/cubits/pick_address_cubit/pick_address_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/address/cubits/pick_address_cubit/pick_address_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 

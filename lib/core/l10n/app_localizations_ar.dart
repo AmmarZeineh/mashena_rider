@@ -54,6 +54,9 @@ class SAr extends S {
   String get commonSave => 'حفظ';
 
   @override
+  String get commonSelected => 'مختار';
+
+  @override
   String get commonLoading => 'جاري التحميل...';
 
   @override
@@ -414,4 +417,43 @@ class SAr extends S {
   @override
   String get homeMapRouteUnavailable =>
       'مسار الخريطة غير متاح حالياً. العلامات توضح توقفات رحلتك.';
+
+  @override
+  String get rideConfirmed => 'تم تأكيد الرحلة';
+
+  @override
+  String get driverRating => 'التقييم';
+
+  @override
+  String get driverTrips => 'الرحلات';
+
+  @override
+  String get driverYears => 'سنوات';
+
+  @override
+  String get driverVehicleDetails => 'تفاصيل المركبة';
+
+  @override
+  String get driverLicensePlate => 'رقم اللوحة';
+
+  @override
+  String get commonClose => 'إغلاق';
+
+  @override
+  String get rideEstFare => 'السعر التقديري';
+
+  @override
+  String get rideDistance => 'المسافة';
+
+  @override
+  String get rideDuration => 'المدة';
+
+  @override
+  String get commonPleaseWait => 'يرجى الانتظار';
+
+  @override
+  String get rideLookingForDrivers => 'جارٍ البحث عن سائقين قريبين...';
+
+  @override
+  String get rideTakesFewMoments => 'يستغرق هذا عادة بضع لحظات';
 }
