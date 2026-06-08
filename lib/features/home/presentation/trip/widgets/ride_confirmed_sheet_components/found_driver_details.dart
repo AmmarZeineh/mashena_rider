@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
+import 'package:mashena_rider/features/home/presentation/shell/cubits/home_cubit/home_cubit.dart';
 
 import 'driver_details_bottom_sheet.dart';
 
@@ -13,171 +15,226 @@ class FoundDriverDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              // Driver Avatar
-              CircleAvatar(
-                radius: 26.r,
-                backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
-                child: Icon(
-                  Icons.person,
-                  color: colorScheme.primary,
-                  size: 28.sp,
-                ),
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        final matchedTrip = state.matchedTrip;
+
+        if (state.isLoadingMatchedTrip || matchedTrip == null) {
+          return Container(
+            padding: EdgeInsets.all(24.w),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(
+                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
               ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+            ),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 20.w,
+                    height: 20.w,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.w,
+                      color: colorScheme.primary,
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Text(
+                    'Loading driver details...',
+                    style: AppTextStyles.w600_14.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final driverName = matchedTrip.driverFullName;
+        final rating = matchedTrip.driverRatingAvg.toStringAsFixed(1);
+        final vehicleModel = matchedTrip.model ?? 'Vehicle';
+        final vehicleColor = matchedTrip.color ?? '';
+        final vehicleText = vehicleColor.isNotEmpty
+            ? '$vehicleModel • $vehicleColor'
+            : vehicleModel;
+        final plateNumber = matchedTrip.plateNumber ?? '...';
+
+        return Container(
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  // Driver Avatar
+                  CircleAvatar(
+                    radius: 26.r,
+                    backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
+                    child: Icon(
+                      Icons.person,
+                      color: colorScheme.primary,
+                      size: 28.sp,
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              driverName,
+                              style: AppTextStyles.w700_18.copyWith(
+                                color: colorScheme.onSurface,
+                              ),
+                            ),
+                            SizedBox(width: 4.w),
+                            Material(
+                              color: Colors.transparent,
+                              shape: const CircleBorder(),
+                              clipBehavior: Clip.antiAlias,
+                              child: InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (context) =>
+                                        const DriverDetailsBottomSheet(),
+                                  );
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.all(4.w),
+                                  child: Icon(
+                                    Icons.info_outline_rounded,
+                                    color: colorScheme.primary,
+                                    size: 20.sp,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 2.h),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.star_rounded,
+                              color: Colors.amber,
+                              size: 16.sp,
+                            ),
+                            SizedBox(width: 4.w),
+                            Text(
+                              rating,
+                              style: AppTextStyles.w500_14.copyWith(
+                                color: AppColors.textGrey,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Container(
+                              width: 4.w,
+                              height: 4.w,
+                              decoration: const BoxDecoration(
+                                color: AppColors.textGrey,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              '500+ ${S.of(context).driverTrips}',
+                              style: AppTextStyles.w500_14.copyWith(
+                                color: AppColors.textGrey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.h),
+              // Car Details and Actions
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 8.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surface,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: colorScheme.outlineVariant.withValues(
+                          alpha: 0.5,
+                        ),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Ahmad Ali',
-                          style: AppTextStyles.w700_18.copyWith(
+                          vehicleText,
+                          style: AppTextStyles.w600_14.copyWith(
                             color: colorScheme.onSurface,
                           ),
                         ),
-                        SizedBox(width: 4.w),
-                        Material(
-                          color: Colors.transparent,
-                          shape: const CircleBorder(),
-                          clipBehavior: Clip.antiAlias,
-                          child: InkWell(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                builder: (context) =>
-                                    const DriverDetailsBottomSheet(),
-                              );
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(4.w),
-                              child: Icon(
-                                Icons.info_outline_rounded,
-                                color: colorScheme.primary,
-                                size: 20.sp,
-                              ),
+                        SizedBox(height: 4.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.amber.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(4.r),
+                            border: Border.all(color: Colors.amber.shade300),
+                          ),
+                          child: Text(
+                            plateNumber,
+                            style: AppTextStyles.w700_12.copyWith(
+                              color: Colors.amber.shade800,
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 2.h),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.star_rounded,
-                          color: Colors.amber,
-                          size: 16.sp,
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          '4.9',
-                          style: AppTextStyles.w500_14.copyWith(
-                            color: AppColors.textGrey,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Container(
-                          width: 4.w,
-                          height: 4.w,
-                          decoration: const BoxDecoration(
-                            color: AppColors.textGrey,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Text(
-                          '500+ ${S.of(context).driverTrips}',
-                          style: AppTextStyles.w500_14.copyWith(
-                            color: AppColors.textGrey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.h),
-          // Car Details and Actions
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                decoration: BoxDecoration(
-                  color: colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                   ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Toyota Corolla • White',
-                      style: AppTextStyles.w600_14.copyWith(
-                        color: colorScheme.onSurface,
+                  Row(
+                    children: [
+                      DriverActionCircle(
+                        icon: Icons.chat_bubble_outline_rounded,
+                        color: colorScheme.secondary,
+                        onPressed: () {},
                       ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 6.w,
-                        vertical: 2.h,
+                      SizedBox(width: 12.w),
+                      DriverActionCircle(
+                        icon: Icons.phone_rounded,
+                        color: colorScheme.primary,
+                        onPressed: () {},
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.amber.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(4.r),
-                        border: Border.all(color: Colors.amber.shade300),
-                      ),
-                      child: Text(
-                        'ABC - 1234',
-                        style: AppTextStyles.w700_12.copyWith(
-                          color: Colors.amber.shade800,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  DriverActionCircle(
-                    icon: Icons.chat_bubble_outline_rounded,
-                    color: colorScheme.secondary,
-                    onPressed: () {},
-                  ),
-                  SizedBox(width: 12.w),
-                  DriverActionCircle(
-                    icon: Icons.phone_rounded,
-                    color: colorScheme.primary,
-                    onPressed: () {},
+                    ],
                   ),
                 ],
               ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

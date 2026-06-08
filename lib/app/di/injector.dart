@@ -13,6 +13,8 @@ import 'package:mashena_rider/core/network/api_client.dart';
 import 'package:mashena_rider/core/network/dio_client.dart';
 import 'package:mashena_rider/core/network/auth_interceptor.dart';
 import 'package:mashena_rider/core/network/network_info.dart';
+import 'package:mashena_rider/core/network/socket_client.dart';
+import 'package:mashena_rider/core/network/socket_io_client_impl.dart';
 
 // ======================
 // Core - Auth
@@ -60,6 +62,7 @@ import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_c
 import 'package:mashena_rider/features/home/domain/repositories/ride_repository.dart';
 import 'package:mashena_rider/features/home/domain/usecases/create_ride_request_usecase.dart';
 import 'package:mashena_rider/features/home/domain/usecases/submit_ride_request_usecase.dart';
+import 'package:mashena_rider/features/home/data/datasources/ride_socket_data_source.dart';
 import 'package:mashena_rider/features/home/data/repositories/ride_repository_impl.dart';
 import 'package:mashena_rider/features/home/presentation/address/cubits/pick_address_cubit/pick_address_cubit.dart';
 
@@ -167,6 +170,13 @@ Future<void> configureDependencies() async {
     ),
   );
 
+  getIt.registerLazySingleton<SocketClient>(
+    () => SocketIOClientImpl(
+      getIt<AppConfig>(),
+      getIt<TokenManager>(),
+    ),
+  );
+
   // =====================================================
   // 🔹 5. Features - Onboarding
   // =====================================================
@@ -238,8 +248,15 @@ Future<void> configureDependencies() async {
   // 🔹 9. Features - Home (Data & Domain)
   // =====================================================
 
+  getIt.registerLazySingleton<RideSocketDataSource>(
+    () => RideSocketDataSourceImpl(getIt<SocketClient>()),
+  );
+
   getIt.registerLazySingleton<RideRepository>(
-    () => RideRepositoryImpl(getIt<ApiClient>()),
+    () => RideRepositoryImpl(
+      getIt<ApiClient>(),
+      getIt<RideSocketDataSource>(),
+    ),
   );
 
   getIt.registerFactory<CreateRideRequestUsecase>(

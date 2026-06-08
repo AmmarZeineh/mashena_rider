@@ -44,13 +44,6 @@ class _RideBookingOverlayState extends State<RideBookingOverlay> {
           previous.rideSubmittedSuccessfully !=
           current.rideSubmittedSuccessfully,
       listener: (context, state) {
-        if (state.rideSubmittedSuccessfully) {
-          // Draw the simulated driver route on the map
-          RideFlowCoordinator.drawDriverRoute(
-            context,
-            widget.rideResult.pickup,
-          );
-        }
         if (state.bookingErrorMessage != null) {
           ScaffoldMessenger.of(
             context,

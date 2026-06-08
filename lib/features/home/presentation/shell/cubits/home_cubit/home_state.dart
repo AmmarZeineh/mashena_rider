@@ -15,6 +15,9 @@ class HomeState {
   final bool rideSubmittedSuccessfully;
   final String? bookingErrorMessage;
   final bool isFetchingRoute;
+  final bool isDriverFound;
+  final bool isLoadingMatchedTrip;
+  final MatchedTrip? matchedTrip;
 
   /// Populated once the ride submission API succeeds.
   final RideSubmissionResponse? submissionResponse;
@@ -33,6 +36,9 @@ class HomeState {
     this.bookingErrorMessage,
     this.submissionResponse,
     this.isFetchingRoute = false,
+    this.isDriverFound = false,
+    this.isLoadingMatchedTrip = false,
+    this.matchedTrip,
   });
 
   const HomeState.initial()
@@ -48,7 +54,11 @@ class HomeState {
       rideSubmittedSuccessfully = false,
       bookingErrorMessage = null,
       submissionResponse = null,
-      isFetchingRoute = false;
+      isFetchingRoute = false,
+      isDriverFound = false,
+      isLoadingMatchedTrip = false,
+      matchedTrip = null;
+
 
   HomeState copyWith({
     HomeUiState? ui,
@@ -67,6 +77,11 @@ class HomeState {
     RideSubmissionResponse? submissionResponse,
     bool clearSubmissionResponse = false,
     bool? isFetchingRoute,
+    bool? isDriverFound,
+    bool clearDriverFound = false,
+    bool? isLoadingMatchedTrip,
+    MatchedTrip? matchedTrip,
+    bool clearMatchedTrip = false,
   }) {
     return HomeState(
       ui: ui ?? this.ui,
@@ -90,6 +105,10 @@ class HomeState {
           ? null
           : (submissionResponse ?? this.submissionResponse),
       isFetchingRoute: isFetchingRoute ?? this.isFetchingRoute,
+      isDriverFound: clearDriverFound ? false : (isDriverFound ?? this.isDriverFound),
+      isLoadingMatchedTrip: isLoadingMatchedTrip ?? this.isLoadingMatchedTrip,
+      matchedTrip: clearMatchedTrip ? null : (matchedTrip ?? this.matchedTrip),
     );
   }
+
 }

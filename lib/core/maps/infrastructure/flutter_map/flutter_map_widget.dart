@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/maps/presentation/app_map.dart';
+
 import 'flutter_map_controller_adapter.dart';
 
 class FlutterMapWidget extends AppMap {
@@ -35,6 +36,50 @@ class _FlutterMapWidgetState extends State<FlutterMapWidget> {
     super.dispose();
   }
 
+  Widget _buildTileLayer(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    Widget tileLayer = TileLayer(
+      urlTemplate: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+      tileProvider: NetworkTileProvider(
+        headers: {
+          'User-Agent':
+              'MashenaRiderApp/1.0 (com.mashena.rider; contact@mashena.com)',
+        },
+      ),
+    );
+
+    if (isDarkMode) {
+      tileLayer = ColorFiltered(
+        colorFilter: const ColorFilter.matrix(<double>[
+          0.75,
+          0.00,
+          0.00,
+          0,
+          -15,
+          0.00,
+          0.78,
+          0.00,
+          0,
+          -15,
+          0.00,
+          0.00,
+          0.90,
+          0,
+          -8,
+          0.00,
+          0.00,
+          0.00,
+          1,
+          0,
+        ]),
+        child: tileLayer,
+      );
+    }
+
+    return tileLayer;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
@@ -46,27 +91,17 @@ class _FlutterMapWidgetState extends State<FlutterMapWidget> {
           widget.onMapCreated(FlutterMapControllerAdapter(_mapController));
         },
         onPositionChanged: (position, hasGesture) {
-          if (widget.onCameraMove != null) {
-            widget.onCameraMove!(
-              MapLatLng(
-                latitude: position.center.latitude,
-                longitude: position.center.longitude,
-              ),
-            );
-          }
+          widget.onCameraMove?.call(
+            MapLatLng(
+              latitude: position.center.latitude,
+              longitude: position.center.longitude,
+            ),
+          );
         },
-        // We simulate onCameraIdle by assuming the gesture ended or pos changed
-        // Real idle detection might require a custom debounce or listening to map event stream.
       ),
       children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          tileProvider: NetworkTileProvider(
-            headers: {
-              'User-Agent': 'MashenaRiderApp/1.0 (com.mashena.rider; contact@mashena.com)',
-            },
-          ),
-        ),
+        _buildTileLayer(context),
+
         if (widget.polylines.isNotEmpty)
           PolylineLayer(
             polylines: widget.polylines
@@ -79,10 +114,12 @@ class _FlutterMapWidgetState extends State<FlutterMapWidget> {
                 )
                 .toList(),
           ),
+
         if (widget.markers.isNotEmpty)
           MarkerLayer(
             markers: widget.markers.map((m) {
               final Widget child;
+
               if (m.iconWidget != null) {
                 child = m.iconWidget!;
               } else if (m.iconPath != null) {
@@ -94,6 +131,7 @@ class _FlutterMapWidgetState extends State<FlutterMapWidget> {
                   size: 36,
                 );
               }
+
               return Marker(
                 point: m.position.toLatLng(),
                 width: 48,

@@ -1,48 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/features/home/presentation/shell/cubits/home_cubit/home_cubit.dart';
 
 import 'found_driver_details.dart';
 import 'searching_driver_details.dart';
 
-class DriverCard extends StatefulWidget {
+class DriverCard extends StatelessWidget {
   const DriverCard({super.key});
 
   @override
-  State<DriverCard> createState() => _DriverCardState();
-}
-
-class _DriverCardState extends State<DriverCard> {
-  bool _isDriverFound = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // Simulate finding a driver after 2.5 seconds
-    Future.delayed(const Duration(milliseconds: 2500), () {
-      if (mounted) {
-        setState(() {
-          _isDriverFound = true;
-        });
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
-      transitionBuilder: (child, animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: SizeTransition(
-            sizeFactor: animation,
-            axisAlignment: -1.0,
-            child: child,
-          ),
+    return BlocBuilder<HomeCubit, HomeState>(
+      buildWhen: (previous, current) =>
+          previous.isDriverFound != current.isDriverFound,
+      builder: (context, state) {
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          transitionBuilder: (child, animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: SizeTransition(
+                sizeFactor: animation,
+                axisAlignment: -1.0,
+                child: child,
+              ),
+            );
+          },
+          child: state.isDriverFound
+              ? const FoundDriverDetails(key: ValueKey('found'))
+              : const SearchingDriverDetails(key: ValueKey('searching')),
         );
       },
-      child: _isDriverFound
-          ? const FoundDriverDetails(key: ValueKey('found'))
-          : const SearchingDriverDetails(key: ValueKey('searching')),
     );
   }
 }

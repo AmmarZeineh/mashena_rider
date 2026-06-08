@@ -182,7 +182,7 @@ abstract class RideFlowCoordinator {
         MapMarker(
           id: 'driver',
           position: driverLatLng,
-          iconWidget: _DriverMarker(),
+          iconWidget: const DriverMarkerWidget(),
         ),
       );
     homeCubit.setMarkers(updatedMarkers);
@@ -244,7 +244,9 @@ class PointMarker extends StatelessWidget {
 }
 
 /// Animated car icon used to mark the driver position on the map.
-class _DriverMarker extends StatelessWidget {
+class DriverMarkerWidget extends StatelessWidget {
+  const DriverMarkerWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -274,12 +276,12 @@ class _DriverMarker extends StatelessWidget {
             ],
           ),
           child: const Icon(
-            Icons.directions_car_filled_rounded,
-            color: Colors.white,
-            size: 16,
+              Icons.directions_car_filled_rounded,
+              color: Colors.white,
+              size: 16,
+            ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
+    }
 }
