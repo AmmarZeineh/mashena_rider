@@ -63,6 +63,9 @@ class FoundDriverDetails extends StatelessWidget {
             : vehicleModel;
         final plateNumber = matchedTrip.plateNumber ?? '...';
 
+        final eta = state.driverEta;
+        final distance = state.driverDistance;
+
         return Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
@@ -74,7 +77,32 @@ class FoundDriverDetails extends StatelessWidget {
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              if (eta != null || distance != null) ...[
+                Row(
+                  children: [
+                    Icon(
+                      Icons.directions_car_rounded,
+                      color: colorScheme.primary,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        '${S.of(context).rideDriverOnWay} • $eta ($distance)',
+                        style: AppTextStyles.w700_14.copyWith(
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(
+                  height: 24.h,
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                ),
+              ],
               Row(
                 children: [
                   // Driver Avatar

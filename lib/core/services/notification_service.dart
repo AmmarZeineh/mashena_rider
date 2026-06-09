@@ -59,7 +59,7 @@ class NotificationService {
       'CHANNEL_ID',
       'CHANNEL_NAME',
       channelDescription: 'Notiffication channel for basic test',
-      icon: 'notification_icon',
+      icon: '@mipmap/ic_launcher',
 
       priority: Priority.high,
       importance: Importance.high,
@@ -84,7 +84,7 @@ class NotificationService {
 
   static Future<void> _initializedLocalNotification() async {
     const AndroidInitializationSettings androidInit =
-        AndroidInitializationSettings('notification_icon');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const DarwinInitializationSettings iosInit = DarwinInitializationSettings();
     final InitializationSettings initSetting = InitializationSettings(

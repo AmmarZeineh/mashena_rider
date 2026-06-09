@@ -22,6 +22,12 @@ class HomeState {
   /// Populated once the ride submission API succeeds.
   final RideSubmissionResponse? submissionResponse;
 
+  // Real-time tracking fields
+  final MapLatLng? driverLocation;
+  final double driverBearing;
+  final String? driverDistance;
+  final String? driverEta;
+
   const HomeState({
     required this.ui,
     required this.isLocationGranted,
@@ -39,6 +45,10 @@ class HomeState {
     this.isDriverFound = false,
     this.isLoadingMatchedTrip = false,
     this.matchedTrip,
+    this.driverLocation,
+    this.driverBearing = 0.0,
+    this.driverDistance,
+    this.driverEta,
   });
 
   const HomeState.initial()
@@ -57,7 +67,11 @@ class HomeState {
       isFetchingRoute = false,
       isDriverFound = false,
       isLoadingMatchedTrip = false,
-      matchedTrip = null;
+      matchedTrip = null,
+      driverLocation = null,
+      driverBearing = 0.0,
+      driverDistance = null,
+      driverEta = null;
 
 
   HomeState copyWith({
@@ -82,6 +96,13 @@ class HomeState {
     bool? isLoadingMatchedTrip,
     MatchedTrip? matchedTrip,
     bool clearMatchedTrip = false,
+    MapLatLng? driverLocation,
+    bool clearDriverLocation = false,
+    double? driverBearing,
+    String? driverDistance,
+    bool clearDriverDistance = false,
+    String? driverEta,
+    bool clearDriverEta = false,
   }) {
     return HomeState(
       ui: ui ?? this.ui,
@@ -108,7 +129,12 @@ class HomeState {
       isDriverFound: clearDriverFound ? false : (isDriverFound ?? this.isDriverFound),
       isLoadingMatchedTrip: isLoadingMatchedTrip ?? this.isLoadingMatchedTrip,
       matchedTrip: clearMatchedTrip ? null : (matchedTrip ?? this.matchedTrip),
+      driverLocation: clearDriverLocation ? null : (driverLocation ?? this.driverLocation),
+      driverBearing: driverBearing ?? this.driverBearing,
+      driverDistance: clearDriverDistance ? null : (driverDistance ?? this.driverDistance),
+      driverEta: clearDriverEta ? null : (driverEta ?? this.driverEta),
     );
   }
 
 }
+

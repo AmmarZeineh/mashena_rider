@@ -1,3 +1,4 @@
+import 'dart:math' show pi;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -245,7 +246,9 @@ class PointMarker extends StatelessWidget {
 
 /// Animated car icon used to mark the driver position on the map.
 class DriverMarkerWidget extends StatelessWidget {
-  const DriverMarkerWidget({super.key});
+  const DriverMarkerWidget({super.key, this.bearing = 0.0});
+
+  final double bearing;
 
   @override
   Widget build(BuildContext context) {
@@ -275,13 +278,16 @@ class DriverMarkerWidget extends StatelessWidget {
               ),
             ],
           ),
-          child: const Icon(
+          child: Transform.rotate(
+            angle: bearing * pi / 180,
+            child: const Icon(
               Icons.directions_car_filled_rounded,
               color: Colors.white,
               size: 16,
             ),
           ),
-        ],
-      );
-    }
+        ),
+      ],
+    );
+  }
 }
