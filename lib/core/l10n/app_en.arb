@@ -182,5 +182,6 @@
   "rideDuration": "Duration",
   "commonPleaseWait": "Please wait",
   "rideLookingForDrivers": "Looking for nearby drivers...",
-  "rideTakesFewMoments": "This usually takes a few moments"
+  "rideTakesFewMoments": "This usually takes a few moments",
+  "simulateEndTrip": "Simulate End Trip"
 }

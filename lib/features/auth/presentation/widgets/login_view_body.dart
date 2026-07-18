@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -139,9 +137,8 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                                     _formKey.currentState?.validate() ?? false;
                                 if (!ok) return;
                                 _formKey.currentState?.save();
-                                var token =
+                                final token =
                                     await NotificationService.getFcmToken();
-                                log(token.toString());
                                 if (context.mounted) {
                                   context.read<LoginBloc>().add(
                                     LoginSubmitted(

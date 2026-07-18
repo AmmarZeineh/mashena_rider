@@ -6,6 +6,7 @@ import 'package:mashena_rider/features/home/presentation/booking/widgets/ride_bo
 import 'package:mashena_rider/features/home/presentation/shell/widgets/home_view_google_maps_section.dart';
 import 'package:mashena_rider/features/home/presentation/shell/widgets/set_destination_cta.dart';
 import 'package:mashena_rider/features/home/presentation/trip/widgets/ride_confirmed_bottom_sheet.dart';
+import 'package:mashena_rider/features/home/presentation/trip/widgets/trip_rating_bottom_sheet.dart';
 
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
@@ -52,17 +53,23 @@ class HomeViewBody extends StatelessWidget {
                         alignment: Alignment.bottomCenter,
                         child: SetDestinationCta(),
                       )
-                    : state.rideSubmittedSuccessfully &&
-                          state.submissionResponse != null
-                    ? RideConfirmedBottomSheet(
-                        key: const ValueKey('confirmed'),
-                        rideResult: rideResult,
-                        submissionResponse: state.submissionResponse!,
-                      )
-                    : RideBookingOverlay(
-                        key: const ValueKey('sheet'),
-                        rideResult: rideResult,
-                      ),
+                    : state.isTripEnded && state.submissionResponse != null
+                        ? TripRatingBottomSheet(
+                            key: const ValueKey('rating'),
+                            rideResult: rideResult,
+                            submissionResponse: state.submissionResponse!,
+                          )
+                        : state.rideSubmittedSuccessfully &&
+                              state.submissionResponse != null
+                        ? RideConfirmedBottomSheet(
+                            key: const ValueKey('confirmed'),
+                            rideResult: rideResult,
+                            submissionResponse: state.submissionResponse!,
+                          )
+                        : RideBookingOverlay(
+                            key: const ValueKey('sheet'),
+                            rideResult: rideResult,
+                          ),
               ),
             ],
           ),

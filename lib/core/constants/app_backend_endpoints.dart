@@ -6,5 +6,6 @@ class BackendEndpoints {
   static const String createRideRequest = '/ride-requests';
   static const String submitRideRequest = '/ride-requests/submit';
   static const String getMatchedTrip = '/trips/by-ride';
+  static const String refresh = '/auth/refresh';
 }
 

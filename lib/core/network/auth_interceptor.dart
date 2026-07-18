@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:mashena_rider/core/auth/auth_event.dart';
 import 'package:mashena_rider/core/auth/auth_event_bus.dart';
+import 'package:mashena_rider/core/constants/app_backend_endpoints.dart';
 import 'package:mashena_rider/core/network/token_manager.dart';
 
 class AuthInterceptor extends Interceptor {
@@ -64,6 +65,9 @@ class AuthInterceptor extends Interceptor {
         authEventBus.emit(AuthEvent.loggedOut);
         return null;
       }
+
+      // Notify listeners that a new token is available (e.g. to reconnect socket)
+      authEventBus.emit(AuthEvent.tokenRefreshed);
     } else {
       await _refreshCompleter?.future;
     }
@@ -86,8 +90,13 @@ class AuthInterceptor extends Interceptor {
       final dio = Dio(BaseOptions(baseUrl: baseUrl));
 
       final response = await dio.post(
-        '/auth/refresh',
+        BackendEndpoints.refresh,
         data: {'refreshToken': refreshToken},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $refreshToken',
+          },
+        ),
       );
 
       final newAccess = response.data['accessToken'];
@@ -99,7 +108,8 @@ class AuthInterceptor extends Interceptor {
       );
 
       return true;
-    } catch (_) {
+    } catch (e) {
+      print('Refresh token failed: $e');
       return false;
     }
   }

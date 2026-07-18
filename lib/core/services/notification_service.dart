@@ -1,14 +1,24 @@
+import 'dart:async';
+import 'dart:developer' as developer;
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../firebase_options.dart';
 
 class NotificationService {
+  static const Duration _apnsTokenRetryDelay = Duration(milliseconds: 500);
+  static const int _apnsTokenMaxAttempts = 10;
+
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   static final FirebaseMessaging _firebaseMessaging =
       FirebaseMessaging.instance;
+
+  static Future<String?>? _tokenRequest;
+  static String? _cachedFcmToken;
 
   @pragma('vm:entry-point')
   static Future<void> firebaseMessagingBackgroundHandler(
@@ -41,7 +51,8 @@ class NotificationService {
       _handleNotificationTap(message);
     });
 
-    await _getFcmToken();
+    _firebaseMessaging.onTokenRefresh.listen(_handleTokenRefresh);
+    unawaited(getFcmToken());
     await _initializedLocalNotification();
     await _getInitialNotification();
 
@@ -124,18 +135,58 @@ class NotificationService {
         ?.createNotificationChannel(channel);
   }
 
-  static Future<void> _getFcmToken() async {
-    await _firebaseMessaging.getToken();
+  static Future<String?> getFcmToken() {
+    final cachedToken = _cachedFcmToken;
+    if (cachedToken != null) return Future<String?>.value(cachedToken);
 
-    _firebaseMessaging.onTokenRefresh.listen((String token) {});
+    return _tokenRequest ??= _requestFcmToken();
   }
 
-  static Future<String?> getFcmToken() async {
+  static Future<String?> _requestFcmToken() async {
     try {
-      String? token = await _firebaseMessaging.getToken();
+      if (!await _isApnsTokenAvailable()) {
+        developer.log(
+          'APNs token is not available yet.',
+          name: 'mashena_rider.notifications',
+        );
+        return null;
+      }
+
+      final token = await _firebaseMessaging.getToken();
+      _cachedFcmToken = token;
       return token;
-    } catch (e) {
+    } on FirebaseException catch (error, stackTrace) {
+      developer.log(
+        'Failed to retrieve the FCM token.',
+        name: 'mashena_rider.notifications',
+        error: error,
+        stackTrace: stackTrace,
+      );
       return null;
+    } finally {
+      _tokenRequest = null;
     }
+  }
+
+  static Future<bool> _isApnsTokenAvailable() async {
+    if (kIsWeb ||
+        (defaultTargetPlatform != TargetPlatform.iOS &&
+            defaultTargetPlatform != TargetPlatform.macOS)) {
+      return true;
+    }
+
+    for (var attempt = 0; attempt < _apnsTokenMaxAttempts; attempt++) {
+      final token = await _firebaseMessaging.getAPNSToken();
+      if (token != null) return true;
+      await Future<void>.delayed(_apnsTokenRetryDelay);
+    }
+
+    return false;
+  }
+
+  static void _handleTokenRefresh(String token) {
+    _cachedFcmToken = token;
+    // Send the refreshed token to the backend when token synchronization
+    // is implemented.
   }
 }

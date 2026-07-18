@@ -18,6 +18,8 @@ class HomeState {
   final bool isDriverFound;
   final bool isLoadingMatchedTrip;
   final MatchedTrip? matchedTrip;
+  final bool isTripEnded;
+  final bool isDriverArrived;
 
   /// Populated once the ride submission API succeeds.
   final RideSubmissionResponse? submissionResponse;
@@ -49,6 +51,8 @@ class HomeState {
     this.driverBearing = 0.0,
     this.driverDistance,
     this.driverEta,
+    this.isTripEnded = false,
+    this.isDriverArrived = false,
   });
 
   const HomeState.initial()
@@ -71,7 +75,9 @@ class HomeState {
       driverLocation = null,
       driverBearing = 0.0,
       driverDistance = null,
-      driverEta = null;
+      driverEta = null,
+      isTripEnded = false,
+      isDriverArrived = false;
 
 
   HomeState copyWith({
@@ -103,6 +109,8 @@ class HomeState {
     bool clearDriverDistance = false,
     String? driverEta,
     bool clearDriverEta = false,
+    bool? isTripEnded,
+    bool? isDriverArrived,
   }) {
     return HomeState(
       ui: ui ?? this.ui,
@@ -133,6 +141,8 @@ class HomeState {
       driverBearing: driverBearing ?? this.driverBearing,
       driverDistance: clearDriverDistance ? null : (driverDistance ?? this.driverDistance),
       driverEta: clearDriverEta ? null : (driverEta ?? this.driverEta),
+      isTripEnded: isTripEnded ?? this.isTripEnded,
+      isDriverArrived: isDriverArrived ?? this.isDriverArrived,
     );
   }
 

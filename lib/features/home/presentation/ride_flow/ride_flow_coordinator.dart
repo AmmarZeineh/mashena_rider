@@ -35,21 +35,29 @@ abstract class RideFlowCoordinator {
     homeCubit.setFetchingRoute(true);
 
     try {
-      // 1. Determine Route Points (prefer backend polyline, fallback to OSRM)
+      // 1. Determine Route Points:
+      //    Priority: backend routeGeometry.points > encoded polyline > OSRM
       List<MapLatLng> routePoints = [];
-      final backendPolyline = result.estimateResponse.polyline;
 
-      if (backendPolyline != null && backendPolyline.isNotEmpty) {
-        try {
-          final decoded = decodePolyline(backendPolyline);
-          routePoints = decoded.map((coord) {
-            return MapLatLng(
-              latitude: coord[0].toDouble(),
-              longitude: coord[1].toDouble(),
-            );
-          }).toList();
-        } catch (_) {
-          // Fallback if decode fails
+      final backendRoutePoints = result.estimateResponse.routePoints;
+      if (backendRoutePoints.isNotEmpty) {
+        routePoints = backendRoutePoints;
+      }
+
+      if (routePoints.isEmpty) {
+        final backendPolyline = result.estimateResponse.polyline;
+        if (backendPolyline != null && backendPolyline.isNotEmpty) {
+          try {
+            final decoded = decodePolyline(backendPolyline);
+            routePoints = decoded.map((coord) {
+              return MapLatLng(
+                latitude: coord[0].toDouble(),
+                longitude: coord[1].toDouble(),
+              );
+            }).toList();
+          } catch (_) {
+            // Fallback if decode fails
+          }
         }
       }
 

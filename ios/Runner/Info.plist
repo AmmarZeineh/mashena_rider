@@ -66,5 +66,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+<string>We need your location to show nearby drivers and calculate routes.</string>
+
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>We need your location to track trips and show nearby drivers.</string>
 </dict>
 </plist>

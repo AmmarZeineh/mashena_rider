@@ -114,11 +114,15 @@ class _RideConfirmedBottomSheetState extends State<RideConfirmedBottomSheet> {
                     padding: EdgeInsets.symmetric(horizontal: 24.w).copyWith(
                       bottom: MediaQuery.of(context).padding.bottom + 16.h,
                     ),
-                    child: CancelRideButton(
-                      onPressed: () {
-                        context.read<HomeCubit>().clearRideFlow();
-                      },
-                      label: S.of(context).rideCancelRide,
+                    child: Column(
+                      children: [
+                        CancelRideButton(
+                          onPressed: () {
+                            context.read<HomeCubit>().clearRideFlow();
+                          },
+                          label: S.of(context).rideCancelRide,
+                        ),
+                      ],
                     ),
                   ),
                 ] else ...[

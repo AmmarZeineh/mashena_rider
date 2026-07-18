@@ -24,6 +24,9 @@ abstract interface class RideRepository {
   /// Stream emitting live driver coordinates
   Stream<MapLatLng> get driverLocationStream;
 
+  /// Stream emitting when the driver has arrived
+  Stream<int> get driverArrivedStream;
+
   /// Connects the underlying socket to the server.
   /// Should be called early (on screen init) so the rider is registered
   /// in the gateway before submitting a ride request.

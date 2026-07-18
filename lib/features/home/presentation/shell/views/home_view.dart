@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mashena_rider/app/di/injector.dart';
+import 'package:mashena_rider/core/auth/auth_event.dart';
 import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/core/services/osrm_route_service.dart';
 import 'package:mashena_rider/features/home/domain/repositories/ride_repository.dart';
@@ -22,6 +23,7 @@ class HomeView extends StatelessWidget {
           getIt.get<SubmitRideRequestUsecase>(),
           getIt.get<RideRepository>(),
           getIt.get<OSRMRouteService>(),
+          getIt.get<AuthEventBus>(),
         ),
         child: HomeViewBody(),
       ),

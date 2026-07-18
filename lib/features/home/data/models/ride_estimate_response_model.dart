@@ -54,6 +54,28 @@ List<MapLatLng> _readStops(Object? value) {
   return const [];
 }
 
+/// Reads the raw `routeGeometry` object and returns its `points` list
+/// as [MapLatLng] coordinates.
+List<MapLatLng> _readRoutePoints(Object? value) {
+  if (value is Map) {
+    final points = value['points'];
+    if (points is List) {
+      return points.map((e) {
+        if (e is Map) {
+          final lat = (e['lat'] ?? e['latitude'] ?? 0) as num;
+          final lng = (e['lng'] ?? e['longitude'] ?? 0) as num;
+          return MapLatLng(
+            latitude: lat.toDouble(),
+            longitude: lng.toDouble(),
+          );
+        }
+        return const MapLatLng(latitude: 0, longitude: 0);
+      }).toList();
+    }
+  }
+  return const [];
+}
+
 @JsonSerializable(fieldRename: FieldRename.snake)
 class RideEstimateResponseModel {
   const RideEstimateResponseModel({
@@ -67,6 +89,7 @@ class RideEstimateResponseModel {
     this.estimates = const [],
     this.polyline,
     this.stops = const [],
+    this.routePoints = const [],
   });
 
   factory RideEstimateResponseModel.fromJson(Map<String, dynamic> json) {
@@ -83,6 +106,8 @@ class RideEstimateResponseModel {
     normalized['estimates'] = data['estimates'] ?? data['vehicle_types'];
     normalized['polyline'] =
         data['polyline'] ?? data['geometry'] ?? data['route'];
+    normalized['route_points'] =
+        data['route_points'] ?? data['routeGeometry'];
 
     return _$RideEstimateResponseModelFromJson(normalized);
   }
@@ -113,6 +138,9 @@ class RideEstimateResponseModel {
   @JsonKey(fromJson: _readStops, includeToJson: false)
   final List<MapLatLng> stops;
 
+  @JsonKey(fromJson: _readRoutePoints, includeToJson: false)
+  final List<MapLatLng> routePoints;
+
   Map<String, dynamic> toJson() => _$RideEstimateResponseModelToJson(this);
 
   RideEstimateResponse toEntity() {
@@ -127,6 +155,7 @@ class RideEstimateResponseModel {
       estimates: estimates.map((estimate) => estimate.toEntity()).toList(),
       polyline: polyline,
       stops: stops,
+      routePoints: routePoints,
     );
   }
 }

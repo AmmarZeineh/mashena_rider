@@ -31,6 +31,7 @@ void main() {
     expect(entity.estimates.first.imageUrl, 'https://example.com/car.png');
     expect(entity.estimates.first.currency, 'SYP');
     expect(entity.estimates.first.estimatedFare, 12500.5);
+    expect(entity.routePoints, isEmpty);
   });
 
   test('keeps empty imageUrl objects nullable', () {
@@ -52,4 +53,44 @@ void main() {
 
     expect(model.toEntity().estimates.first.imageUrl, isNull);
   });
+
+  test('parses routeGeometry points into routePoints', () {
+    final model = RideEstimateResponseModel.fromJson({
+      'distanceKm': 7.134,
+      'durationMin': 10,
+      'stopsCount': 1,
+      'isNight': false,
+      'estimates': [],
+      'routeGeometry': {
+        'distanceMeters': 7134,
+        'durationSeconds': 611.3,
+        'points': [
+          {'lat': 33.513844, 'lng': 36.276511},
+          {'lat': 33.513973, 'lng': 36.275756},
+          {'lat': 33.514234, 'lng': 36.274507},
+        ],
+      },
+    });
+
+    final entity = model.toEntity();
+
+    expect(entity.routePoints, hasLength(3));
+    expect(entity.routePoints[0].latitude, closeTo(33.513844, 0.000001));
+    expect(entity.routePoints[0].longitude, closeTo(36.276511, 0.000001));
+    expect(entity.routePoints[1].latitude, closeTo(33.513973, 0.000001));
+    expect(entity.routePoints[2].latitude, closeTo(33.514234, 0.000001));
+  });
+
+  test('routePoints is empty when routeGeometry is absent', () {
+    final model = RideEstimateResponseModel.fromJson({
+      'distanceKm': 5.0,
+      'durationMin': 8,
+      'stopsCount': 0,
+      'isNight': false,
+      'estimates': [],
+    });
+
+    expect(model.toEntity().routePoints, isEmpty);
+  });
 }
+

@@ -58,7 +58,11 @@ class AuthRepositoryImpl implements AuthRepository {
       final dto = await _remote.login(
         LoginRequestDto(email: email, password: password, fcmToken: fcmToken),
       );
-      await _local.cacheSession(accessToken: dto.accessToken, user: dto.user);
+      await _local.cacheSession(
+        accessToken: dto.accessToken,
+        refreshToken: dto.refreshToken,
+        user: dto.user,
+      );
       return Right(
         AuthSession(accessToken: dto.accessToken, user: dto.user.toEntity()),
       );

@@ -1,1 +1,1 @@
-enum AuthEvent { loggedOut }
+enum AuthEvent { loggedOut, tokenRefreshed }

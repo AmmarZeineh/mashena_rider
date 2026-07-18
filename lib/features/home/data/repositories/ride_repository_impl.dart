@@ -107,6 +107,10 @@ class RideRepositoryImpl implements RideRepository {
       _rideSocketDataSource.driverLocationStream;
 
   @override
+  Stream<int> get driverArrivedStream =>
+      _rideSocketDataSource.driverArrivedStream;
+
+  @override
   Future<void> connectSocket() => _rideSocketDataSource.connectSocket();
 
   @override

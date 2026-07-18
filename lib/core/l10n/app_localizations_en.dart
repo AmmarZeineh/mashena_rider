@@ -461,4 +461,7 @@ class SEn extends S {
 
   @override
   String get rideTakesFewMoments => 'This usually takes a few moments';
+
+  @override
+  String get simulateEndTrip => 'Simulate End Trip';
 }

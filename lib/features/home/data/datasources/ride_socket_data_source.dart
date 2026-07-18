@@ -12,6 +12,9 @@ abstract interface class RideSocketDataSource {
   /// Stream of driver location coordinates in real-time.
   Stream<MapLatLng> get driverLocationStream;
 
+  /// Stream that fires when the driver has arrived.
+  Stream<int> get driverArrivedStream;
+
   /// Connects the underlying socket to the server.
   Future<void> connectSocket();
 
@@ -30,6 +33,8 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
       StreamController<int>.broadcast();
   final StreamController<MapLatLng> _driverLocationController =
       StreamController<MapLatLng>.broadcast();
+  final StreamController<int> _driverArrivedController =
+      StreamController<int>.broadcast();
 
   RideSocketDataSourceImpl(this._socketClient) {
     _initSocketListeners();
@@ -85,6 +90,28 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
         );
       }
     });
+
+    _socketClient.on('trip:driver-arrived', (data) {
+      developer.log(
+        'Received trip:driver-arrived event: $data',
+        name: 'features.home.socket',
+      );
+      try {
+        if (data is Map) {
+          final tripId = data['tripId'];
+          if (tripId != null) {
+            _driverArrivedController.add(int.parse(tripId.toString()));
+          }
+        }
+      } catch (e, stackTrace) {
+        developer.log(
+          'Error parsing trip:driver-arrived payload',
+          name: 'features.home.socket',
+          error: e,
+          stackTrace: stackTrace,
+        );
+      }
+    });
   }
 
   @override
@@ -92,6 +119,9 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
 
   @override
   Stream<MapLatLng> get driverLocationStream => _driverLocationController.stream;
+
+  @override
+  Stream<int> get driverArrivedStream => _driverArrivedController.stream;
 
   @override
   Future<void> connectSocket() => _socketClient.connect();

@@ -14,6 +14,7 @@ class RideEstimateResponse {
     this.destination,
     this.polyline,
     this.stops = const [],
+    this.routePoints = const [],
   });
 
   final int? rideRequestId;
@@ -26,4 +27,9 @@ class RideEstimateResponse {
   final RideLocation? destination;
   final String? polyline;
   final List<MapLatLng> stops;
+
+  /// Decoded route coordinates from the backend `routeGeometry.points` field.
+  /// When non-empty, these should be used directly for map rendering
+  /// instead of decoding a polyline string or fetching from OSRM.
+  final List<MapLatLng> routePoints;
 }

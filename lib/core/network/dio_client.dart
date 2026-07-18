@@ -12,15 +12,13 @@ final class DioApiClient implements ApiClient {
     required AuthInterceptor authInterceptor,
 
     Dio? dio,
-  }) : _tokenManager = tokenManager,
-       _dio = dio ?? Dio() {
+  }) : _dio = dio ?? Dio() {
     _setup(baseUrl);
     _dio.interceptors.add(ApiLoggingInterceptor());
     _dio.interceptors.add(authInterceptor);
   }
 
   final Dio _dio;
-  final TokenManager _tokenManager;
 
   void _setup(String baseUrl) {
     _dio.options = BaseOptions(
@@ -34,23 +32,7 @@ final class DioApiClient implements ApiClient {
       },
     );
 
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) async {
-          final token = await _tokenManager.getAccessToken();
-          if (token?.isNotEmpty ?? false) {
-            options.headers['Authorization'] = 'Bearer $token';
-          }
-          handler.next(options);
-        },
-        onError: (error, handler) async {
-          if (error.response?.statusCode == 401) {
-            await _tokenManager.clearTokens();
-          }
-          handler.next(error);
-        },
-      ),
-    );
+    // The authInterceptor handles token injection and refresh logic.
   }
 
   @override
@@ -171,6 +153,8 @@ final class DioApiClient implements ApiClient {
           data: e.response?.data,
           message: e.message,
         );
+      case DioExceptionType.transformTimeout:
+        return const ApiException(ApiErrorCode.receiveTimeout);
       case DioExceptionType.unknown:
         return ApiException(ApiErrorCode.unknown, message: e.message);
     }

@@ -30,7 +30,7 @@ class StopsReorderableList extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: 1 + state.destinations.length,
-        onReorder: cubit.reorderAllStops,
+        onReorderItem: cubit.reorderAllStops,
         itemBuilder: (context, index) {
           final isPickup = index == 0;
           return StopFieldRow(

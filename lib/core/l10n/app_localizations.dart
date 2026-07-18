@@ -954,6 +954,12 @@ abstract class S {
   /// In en, this message translates to:
   /// **'This usually takes a few moments'**
   String get rideTakesFewMoments;
+
+  /// No description provided for @simulateEndTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulate End Trip'**
+  String get simulateEndTrip;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

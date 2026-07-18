@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 import 'dart:math' show pi, sin, cos, atan2;
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart' show Colors;
@@ -14,6 +15,8 @@ import 'package:mashena_rider/features/home/domain/entities/ride_submission_resp
 import 'package:mashena_rider/features/home/domain/repositories/ride_repository.dart';
 import 'package:mashena_rider/features/home/domain/usecases/submit_ride_request_usecase.dart';
 import 'package:mashena_rider/features/home/presentation/common/models/confirmed_ride_flow_result.dart';
+import 'package:mashena_rider/core/auth/auth_event.dart';
+import 'package:mashena_rider/core/auth/auth_event_bus.dart';
 import 'package:mashena_rider/features/home/presentation/ride_flow/ride_flow_coordinator.dart';
 
 part 'home_state.dart';
@@ -24,17 +27,22 @@ class HomeCubit extends Cubit<HomeState> {
     this._submitRideRequest,
     this._rideRepository,
     this._osrmRouteService,
+    this._authEventBus,
   ) : super(const HomeState.initial()) {
     _subscribeToSocketStreams();
+    _subscribeToAuthEvents();
   }
 
   final LocationService _locationService;
   final SubmitRideRequestUsecase _submitRideRequest;
   final RideRepository _rideRepository;
   final OSRMRouteService _osrmRouteService;
+  final AuthEventBus _authEventBus;
 
   StreamSubscription<int>? _rideMatchedSubscription;
   StreamSubscription<MapLatLng>? _driverLocationSubscription;
+  StreamSubscription<int>? _driverArrivedSubscription;
+  StreamSubscription<AuthEvent>? _authEventSubscription;
 
   /// Called once when the home screen loads.
   /// Now requests permission (triggers the OS prompt) instead of just checking.
@@ -44,7 +52,12 @@ class HomeCubit extends Cubit<HomeState> {
     // Connect socket early so the rider is registered in the gateway
     // before any ride is submitted. notifyRiderMatched checks riderSockets.
     // ignore: unawaited_futures
-    _rideRepository.connectSocket();
+    _rideRepository.connectSocket().then((_) {
+      developer.log(
+        'Socket connect() called on init',
+        name: 'features.home.cubit',
+      );
+    });
 
     final status = await _locationService.requestPermissionIfNeeded();
 
@@ -149,8 +162,16 @@ class HomeCubit extends Cubit<HomeState> {
         driverBearing: 0.0,
         clearDriverDistance: true,
         clearDriverEta: true,
+        isTripEnded: false,
+        isDriverArrived: false,
       ),
     );
+  }
+
+  Future<void> submitRating(double rating, String? comment) async {
+    // In a real app, you would make an API call here.
+    // For now, we just clear the ride flow to return to the idle state.
+    clearRideFlow();
   }
 
   Future<void> submitRideSelection(int vehicleTypeId) async {
@@ -200,19 +221,7 @@ class HomeCubit extends Cubit<HomeState> {
         ),
       );
 
-      final result = await _rideRepository.getMatchedTripDetails(rideRequestId);
-
-      result.fold(
-        (error) => emit(
-          state.copyWith(
-            isLoadingMatchedTrip: false,
-            bookingErrorMessage: error,
-          ),
-        ),
-        (matchedTrip) => emit(
-          state.copyWith(isLoadingMatchedTrip: false, matchedTrip: matchedTrip),
-        ),
-      );
+      await _fetchMatchedTripWithRetry(rideRequestId);
     });
 
     _driverLocationSubscription = _rideRepository.driverLocationStream.listen((
@@ -220,11 +229,89 @@ class HomeCubit extends Cubit<HomeState> {
     ) async {
       await _updateDriverMarker(location);
     });
+
+    _driverArrivedSubscription = _rideRepository.driverArrivedStream.listen((
+      tripId,
+    ) {
+      emit(state.copyWith(isDriverArrived: true));
+      // Once arrived, update the marker/route immediately using the last known location
+      if (state.driverLocation != null) {
+        _updateDriverMarker(state.driverLocation!);
+      }
+    });
+  }
+
+  /// Listens to auth events. When the token is refreshed, the socket is
+  /// reconnected using the new token so ride:matched events are not missed.
+  void _subscribeToAuthEvents() {
+    _authEventSubscription = _authEventBus.stream.listen((event) {
+      if (event == AuthEvent.tokenRefreshed) {
+        developer.log(
+          'Token refreshed — reconnecting socket',
+          name: 'features.home.cubit',
+        );
+        _rideRepository.connectSocket();
+      }
+    });
+  }
+
+  /// Fetches matched trip details with one retry on failure.
+  /// This guards against transient auth failures (token refresh in-flight)
+  /// that can occur right when the ride:matched socket event arrives.
+  Future<void> _fetchMatchedTripWithRetry(int rideRequestId) async {
+    developer.log(
+      'Fetching matched trip for rideRequestId=$rideRequestId (attempt 1)',
+      name: 'features.home.cubit',
+    );
+
+    var result = await _rideRepository.getMatchedTripDetails(rideRequestId);
+
+    if (result.isLeft()) {
+      developer.log(
+        'First attempt failed — retrying in 2s',
+        name: 'features.home.cubit',
+      );
+      // Wait for any in-flight token refresh to complete, then retry once.
+      await Future<void>.delayed(const Duration(seconds: 2));
+      developer.log(
+        'Fetching matched trip for rideRequestId=$rideRequestId (attempt 2)',
+        name: 'features.home.cubit',
+      );
+      result = await _rideRepository.getMatchedTripDetails(rideRequestId);
+    }
+
+    result.fold(
+      (error) {
+        developer.log(
+          'getMatchedTripDetails FAILED after retry: $error',
+          name: 'features.home.cubit',
+        );
+        emit(
+          state.copyWith(
+            isLoadingMatchedTrip: false,
+            isDriverFound: false,
+            bookingErrorMessage: error,
+          ),
+        );
+      },
+      (matchedTrip) {
+        developer.log(
+          'getMatchedTripDetails SUCCESS — driver: ${matchedTrip.driverFullName}',
+          name: 'features.home.cubit',
+        );
+        emit(
+          state.copyWith(isLoadingMatchedTrip: false, matchedTrip: matchedTrip),
+        );
+      },
+    );
   }
 
   Future<void> _updateDriverMarker(MapLatLng driverLocation) async {
     final pickup = state.confirmedRideResult?.pickup;
-    if (pickup == null) return;
+    final destination = state.confirmedRideResult?.destination;
+    if (pickup == null || destination == null) return;
+
+    final targetLocation = state.isDriverArrived ? destination : pickup;
 
     // 1. Calculate bearing
     double bearing = state.driverBearing;
@@ -233,13 +320,13 @@ class HomeCubit extends Cubit<HomeState> {
     }
 
     // 2. Fetch OSRM street route details (points, distance, duration)
-    List<MapLatLng> routePoints = [driverLocation, pickup];
+    List<MapLatLng> routePoints = [driverLocation, targetLocation];
     String? distanceText;
     String? etaText;
 
     final routeDetails = await _osrmRouteService.getRouteDetails([
       driverLocation,
-      pickup,
+      targetLocation,
     ]);
     if (routeDetails != null) {
       routePoints = routeDetails.points;
@@ -273,15 +360,20 @@ class HomeCubit extends Cubit<HomeState> {
       );
 
     // 4. Update/Add driver to pickup polyline (along streets)
+    final polylineIdBorder = state.isDriverArrived ? 'driver_to_destination_border' : 'driver_to_pickup_border';
+    final polylineId = state.isDriverArrived ? 'driver_to_destination' : 'driver_to_pickup';
+
     final updatedPolylines = List<MapPolyline>.from(state.polylines)
       ..removeWhere(
         (poly) =>
             poly.id == 'driver_to_pickup_border' ||
-            poly.id == 'driver_to_pickup',
+            poly.id == 'driver_to_pickup' ||
+            poly.id == 'driver_to_destination_border' ||
+            poly.id == 'driver_to_destination',
       )
       ..add(
         MapPolyline(
-          id: 'driver_to_pickup_border',
+          id: polylineIdBorder,
           points: routePoints,
           color: Colors.amber.withValues(alpha: 0.3),
           width: 10,
@@ -289,7 +381,7 @@ class HomeCubit extends Cubit<HomeState> {
       )
       ..add(
         MapPolyline(
-          id: 'driver_to_pickup',
+          id: polylineId,
           points: routePoints,
           color: Colors.amber,
           width: 4,
@@ -329,6 +421,8 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> close() {
     _rideMatchedSubscription?.cancel();
     _driverLocationSubscription?.cancel();
+    _driverArrivedSubscription?.cancel();
+    _authEventSubscription?.cancel();
     return super.close();
   }
 }

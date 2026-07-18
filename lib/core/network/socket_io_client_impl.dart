@@ -41,6 +41,11 @@ class SocketIOClientImpl implements SocketClient {
       return;
     }
 
+    developer.log(
+      'Socket connecting with token (present: true)',
+      name: 'core.network.socket',
+    );
+
     // Clean up existing socket before creating a new one
     if (_socket != null) {
       _socket!.destroy();

@@ -7,6 +7,7 @@ import 'package:mashena_rider/features/auth/data/models/login_user_dto.dart';
 abstract class AuthLocalDataSource {
   Future<void> cacheSession({
     required String accessToken,
+    required String refreshToken,
     required LoginUserDto user,
   });
 
@@ -27,9 +28,13 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<void> cacheSession({
     required String accessToken,
+    required String refreshToken,
     required LoginUserDto user,
   }) async {
-    await _tokenManager.saveTokens(accessToken: accessToken);
+    await _tokenManager.saveTokens(
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    );
     await _storage.setString(_kUserKey, jsonEncode(user.toJson()));
   }
 

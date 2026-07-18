@@ -3,7 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 
 class CancelRideButton extends StatelessWidget {
-  const CancelRideButton({super.key, required this.onPressed, required this.label});
+  const CancelRideButton({
+    super.key,
+    required this.onPressed,
+    required this.label,
+  });
 
   final VoidCallback onPressed;
   final String label;
@@ -20,7 +24,10 @@ class CancelRideButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.r),
         ),
       ),
-      child: Text(label, style: AppTextStyles.w700_16),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(label, style: AppTextStyles.w700_16),
+      ),
     );
   }
 }

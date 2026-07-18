@@ -456,4 +456,7 @@ class SAr extends S {
 
   @override
   String get rideTakesFewMoments => 'يستغرق هذا عادة بضع لحظات';
+
+  @override
+  String get simulateEndTrip => 'محاكاة إنهاء الرحلة';
 }

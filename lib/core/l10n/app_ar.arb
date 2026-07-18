@@ -176,5 +176,6 @@
   "rideDuration": "المدة",
   "commonPleaseWait": "يرجى الانتظار",
   "rideLookingForDrivers": "جارٍ البحث عن سائقين قريبين...",
-  "rideTakesFewMoments": "يستغرق هذا عادة بضع لحظات"
+  "rideTakesFewMoments": "يستغرق هذا عادة بضع لحظات",
+  "simulateEndTrip": "محاكاة إنهاء الرحلة"
 }
