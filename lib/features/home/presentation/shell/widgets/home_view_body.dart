@@ -10,15 +10,35 @@ import 'package:mashena_rider/features/home/presentation/trip/widgets/trip_ratin
 
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
 
 class HomeViewBody extends StatelessWidget {
   const HomeViewBody({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
-        final rideResult = state.confirmedRideResult;
+    return BlocListener<HomeCubit, HomeState>(
+      listenWhen: (previous, current) =>
+          previous.bookingErrorMessage != current.bookingErrorMessage &&
+          current.bookingErrorMessage != null,
+      listener: (context, state) {
+        final error = state.bookingErrorMessage!;
+        final s = S.of(context);
+        String displayError = error;
+        if (error == 'tripCancelledByDriver') {
+          displayError = s.tripCancelledByDriver;
+        } else if (error == 'tripCancelledByAdmin') {
+          displayError = s.tripCancelledByAdmin;
+        } else if (error == 'tripCancelled') {
+          displayError = s.tripCancelled;
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(displayError)),
+        );
+      },
+      child: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+          final rideResult = state.confirmedRideResult;
         return ModalProgressHUD(
           inAsyncCall: state.isFetchingRoute,
           opacity: 0.2,
@@ -58,6 +78,7 @@ class HomeViewBody extends StatelessWidget {
                             key: const ValueKey('rating'),
                             rideResult: rideResult,
                             submissionResponse: state.submissionResponse!,
+                            tripCompletedData: state.tripCompletedData,
                           )
                         : state.rideSubmittedSuccessfully &&
                               state.submissionResponse != null
@@ -75,6 +96,7 @@ class HomeViewBody extends StatelessWidget {
           ),
         );
       },
-    );
-  }
+    ),
+  );
+}
 }

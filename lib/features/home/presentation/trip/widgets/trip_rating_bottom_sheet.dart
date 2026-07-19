@@ -7,6 +7,7 @@ import 'package:mashena_rider/features/home/presentation/common/models/confirmed
 import 'package:mashena_rider/features/home/presentation/common/widgets/custom_drag_handle.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
+import 'package:mashena_rider/features/home/data/models/trip_completed_payload.dart';
 
 import 'ride_confirmed_sheet_components/driver_card.dart';
 
@@ -15,10 +16,12 @@ class TripRatingBottomSheet extends StatefulWidget {
     super.key,
     required this.rideResult,
     required this.submissionResponse,
+    this.tripCompletedData,
   });
 
   final ConfirmedRideFlowResult rideResult;
   final RideSubmissionResponse submissionResponse;
+  final TripCompletedPayload? tripCompletedData;
 
   @override
   State<TripRatingBottomSheet> createState() => _TripRatingBottomSheetState();
@@ -40,7 +43,14 @@ class _TripRatingBottomSheetState extends State<TripRatingBottomSheet> {
     final destination = widget.rideResult.destinationPlaces.isNotEmpty
         ? widget.rideResult.destinationPlaces.first.name
         : 'Unknown Destination';
-    final duration = widget.submissionResponse.durationMin.toStringAsFixed(0);
+    
+    String duration;
+    if (widget.tripCompletedData != null && widget.tripCompletedData!.durationSec != null) {
+      final durationMin = (widget.tripCompletedData!.durationSec! / 60).ceil();
+      duration = durationMin.toString();
+    } else {
+      duration = widget.submissionResponse.durationMin.toStringAsFixed(0);
+    }
     final price = widget.submissionResponse.estimatedFare.toStringAsFixed(2);
     final currency = widget.submissionResponse.currency;
 

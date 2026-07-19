@@ -39,17 +39,7 @@ class _RideBookingOverlayState extends State<RideBookingOverlay> {
     final localizations = S.of(context);
     final estimates = widget.rideResult.estimateResponse.estimates;
 
-    return BlocConsumer<HomeCubit, HomeState>(
-      listenWhen: (previous, current) =>
-          previous.rideSubmittedSuccessfully !=
-          current.rideSubmittedSuccessfully,
-      listener: (context, state) {
-        if (state.bookingErrorMessage != null) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.bookingErrorMessage!)));
-        }
-      },
+    return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         return Stack(
           children: [

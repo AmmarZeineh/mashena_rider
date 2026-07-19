@@ -62,6 +62,7 @@ import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_c
 import 'package:mashena_rider/features/home/domain/repositories/ride_repository.dart';
 import 'package:mashena_rider/features/home/domain/usecases/create_ride_request_usecase.dart';
 import 'package:mashena_rider/features/home/domain/usecases/submit_ride_request_usecase.dart';
+import 'package:mashena_rider/features/home/domain/usecases/cancel_ride_usecase.dart';
 import 'package:mashena_rider/features/home/data/datasources/ride_socket_data_source.dart';
 import 'package:mashena_rider/features/home/data/repositories/ride_repository_impl.dart';
 import 'package:mashena_rider/features/home/presentation/address/cubits/pick_address_cubit/pick_address_cubit.dart';
@@ -265,6 +266,10 @@ Future<void> configureDependencies() async {
 
   getIt.registerFactory<SubmitRideRequestUsecase>(
     () => SubmitRideRequestUsecase(getIt<RideRepository>()),
+  );
+
+  getIt.registerFactory<CancelRideUsecase>(
+    () => CancelRideUsecase(getIt<RideRepository>()),
   );
 
   // =====================================================

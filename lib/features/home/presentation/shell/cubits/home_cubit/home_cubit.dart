@@ -10,10 +10,13 @@ import 'package:mashena_rider/core/maps/domain/entities/map_polyline.dart';
 import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/core/services/location_status.dart';
 import 'package:mashena_rider/core/services/osrm_route_service.dart';
+import 'package:mashena_rider/features/home/data/models/trip_cancelled_payload.dart';
+import 'package:mashena_rider/features/home/data/models/trip_completed_payload.dart';
 import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import 'package:mashena_rider/features/home/domain/repositories/ride_repository.dart';
 import 'package:mashena_rider/features/home/domain/usecases/submit_ride_request_usecase.dart';
+import 'package:mashena_rider/features/home/domain/usecases/cancel_ride_usecase.dart';
 import 'package:mashena_rider/features/home/presentation/common/models/confirmed_ride_flow_result.dart';
 import 'package:mashena_rider/core/auth/auth_event.dart';
 import 'package:mashena_rider/core/auth/auth_event_bus.dart';
@@ -25,6 +28,7 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit(
     this._locationService,
     this._submitRideRequest,
+    this._cancelRideUsecase,
     this._rideRepository,
     this._osrmRouteService,
     this._authEventBus,
@@ -35,6 +39,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   final LocationService _locationService;
   final SubmitRideRequestUsecase _submitRideRequest;
+  final CancelRideUsecase _cancelRideUsecase;
   final RideRepository _rideRepository;
   final OSRMRouteService _osrmRouteService;
   final AuthEventBus _authEventBus;
@@ -42,6 +47,9 @@ class HomeCubit extends Cubit<HomeState> {
   StreamSubscription<int>? _rideMatchedSubscription;
   StreamSubscription<MapLatLng>? _driverLocationSubscription;
   StreamSubscription<int>? _driverArrivedSubscription;
+  StreamSubscription<int>? _driverStartedSubscription;
+  StreamSubscription<TripCompletedPayload>? _tripCompletedSubscription;
+  StreamSubscription<TripCancelledPayload>? _tripCancelledSubscription;
   StreamSubscription<AuthEvent>? _authEventSubscription;
 
   /// Called once when the home screen loads.
@@ -164,6 +172,9 @@ class HomeCubit extends Cubit<HomeState> {
         clearDriverEta: true,
         isTripEnded: false,
         isDriverArrived: false,
+        isTripStarted: false,
+        clearTripCompletedData: true,
+        clearTripCancelledData: true,
       ),
     );
   }
@@ -172,6 +183,28 @@ class HomeCubit extends Cubit<HomeState> {
     // In a real app, you would make an API call here.
     // For now, we just clear the ride flow to return to the idle state.
     clearRideFlow();
+  }
+
+  Future<void> cancelRide() async {
+    final rideRequestId = state.submissionResponse?.rideRequestId;
+    if (rideRequestId == null) return;
+
+    if (state.isTripStarted) {
+      emit(state.copyWith(bookingErrorMessage: 'Cannot cancel ride after trip has started'));
+      return;
+    }
+
+    emit(state.copyWith(isSubmittingRide: true, clearBookingError: true));
+
+    final response = await _cancelRideUsecase(rideRequestId);
+
+    response.fold(
+      (error) => emit(state.copyWith(isSubmittingRide: false, bookingErrorMessage: error)),
+      (_) {
+        _rideRepository.stopListeningToRide(rideRequestId);
+        clearRideFlow();
+      },
+    );
   }
 
   Future<void> submitRideSelection(int vehicleTypeId) async {
@@ -238,6 +271,38 @@ class HomeCubit extends Cubit<HomeState> {
       if (state.driverLocation != null) {
         _updateDriverMarker(state.driverLocation!);
       }
+    });
+
+    _driverStartedSubscription = _rideRepository.driverStartedStream.listen((
+      tripId,
+    ) {
+      emit(state.copyWith(isTripStarted: true));
+    });
+
+    _tripCompletedSubscription = _rideRepository.tripCompletedStream.listen((
+      payload,
+    ) {
+      emit(state.copyWith(isTripEnded: true, tripCompletedData: payload));
+    });
+
+    _tripCancelledSubscription = _rideRepository.tripCancelledStream.listen((
+      payload,
+    ) {
+      clearRideFlow();
+      final String errorKey;
+      if (payload.cancelledBy == 'driver') {
+        errorKey = 'tripCancelledByDriver';
+      } else if (payload.cancelledBy == 'admin') {
+        errorKey = 'tripCancelledByAdmin';
+      } else {
+        errorKey = 'tripCancelled';
+      }
+      emit(
+        state.copyWith(
+          bookingErrorMessage: errorKey,
+          tripCancelledData: payload,
+        ),
+      );
     });
   }
 
@@ -360,8 +425,12 @@ class HomeCubit extends Cubit<HomeState> {
       );
 
     // 4. Update/Add driver to pickup polyline (along streets)
-    final polylineIdBorder = state.isDriverArrived ? 'driver_to_destination_border' : 'driver_to_pickup_border';
-    final polylineId = state.isDriverArrived ? 'driver_to_destination' : 'driver_to_pickup';
+    final polylineIdBorder = state.isDriverArrived
+        ? 'driver_to_destination_border'
+        : 'driver_to_pickup_border';
+    final polylineId = state.isDriverArrived
+        ? 'driver_to_destination'
+        : 'driver_to_pickup';
 
     final updatedPolylines = List<MapPolyline>.from(state.polylines)
       ..removeWhere(
@@ -422,6 +491,9 @@ class HomeCubit extends Cubit<HomeState> {
     _rideMatchedSubscription?.cancel();
     _driverLocationSubscription?.cancel();
     _driverArrivedSubscription?.cancel();
+    _driverStartedSubscription?.cancel();
+    _tripCompletedSubscription?.cancel();
+    _tripCancelledSubscription?.cancel();
     _authEventSubscription?.cancel();
     return super.close();
   }

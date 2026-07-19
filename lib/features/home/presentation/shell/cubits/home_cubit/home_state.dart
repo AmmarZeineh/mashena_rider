@@ -20,6 +20,9 @@ class HomeState {
   final MatchedTrip? matchedTrip;
   final bool isTripEnded;
   final bool isDriverArrived;
+  final bool isTripStarted;
+  final TripCompletedPayload? tripCompletedData;
+  final TripCancelledPayload? tripCancelledData;
 
   /// Populated once the ride submission API succeeds.
   final RideSubmissionResponse? submissionResponse;
@@ -53,6 +56,9 @@ class HomeState {
     this.driverEta,
     this.isTripEnded = false,
     this.isDriverArrived = false,
+    this.isTripStarted = false,
+    this.tripCompletedData,
+    this.tripCancelledData,
   });
 
   const HomeState.initial()
@@ -77,7 +83,10 @@ class HomeState {
       driverDistance = null,
       driverEta = null,
       isTripEnded = false,
-      isDriverArrived = false;
+      isDriverArrived = false,
+      isTripStarted = false,
+      tripCompletedData = null,
+      tripCancelledData = null;
 
 
   HomeState copyWith({
@@ -111,6 +120,11 @@ class HomeState {
     bool clearDriverEta = false,
     bool? isTripEnded,
     bool? isDriverArrived,
+    bool? isTripStarted,
+    TripCompletedPayload? tripCompletedData,
+    bool clearTripCompletedData = false,
+    TripCancelledPayload? tripCancelledData,
+    bool clearTripCancelledData = false,
   }) {
     return HomeState(
       ui: ui ?? this.ui,
@@ -143,6 +157,9 @@ class HomeState {
       driverEta: clearDriverEta ? null : (driverEta ?? this.driverEta),
       isTripEnded: isTripEnded ?? this.isTripEnded,
       isDriverArrived: isDriverArrived ?? this.isDriverArrived,
+      isTripStarted: isTripStarted ?? this.isTripStarted,
+      tripCompletedData: clearTripCompletedData ? null : (tripCompletedData ?? this.tripCompletedData),
+      tripCancelledData: clearTripCancelledData ? null : (tripCancelledData ?? this.tripCancelledData),
     );
   }
 

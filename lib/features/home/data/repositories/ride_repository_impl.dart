@@ -9,6 +9,8 @@ import 'package:mashena_rider/features/home/data/models/matched_trip_model.dart'
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
+import 'package:mashena_rider/features/home/data/models/trip_completed_payload.dart';
+import 'package:mashena_rider/features/home/data/models/trip_cancelled_payload.dart';
 import '../../domain/entities/ride_request.dart';
 import '../../domain/repositories/ride_repository.dart';
 import '../models/ride_request_model.dart';
@@ -111,6 +113,18 @@ class RideRepositoryImpl implements RideRepository {
       _rideSocketDataSource.driverArrivedStream;
 
   @override
+  Stream<int> get driverStartedStream =>
+      _rideSocketDataSource.driverStartedStream;
+
+  @override
+  Stream<TripCompletedPayload> get tripCompletedStream =>
+      _rideSocketDataSource.tripCompletedStream;
+
+  @override
+  Stream<TripCancelledPayload> get tripCancelledStream =>
+      _rideSocketDataSource.tripCancelledStream;
+
+  @override
   Future<void> connectSocket() => _rideSocketDataSource.connectSocket();
 
   @override
@@ -121,5 +135,17 @@ class RideRepositoryImpl implements RideRepository {
   @override
   void stopListeningToRide(int rideRequestId) {
     _rideSocketDataSource.stopListeningToRide(rideRequestId);
+  }
+
+  @override
+  Future<Either<String, void>> cancelRide(int rideRequestId) async {
+    try {
+      await _apiClient.post(
+        '${BackendEndpoints.cancelRideByRider}/$rideRequestId/cancel-by-rider',
+      );
+      return const Right(null);
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 }

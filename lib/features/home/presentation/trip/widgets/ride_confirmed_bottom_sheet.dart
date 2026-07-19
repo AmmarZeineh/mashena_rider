@@ -110,21 +110,22 @@ class _RideConfirmedBottomSheetState extends State<RideConfirmedBottomSheet> {
                   SizedBox(height: 32.h),
 
                   // Cancel Button
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w).copyWith(
-                      bottom: MediaQuery.of(context).padding.bottom + 16.h,
+                  if (!context.watch<HomeCubit>().state.isTripStarted)
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w).copyWith(
+                        bottom: MediaQuery.of(context).padding.bottom + 16.h,
+                      ),
+                      child: Column(
+                        children: [
+                          CancelRideButton(
+                            onPressed: () {
+                              context.read<HomeCubit>().cancelRide();
+                            },
+                            label: S.of(context).rideCancelRide,
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      children: [
-                        CancelRideButton(
-                          onPressed: () {
-                            context.read<HomeCubit>().clearRideFlow();
-                          },
-                          label: S.of(context).rideCancelRide,
-                        ),
-                      ],
-                    ),
-                  ),
                 ] else ...[
                   SizedBox(
                     height: MediaQuery.of(context).padding.bottom + 16.h,

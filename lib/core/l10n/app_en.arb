@@ -183,5 +183,8 @@
   "commonPleaseWait": "Please wait",
   "rideLookingForDrivers": "Looking for nearby drivers...",
   "rideTakesFewMoments": "This usually takes a few moments",
-  "simulateEndTrip": "Simulate End Trip"
+  "simulateEndTrip": "Simulate End Trip",
+  "tripCancelledByDriver": "Trip cancelled by driver",
+  "tripCancelledByAdmin": "Trip cancelled by admin",
+  "tripCancelled": "Trip cancelled"
 }

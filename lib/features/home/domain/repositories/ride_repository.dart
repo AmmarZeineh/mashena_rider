@@ -3,6 +3,8 @@ import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
+import 'package:mashena_rider/features/home/data/models/trip_completed_payload.dart';
+import 'package:mashena_rider/features/home/data/models/trip_cancelled_payload.dart';
 import '../entities/ride_request.dart';
 
 abstract interface class RideRepository {
@@ -27,6 +29,15 @@ abstract interface class RideRepository {
   /// Stream emitting when the driver has arrived
   Stream<int> get driverArrivedStream;
 
+  /// Stream emitting when the driver has started the trip
+  Stream<int> get driverStartedStream;
+
+  /// Stream emitting when the trip is completed
+  Stream<TripCompletedPayload> get tripCompletedStream;
+
+  /// Stream emitting when the trip is cancelled
+  Stream<TripCancelledPayload> get tripCancelledStream;
+
   /// Connects the underlying socket to the server.
   /// Should be called early (on screen init) so the rider is registered
   /// in the gateway before submitting a ride request.
@@ -37,4 +48,7 @@ abstract interface class RideRepository {
 
   /// Stops listening to real-time updates for the ride
   void stopListeningToRide(int rideRequestId);
+
+  /// Cancels the ride request or matched trip
+  Future<Either<String, void>> cancelRide(int rideRequestId);
 }

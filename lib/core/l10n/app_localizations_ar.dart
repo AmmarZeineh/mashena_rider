@@ -459,4 +459,13 @@ class SAr extends S {
 
   @override
   String get simulateEndTrip => 'محاكاة إنهاء الرحلة';
+
+  @override
+  String get tripCancelledByDriver => 'Trip cancelled by driver';
+
+  @override
+  String get tripCancelledByAdmin => 'Trip cancelled by admin';
+
+  @override
+  String get tripCancelled => 'Trip cancelled';
 }

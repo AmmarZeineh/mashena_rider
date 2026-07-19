@@ -1,6 +1,9 @@
 {
   "ar": [
     "enterYourNumberRegister",
-    "validationPasswordsNotMatch"
+    "validationPasswordsNotMatch",
+    "tripCancelledByDriver",
+    "tripCancelledByAdmin",
+    "tripCancelled"
   ]
 }

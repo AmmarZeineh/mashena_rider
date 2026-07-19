@@ -3,6 +3,8 @@ import 'dart:developer' as developer;
 
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/network/socket_client.dart';
+import 'package:mashena_rider/features/home/data/models/trip_completed_payload.dart';
+import 'package:mashena_rider/features/home/data/models/trip_cancelled_payload.dart';
 
 /// Abstract class defining contracts for the real-time ride socket data source.
 abstract interface class RideSocketDataSource {
@@ -14,6 +16,15 @@ abstract interface class RideSocketDataSource {
 
   /// Stream that fires when the driver has arrived.
   Stream<int> get driverArrivedStream;
+
+  /// Stream that fires when the trip has started.
+  Stream<int> get driverStartedStream;
+
+  /// Stream that fires when the trip is completed.
+  Stream<TripCompletedPayload> get tripCompletedStream;
+
+  /// Stream that fires when the trip is cancelled.
+  Stream<TripCancelledPayload> get tripCancelledStream;
 
   /// Connects the underlying socket to the server.
   Future<void> connectSocket();
@@ -35,6 +46,12 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
       StreamController<MapLatLng>.broadcast();
   final StreamController<int> _driverArrivedController =
       StreamController<int>.broadcast();
+  final StreamController<int> _driverStartedController =
+      StreamController<int>.broadcast();
+  final StreamController<TripCompletedPayload> _tripCompletedController =
+      StreamController<TripCompletedPayload>.broadcast();
+  final StreamController<TripCancelledPayload> _tripCancelledController =
+      StreamController<TripCancelledPayload>.broadcast();
 
   RideSocketDataSourceImpl(this._socketClient) {
     _initSocketListeners();
@@ -112,6 +129,68 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
         );
       }
     });
+
+    _socketClient.on('trip:driver-started', (data) {
+      developer.log(
+        'Received trip:driver-started event: $data',
+        name: 'features.home.socket',
+      );
+      try {
+        if (data is Map) {
+          final tripId = data['tripId'];
+          if (tripId != null) {
+            _driverStartedController.add(int.parse(tripId.toString()));
+          }
+        }
+      } catch (e, stackTrace) {
+        developer.log(
+          'Error parsing trip:driver-started payload',
+          name: 'features.home.socket',
+          error: e,
+          stackTrace: stackTrace,
+        );
+      }
+    });
+
+    _socketClient.on('trip:completed', (data) {
+      developer.log(
+        'Received trip:completed event: $data',
+        name: 'features.home.socket',
+      );
+      try {
+        if (data is Map) {
+          final payload = TripCompletedPayload.fromJson(Map<String, dynamic>.from(data));
+          _tripCompletedController.add(payload);
+        }
+      } catch (e, stackTrace) {
+        developer.log(
+          'Error parsing trip:completed payload',
+          name: 'features.home.socket',
+          error: e,
+          stackTrace: stackTrace,
+        );
+      }
+    });
+
+    _socketClient.on('trip:cancelled', (data) {
+      developer.log(
+        'Received trip:cancelled event: $data',
+        name: 'features.home.socket',
+      );
+      try {
+        if (data is Map) {
+          final payload = TripCancelledPayload.fromJson(Map<String, dynamic>.from(data));
+          _tripCancelledController.add(payload);
+        }
+      } catch (e, stackTrace) {
+        developer.log(
+          'Error parsing trip:cancelled payload',
+          name: 'features.home.socket',
+          error: e,
+          stackTrace: stackTrace,
+        );
+      }
+    });
   }
 
   @override
@@ -122,6 +201,15 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
 
   @override
   Stream<int> get driverArrivedStream => _driverArrivedController.stream;
+
+  @override
+  Stream<int> get driverStartedStream => _driverStartedController.stream;
+
+  @override
+  Stream<TripCompletedPayload> get tripCompletedStream => _tripCompletedController.stream;
+
+  @override
+  Stream<TripCancelledPayload> get tripCancelledStream => _tripCancelledController.stream;
 
   @override
   Future<void> connectSocket() => _socketClient.connect();

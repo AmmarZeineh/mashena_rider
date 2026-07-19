@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 import 'package:dio/dio.dart';
 import 'package:mashena_rider/core/auth/auth_event.dart';
 import 'package:mashena_rider/core/auth/auth_event_bus.dart';
@@ -108,8 +109,8 @@ class AuthInterceptor extends Interceptor {
       );
 
       return true;
-    } catch (e) {
-      print('Refresh token failed: $e');
+    } catch (e, stackTrace) {
+      developer.log('Refresh token failed', error: e, stackTrace: stackTrace, name: 'core.network.auth_interceptor');
       return false;
     }
   }

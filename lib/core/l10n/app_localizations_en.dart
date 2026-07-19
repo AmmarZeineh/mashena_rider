@@ -464,4 +464,13 @@ class SEn extends S {
 
   @override
   String get simulateEndTrip => 'Simulate End Trip';
+
+  @override
+  String get tripCancelledByDriver => 'Trip cancelled by driver';
+
+  @override
+  String get tripCancelledByAdmin => 'Trip cancelled by admin';
+
+  @override
+  String get tripCancelled => 'Trip cancelled';
 }

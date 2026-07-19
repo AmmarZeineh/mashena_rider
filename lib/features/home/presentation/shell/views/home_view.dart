@@ -6,6 +6,7 @@ import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/core/services/osrm_route_service.dart';
 import 'package:mashena_rider/features/home/domain/repositories/ride_repository.dart';
 import 'package:mashena_rider/features/home/domain/usecases/submit_ride_request_usecase.dart';
+import 'package:mashena_rider/features/home/domain/usecases/cancel_ride_usecase.dart';
 import 'package:mashena_rider/features/home/presentation/shell/cubits/home_cubit/home_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/shell/widgets/home_drawer.dart';
 import 'package:mashena_rider/features/home/presentation/shell/widgets/home_view_body.dart';
@@ -21,6 +22,7 @@ class HomeView extends StatelessWidget {
         create: (context) => HomeCubit(
           getIt.get<LocationService>(),
           getIt.get<SubmitRideRequestUsecase>(),
+          getIt.get<CancelRideUsecase>(),
           getIt.get<RideRepository>(),
           getIt.get<OSRMRouteService>(),
           getIt.get<AuthEventBus>(),

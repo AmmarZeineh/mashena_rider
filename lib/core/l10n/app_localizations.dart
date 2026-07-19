@@ -960,6 +960,24 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Simulate End Trip'**
   String get simulateEndTrip;
+
+  /// No description provided for @tripCancelledByDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip cancelled by driver'**
+  String get tripCancelledByDriver;
+
+  /// No description provided for @tripCancelledByAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip cancelled by admin'**
+  String get tripCancelledByAdmin;
+
+  /// No description provided for @tripCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip cancelled'**
+  String get tripCancelled;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {
