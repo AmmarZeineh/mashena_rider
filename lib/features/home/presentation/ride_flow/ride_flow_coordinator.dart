@@ -286,13 +286,19 @@ class DriverMarkerWidget extends StatelessWidget {
               ),
             ],
           ),
-          child: Transform.rotate(
-            angle: bearing * pi / 180,
-            child: const Icon(
-              Icons.directions_car_filled_rounded,
-              color: Colors.white,
-              size: 16,
-            ),
+          child: TweenAnimationBuilder<double>(
+            tween: Tween<double>(end: bearing),
+            duration: const Duration(milliseconds: 600),
+            builder: (context, angle, child) {
+              return Transform.rotate(
+                angle: angle * pi / 180,
+                child: const Icon(
+                  Icons.directions_car_filled_rounded,
+                  color: Colors.white,
+                  size: 16,
+                ),
+              );
+            },
           ),
         ),
       ],

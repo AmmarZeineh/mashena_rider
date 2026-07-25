@@ -55,6 +55,9 @@ class _RideConfirmedBottomSheetState extends State<RideConfirmedBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final homeState = context.watch<HomeCubit>().state;
+    final isDriverArrived =
+        homeState.isDriverArrived || homeState.isTripStarted;
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -97,20 +100,22 @@ class _RideConfirmedBottomSheetState extends State<RideConfirmedBottomSheet> {
                     child: const DriverCard(),
                   ),
 
-                  SizedBox(height: 24.h),
+                  if (!isDriverArrived) ...[
+                    SizedBox(height: 24.h),
 
-                  // Trip Details
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w),
-                    child: TripDetails(
-                      submissionResponse: widget.submissionResponse,
+                    // Trip Details
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: TripDetails(
+                        submissionResponse: widget.submissionResponse,
+                      ),
                     ),
-                  ),
+                  ],
 
                   SizedBox(height: 32.h),
 
                   // Cancel Button
-                  if (!context.watch<HomeCubit>().state.isTripStarted)
+                  if (!homeState.isTripStarted)
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 24.w).copyWith(
                         bottom: MediaQuery.of(context).padding.bottom + 16.h,

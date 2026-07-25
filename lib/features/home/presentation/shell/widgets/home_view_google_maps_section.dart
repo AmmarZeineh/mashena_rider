@@ -69,9 +69,40 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
   @override
   Widget build(BuildContext context) {
     return BlocListener<HomeCubit, HomeState>(
-      listenWhen: (prev, curr) => prev.position != curr.position,
+      listenWhen: (prev, curr) =>
+          prev.position != curr.position ||
+          prev.driverLocation != curr.driverLocation ||
+          prev.isDriverArrived != curr.isDriverArrived ||
+          prev.isTripStarted != curr.isTripStarted,
       listener: (context, state) {
-        if (state.position != null && _mapController != null) {
+        if (_mapController == null) return;
+
+        if (state.driverLocation != null && state.isDriverFound) {
+          final pickup = state.confirmedRideResult?.pickup ??
+              (state.matchedTrip != null
+                  ? MapLatLng(
+                      latitude: state.matchedTrip!.pickupLat,
+                      longitude: state.matchedTrip!.pickupLng,
+                    )
+                  : null);
+          final destination = state.confirmedRideResult?.destination ??
+              (state.matchedTrip != null
+                  ? MapLatLng(
+                      latitude: state.matchedTrip!.destinationLat,
+                      longitude: state.matchedTrip!.destinationLng,
+                    )
+                  : null);
+
+          final target = state.isTripStarted
+              ? destination
+              : pickup;
+          if (target != null) {
+            _mapController!.fitBounds([state.driverLocation!, target], padding: 80);
+            return;
+          }
+        }
+
+        if (state.position != null && state.driverLocation == null) {
           _mapController!.moveCamera(
             MapLatLng(
               latitude: state.position!.latitude,

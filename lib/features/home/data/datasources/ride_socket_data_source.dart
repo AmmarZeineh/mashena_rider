@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/network/socket_client.dart';
+import 'package:mashena_rider/features/home/data/models/driver_arrived_payload.dart';
 import 'package:mashena_rider/features/home/data/models/trip_completed_payload.dart';
 import 'package:mashena_rider/features/home/data/models/trip_cancelled_payload.dart';
 
@@ -15,7 +16,7 @@ abstract interface class RideSocketDataSource {
   Stream<MapLatLng> get driverLocationStream;
 
   /// Stream that fires when the driver has arrived.
-  Stream<int> get driverArrivedStream;
+  Stream<DriverArrivedPayload> get driverArrivedStream;
 
   /// Stream that fires when the trip has started.
   Stream<int> get driverStartedStream;
@@ -44,8 +45,8 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
       StreamController<int>.broadcast();
   final StreamController<MapLatLng> _driverLocationController =
       StreamController<MapLatLng>.broadcast();
-  final StreamController<int> _driverArrivedController =
-      StreamController<int>.broadcast();
+  final StreamController<DriverArrivedPayload> _driverArrivedController =
+      StreamController<DriverArrivedPayload>.broadcast();
   final StreamController<int> _driverStartedController =
       StreamController<int>.broadcast();
   final StreamController<TripCompletedPayload> _tripCompletedController =
@@ -115,10 +116,8 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
       );
       try {
         if (data is Map) {
-          final tripId = data['tripId'];
-          if (tripId != null) {
-            _driverArrivedController.add(int.parse(tripId.toString()));
-          }
+          final payload = DriverArrivedPayload.fromJson(Map<String, dynamic>.from(data));
+          _driverArrivedController.add(payload);
         }
       } catch (e, stackTrace) {
         developer.log(
@@ -200,7 +199,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
   Stream<MapLatLng> get driverLocationStream => _driverLocationController.stream;
 
   @override
-  Stream<int> get driverArrivedStream => _driverArrivedController.stream;
+  Stream<DriverArrivedPayload> get driverArrivedStream => _driverArrivedController.stream;
 
   @override
   Stream<int> get driverStartedStream => _driverStartedController.stream;

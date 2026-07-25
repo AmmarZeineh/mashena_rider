@@ -7,7 +7,7 @@ import 'package:mashena_rider/features/home/presentation/common/models/confirmed
 import 'package:mashena_rider/features/home/presentation/common/widgets/custom_drag_handle.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
-import 'package:mashena_rider/features/home/data/models/trip_completed_payload.dart';
+import 'package:mashena_rider/features/home/domain/entities/trip_completed.dart';
 
 import 'ride_confirmed_sheet_components/driver_card.dart';
 
@@ -21,7 +21,7 @@ class TripRatingBottomSheet extends StatefulWidget {
 
   final ConfirmedRideFlowResult rideResult;
   final RideSubmissionResponse submissionResponse;
-  final TripCompletedPayload? tripCompletedData;
+  final TripCompleted? tripCompletedData;
 
   @override
   State<TripRatingBottomSheet> createState() => _TripRatingBottomSheetState();

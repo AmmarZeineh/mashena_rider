@@ -6,11 +6,12 @@ import 'package:mashena_rider/features/home/data/datasources/ride_socket_data_so
 import 'package:mashena_rider/features/home/data/models/ride_estimate_response_model.dart';
 import 'package:mashena_rider/features/home/data/models/ride_submission_response_model.dart';
 import 'package:mashena_rider/features/home/data/models/matched_trip_model.dart';
+import 'package:mashena_rider/features/home/data/models/driver_arrived_payload.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
-import 'package:mashena_rider/features/home/data/models/trip_completed_payload.dart';
-import 'package:mashena_rider/features/home/data/models/trip_cancelled_payload.dart';
+import 'package:mashena_rider/features/home/domain/entities/trip_completed.dart';
+import 'package:mashena_rider/features/home/domain/entities/trip_cancelled.dart';
 import '../../domain/entities/ride_request.dart';
 import '../../domain/repositories/ride_repository.dart';
 import '../models/ride_request_model.dart';
@@ -109,7 +110,7 @@ class RideRepositoryImpl implements RideRepository {
       _rideSocketDataSource.driverLocationStream;
 
   @override
-  Stream<int> get driverArrivedStream =>
+  Stream<DriverArrivedPayload> get driverArrivedStream =>
       _rideSocketDataSource.driverArrivedStream;
 
   @override
@@ -117,12 +118,12 @@ class RideRepositoryImpl implements RideRepository {
       _rideSocketDataSource.driverStartedStream;
 
   @override
-  Stream<TripCompletedPayload> get tripCompletedStream =>
-      _rideSocketDataSource.tripCompletedStream;
+  Stream<TripCompleted> get tripCompletedStream =>
+      _rideSocketDataSource.tripCompletedStream.map((payload) => payload.toEntity());
 
   @override
-  Stream<TripCancelledPayload> get tripCancelledStream =>
-      _rideSocketDataSource.tripCancelledStream;
+  Stream<TripCancelled> get tripCancelledStream =>
+      _rideSocketDataSource.tripCancelledStream.map((payload) => payload.toEntity());
 
   @override
   Future<void> connectSocket() => _rideSocketDataSource.connectSocket();

@@ -10,8 +10,9 @@ import 'package:mashena_rider/core/maps/domain/entities/map_polyline.dart';
 import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/core/services/location_status.dart';
 import 'package:mashena_rider/core/services/osrm_route_service.dart';
-import 'package:mashena_rider/features/home/data/models/trip_cancelled_payload.dart';
-import 'package:mashena_rider/features/home/data/models/trip_completed_payload.dart';
+import 'package:mashena_rider/features/home/data/models/driver_arrived_payload.dart';
+import 'package:mashena_rider/features/home/domain/entities/trip_completed.dart';
+import 'package:mashena_rider/features/home/domain/entities/trip_cancelled.dart';
 import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import 'package:mashena_rider/features/home/domain/repositories/ride_repository.dart';
@@ -46,10 +47,10 @@ class HomeCubit extends Cubit<HomeState> {
 
   StreamSubscription<int>? _rideMatchedSubscription;
   StreamSubscription<MapLatLng>? _driverLocationSubscription;
-  StreamSubscription<int>? _driverArrivedSubscription;
+  StreamSubscription<DriverArrivedPayload>? _driverArrivedSubscription;
   StreamSubscription<int>? _driverStartedSubscription;
-  StreamSubscription<TripCompletedPayload>? _tripCompletedSubscription;
-  StreamSubscription<TripCancelledPayload>? _tripCancelledSubscription;
+  StreamSubscription<TripCompleted>? _tripCompletedSubscription;
+  StreamSubscription<TripCancelled>? _tripCancelledSubscription;
   StreamSubscription<AuthEvent>? _authEventSubscription;
 
   /// Called once when the home screen loads.
@@ -152,7 +153,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   /// Clears route, markers, and confirmed ride — back to idle.
   void clearRideFlow() {
-    final activeRideId = state.submissionResponse?.rideRequestId;
+    final activeRideId = state.submissionResponse?.rideRequestId ?? state.matchedTrip?.rideRequestId;
     if (activeRideId != null) {
       _rideRepository.stopListeningToRide(activeRideId);
     }
@@ -190,7 +191,11 @@ class HomeCubit extends Cubit<HomeState> {
     if (rideRequestId == null) return;
 
     if (state.isTripStarted) {
-      emit(state.copyWith(bookingErrorMessage: 'Cannot cancel ride after trip has started'));
+      emit(
+        state.copyWith(
+          bookingErrorMessage: 'Cannot cancel ride after trip has started',
+        ),
+      );
       return;
     }
 
@@ -199,7 +204,9 @@ class HomeCubit extends Cubit<HomeState> {
     final response = await _cancelRideUsecase(rideRequestId);
 
     response.fold(
-      (error) => emit(state.copyWith(isSubmittingRide: false, bookingErrorMessage: error)),
+      (error) => emit(
+        state.copyWith(isSubmittingRide: false, bookingErrorMessage: error),
+      ),
       (_) {
         _rideRepository.stopListeningToRide(rideRequestId);
         clearRideFlow();
@@ -264,9 +271,15 @@ class HomeCubit extends Cubit<HomeState> {
     });
 
     _driverArrivedSubscription = _rideRepository.driverArrivedStream.listen((
-      tripId,
+      payload,
     ) {
-      emit(state.copyWith(isDriverArrived: true));
+      emit(
+        state.copyWith(
+          isDriverArrived: true,
+          freeWaitTimeSeconds: payload.freeWaitTimeSeconds,
+          arrivedAt: payload.arrivedAt,
+        ),
+      );
       // Once arrived, update the marker/route immediately using the last known location
       if (state.driverLocation != null) {
         _updateDriverMarker(state.driverLocation!);
@@ -282,7 +295,18 @@ class HomeCubit extends Cubit<HomeState> {
     _tripCompletedSubscription = _rideRepository.tripCompletedStream.listen((
       payload,
     ) {
-      emit(state.copyWith(isTripEnded: true, tripCompletedData: payload));
+      final activeRideId = state.submissionResponse?.rideRequestId ?? state.matchedTrip?.rideRequestId;
+      if (activeRideId != null) {
+        _rideRepository.stopListeningToRide(activeRideId);
+      }
+      emit(
+        state.copyWith(
+          isTripEnded: true,
+          tripCompletedData: payload,
+          markers: [],
+          polylines: [],
+        ),
+      );
     });
 
     _tripCancelledSubscription = _rideRepository.tripCancelledStream.listen((
@@ -312,7 +336,7 @@ class HomeCubit extends Cubit<HomeState> {
     _authEventSubscription = _authEventBus.stream.listen((event) {
       if (event == AuthEvent.tokenRefreshed) {
         developer.log(
-          'Token refreshed — reconnecting socket',
+          'Token refreshed, reconnecting socket...',
           name: 'features.home.cubit',
         );
         _rideRepository.connectSocket();
@@ -320,63 +344,95 @@ class HomeCubit extends Cubit<HomeState> {
     });
   }
 
-  /// Fetches matched trip details with one retry on failure.
+  /// Fetches matched trip details with retry on failure.
   /// This guards against transient auth failures (token refresh in-flight)
   /// that can occur right when the ride:matched socket event arrives.
   Future<void> _fetchMatchedTripWithRetry(int rideRequestId) async {
-    developer.log(
-      'Fetching matched trip for rideRequestId=$rideRequestId (attempt 1)',
-      name: 'features.home.cubit',
-    );
+    const int maxRetries = 4;
+    const Duration delayBetweenRetries = Duration(milliseconds: 1500);
 
-    var result = await _rideRepository.getMatchedTripDetails(rideRequestId);
+    for (int attempt = 1; attempt <= maxRetries; attempt++) {
+      if (isClosed) return;
 
-    if (result.isLeft()) {
       developer.log(
-        'First attempt failed — retrying in 2s',
+        'Fetching matched trip details (Attempt $attempt/$maxRetries for ID: $rideRequestId)...',
         name: 'features.home.cubit',
       );
-      // Wait for any in-flight token refresh to complete, then retry once.
-      await Future<void>.delayed(const Duration(seconds: 2));
-      developer.log(
-        'Fetching matched trip for rideRequestId=$rideRequestId (attempt 2)',
-        name: 'features.home.cubit',
-      );
-      result = await _rideRepository.getMatchedTripDetails(rideRequestId);
-    }
 
-    result.fold(
-      (error) {
+      final result = await _rideRepository.getMatchedTripDetails(
+        rideRequestId,
+      );
+
+      if (isClosed) return;
+
+      if (result.isRight()) {
+        final matchedTrip = result.getOrElse(() => throw Exception());
         developer.log(
-          'getMatchedTripDetails FAILED after retry: $error',
+          'Successfully loaded matched trip: ${matchedTrip.driverFullName} (${matchedTrip.model})',
+          name: 'features.home.cubit',
+        );
+
+        emit(
+          state.copyWith(
+            matchedTrip: matchedTrip,
+            isLoadingMatchedTrip: false,
+          ),
+        );
+
+        // If we already received a driver location via socket while fetching, update marker now
+        if (state.driverLocation != null) {
+          _updateDriverMarker(state.driverLocation!);
+        }
+        return;
+      }
+
+      final error = result.fold((l) => l, (r) => '');
+      developer.log(
+        'Attempt $attempt failed: $error',
+        name: 'features.home.cubit',
+      );
+
+      if (attempt < maxRetries) {
+        await Future.delayed(delayBetweenRetries);
+      } else {
+        developer.log(
+          'All retries exhausted for matched trip details.',
           name: 'features.home.cubit',
         );
         emit(
           state.copyWith(
             isLoadingMatchedTrip: false,
             isDriverFound: false,
-            bookingErrorMessage: error,
+            bookingErrorMessage: 'failedToLoadDriverDetails',
           ),
         );
-      },
-      (matchedTrip) {
-        developer.log(
-          'getMatchedTripDetails SUCCESS — driver: ${matchedTrip.driverFullName}',
-          name: 'features.home.cubit',
-        );
-        emit(
-          state.copyWith(isLoadingMatchedTrip: false, matchedTrip: matchedTrip),
-        );
-      },
-    );
+      }
+    }
   }
 
   Future<void> _updateDriverMarker(MapLatLng driverLocation) async {
-    final pickup = state.confirmedRideResult?.pickup;
-    final destination = state.confirmedRideResult?.destination;
-    if (pickup == null || destination == null) return;
+    final pickup =
+        state.confirmedRideResult?.pickup ??
+        (state.matchedTrip != null
+            ? MapLatLng(
+                latitude: state.matchedTrip!.pickupLat,
+                longitude: state.matchedTrip!.pickupLng,
+              )
+            : null);
+    final destination =
+        state.confirmedRideResult?.destination ??
+        (state.matchedTrip != null
+            ? MapLatLng(
+                latitude: state.matchedTrip!.destinationLat,
+                longitude: state.matchedTrip!.destinationLng,
+              )
+            : null);
+    if (pickup == null || destination == null) {
+      emit(state.copyWith(driverLocation: driverLocation));
+      return;
+    }
 
-    final targetLocation = state.isDriverArrived ? destination : pickup;
+    final targetLocation = state.isTripStarted ? destination : pickup;
 
     // 1. Calculate bearing
     double bearing = state.driverBearing;

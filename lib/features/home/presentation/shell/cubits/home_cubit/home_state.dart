@@ -21,8 +21,10 @@ class HomeState {
   final bool isTripEnded;
   final bool isDriverArrived;
   final bool isTripStarted;
-  final TripCompletedPayload? tripCompletedData;
-  final TripCancelledPayload? tripCancelledData;
+  final int freeWaitTimeSeconds;
+  final String? arrivedAt;
+  final TripCompleted? tripCompletedData;
+  final TripCancelled? tripCancelledData;
 
   /// Populated once the ride submission API succeeds.
   final RideSubmissionResponse? submissionResponse;
@@ -57,6 +59,8 @@ class HomeState {
     this.isTripEnded = false,
     this.isDriverArrived = false,
     this.isTripStarted = false,
+    this.freeWaitTimeSeconds = 300,
+    this.arrivedAt,
     this.tripCompletedData,
     this.tripCancelledData,
   });
@@ -85,6 +89,8 @@ class HomeState {
       isTripEnded = false,
       isDriverArrived = false,
       isTripStarted = false,
+      freeWaitTimeSeconds = 300,
+      arrivedAt = null,
       tripCompletedData = null,
       tripCancelledData = null;
 
@@ -121,9 +127,12 @@ class HomeState {
     bool? isTripEnded,
     bool? isDriverArrived,
     bool? isTripStarted,
-    TripCompletedPayload? tripCompletedData,
+    int? freeWaitTimeSeconds,
+    String? arrivedAt,
+    bool clearArrivedAt = false,
+    TripCompleted? tripCompletedData,
     bool clearTripCompletedData = false,
-    TripCancelledPayload? tripCancelledData,
+    TripCancelled? tripCancelledData,
     bool clearTripCancelledData = false,
   }) {
     return HomeState(
@@ -158,6 +167,8 @@ class HomeState {
       isTripEnded: isTripEnded ?? this.isTripEnded,
       isDriverArrived: isDriverArrived ?? this.isDriverArrived,
       isTripStarted: isTripStarted ?? this.isTripStarted,
+      freeWaitTimeSeconds: freeWaitTimeSeconds ?? this.freeWaitTimeSeconds,
+      arrivedAt: clearArrivedAt ? null : (arrivedAt ?? this.arrivedAt),
       tripCompletedData: clearTripCompletedData ? null : (tripCompletedData ?? this.tripCompletedData),
       tripCancelledData: clearTripCancelledData ? null : (tripCancelledData ?? this.tripCancelledData),
     );

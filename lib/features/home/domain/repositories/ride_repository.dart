@@ -3,8 +3,9 @@ import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
-import 'package:mashena_rider/features/home/data/models/trip_completed_payload.dart';
-import 'package:mashena_rider/features/home/data/models/trip_cancelled_payload.dart';
+import 'package:mashena_rider/features/home/domain/entities/trip_completed.dart';
+import 'package:mashena_rider/features/home/domain/entities/trip_cancelled.dart';
+import 'package:mashena_rider/features/home/data/models/driver_arrived_payload.dart';
 import '../entities/ride_request.dart';
 
 abstract interface class RideRepository {
@@ -27,16 +28,16 @@ abstract interface class RideRepository {
   Stream<MapLatLng> get driverLocationStream;
 
   /// Stream emitting when the driver has arrived
-  Stream<int> get driverArrivedStream;
+  Stream<DriverArrivedPayload> get driverArrivedStream;
 
   /// Stream emitting when the driver has started the trip
   Stream<int> get driverStartedStream;
 
   /// Stream emitting when the trip is completed
-  Stream<TripCompletedPayload> get tripCompletedStream;
+  Stream<TripCompleted> get tripCompletedStream;
 
   /// Stream emitting when the trip is cancelled
-  Stream<TripCancelledPayload> get tripCancelledStream;
+  Stream<TripCancelled> get tripCancelledStream;
 
   /// Connects the underlying socket to the server.
   /// Should be called early (on screen init) so the rider is registered

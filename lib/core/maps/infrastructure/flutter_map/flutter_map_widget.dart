@@ -21,17 +21,51 @@ class FlutterMapWidget extends AppMap {
   State<FlutterMapWidget> createState() => _FlutterMapWidgetState();
 }
 
-class _FlutterMapWidgetState extends State<FlutterMapWidget> {
+class _FlutterMapWidgetState extends State<FlutterMapWidget>
+    with SingleTickerProviderStateMixin {
   late final MapController _mapController;
+  late final AnimationController _markerAnimationController;
+  final Map<String, MapLatLng> _previousMarkerPositions = {};
+  final Map<String, MapLatLng> _targetMarkerPositions = {};
 
   @override
   void initState() {
     super.initState();
     _mapController = MapController();
+    _markerAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+    for (final m in widget.markers) {
+      _previousMarkerPositions[m.id] = m.position;
+      _targetMarkerPositions[m.id] = m.position;
+    }
+  }
+
+  @override
+  void didUpdateWidget(FlutterMapWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    bool anyPositionChanged = false;
+    for (final m in widget.markers) {
+      final oldPos = _targetMarkerPositions[m.id] ?? m.position;
+      if (oldPos.latitude != m.position.latitude ||
+          oldPos.longitude != m.position.longitude) {
+        _previousMarkerPositions[m.id] = oldPos;
+        _targetMarkerPositions[m.id] = m.position;
+        anyPositionChanged = true;
+      } else {
+        _previousMarkerPositions[m.id] = m.position;
+        _targetMarkerPositions[m.id] = m.position;
+      }
+    }
+    if (anyPositionChanged) {
+      _markerAnimationController.forward(from: 0.0);
+    }
   }
 
   @override
   void dispose() {
+    _markerAnimationController.dispose();
     _mapController.dispose();
     super.dispose();
   }
@@ -116,29 +150,47 @@ class _FlutterMapWidgetState extends State<FlutterMapWidget> {
           ),
 
         if (widget.markers.isNotEmpty)
-          MarkerLayer(
-            markers: widget.markers.map((m) {
-              final Widget child;
+          AnimatedBuilder(
+            animation: _markerAnimationController,
+            builder: (context, _) {
+              return MarkerLayer(
+                markers: widget.markers.map((m) {
+                  final Widget child;
 
-              if (m.iconWidget != null) {
-                child = m.iconWidget!;
-              } else if (m.iconPath != null) {
-                child = Image.asset(m.iconPath!);
-              } else {
-                child = const Icon(
-                  Icons.location_on,
-                  color: Colors.red,
-                  size: 36,
-                );
-              }
+                  if (m.iconWidget != null) {
+                    child = m.iconWidget!;
+                  } else if (m.iconPath != null) {
+                    child = Image.asset(m.iconPath!);
+                  } else {
+                    child = const Icon(
+                      Icons.location_on,
+                      color: Colors.red,
+                      size: 36,
+                    );
+                  }
 
-              return Marker(
-                point: m.position.toLatLng(),
-                width: 48,
-                height: 48,
-                child: child,
+                  MapLatLng currentPos = m.position;
+                  if (_markerAnimationController.isAnimating &&
+                      _previousMarkerPositions.containsKey(m.id) &&
+                      _targetMarkerPositions.containsKey(m.id)) {
+                    final prev = _previousMarkerPositions[m.id]!;
+                    final target = _targetMarkerPositions[m.id]!;
+                    final t = _markerAnimationController.value;
+                    currentPos = MapLatLng(
+                      latitude: prev.latitude + (target.latitude - prev.latitude) * t,
+                      longitude: prev.longitude + (target.longitude - prev.longitude) * t,
+                    );
+                  }
+
+                  return Marker(
+                    point: currentPos.toLatLng(),
+                    width: 48,
+                    height: 48,
+                    child: child,
+                  );
+                }).toList(),
               );
-            }).toList(),
+            },
           ),
       ],
     );

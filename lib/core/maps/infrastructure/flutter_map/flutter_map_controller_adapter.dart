@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
@@ -11,5 +12,22 @@ class FlutterMapControllerAdapter implements AppMapController {
   @override
   Future<void> moveCamera(MapLatLng target, {double zoom = 14}) async {
     _mapController.move(LatLng(target.latitude, target.longitude), zoom);
+  }
+
+  @override
+  Future<void> fitBounds(List<MapLatLng> points, {double padding = 50}) async {
+    if (points.isEmpty) return;
+    if (points.length == 1) {
+      _mapController.move(LatLng(points.first.latitude, points.first.longitude), 15);
+      return;
+    }
+    final latLngs = points.map((p) => LatLng(p.latitude, p.longitude)).toList();
+    final bounds = LatLngBounds.fromPoints(latLngs);
+    _mapController.fitCamera(
+      CameraFit.bounds(
+        bounds: bounds,
+        padding: EdgeInsets.all(padding),
+      ),
+    );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:math' show max;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -65,6 +67,7 @@ class FoundDriverDetails extends StatelessWidget {
 
         final eta = state.driverEta;
         final distance = state.driverDistance;
+        final isDriverArrived = state.isDriverArrived || state.isTripStarted;
 
         return Container(
           padding: EdgeInsets.all(16.w),
@@ -79,7 +82,67 @@ class FoundDriverDetails extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (eta != null || distance != null) ...[
+              if (state.isDriverArrived && !state.isTripStarted) ...[
+                Container(
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(color: Colors.amber.shade600, width: 1),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.timer_outlined, color: Colors.amber.shade800, size: 20.sp),
+                          SizedBox(width: 8.w),
+                          Expanded(
+                            child: Text(
+                              "Your driver has arrived at the pickup location!",
+                              style: AppTextStyles.w700_14.copyWith(color: Colors.amber.shade900),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8.h),
+                      _FreeWaitTimerWidget(
+                        freeWaitTimeSeconds: state.freeWaitTimeSeconds,
+                        arrivedAt: state.arrivedAt,
+                      ),
+                      SizedBox(height: 6.h),
+                      Text(
+                        "⚠️ Waiting charges may apply after the free wait timer expires.",
+                        style: AppTextStyles.w500_12.copyWith(color: colorScheme.onSurfaceVariant),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 12.h),
+              ] else if (isDriverArrived) ...[
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_rounded,
+                      color: Colors.green,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        state.isTripStarted ? "In Progress • Heading to Destination" : S.of(context).rideDriverArrived,
+                        style: AppTextStyles.w700_14.copyWith(
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(
+                  height: 24.h,
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                ),
+              ] else if (eta != null || distance != null) ...[
                 Row(
                   children: [
                     Icon(
@@ -292,6 +355,70 @@ class DriverActionCircle extends StatelessWidget {
           child: Icon(icon, color: color, size: 24.sp),
         ),
       ),
+    );
+  }
+}
+
+class _FreeWaitTimerWidget extends StatefulWidget {
+  const _FreeWaitTimerWidget({
+    required this.freeWaitTimeSeconds,
+    this.arrivedAt,
+  });
+
+  final int freeWaitTimeSeconds;
+  final String? arrivedAt;
+
+  @override
+  State<_FreeWaitTimerWidget> createState() => _FreeWaitTimerWidgetState();
+}
+
+class _FreeWaitTimerWidgetState extends State<_FreeWaitTimerWidget> {
+  Timer? _timer;
+  late int _remainingSeconds;
+
+  @override
+  void initState() {
+    super.initState();
+    _calculateRemaining();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) {
+        setState(() {
+          _calculateRemaining();
+        });
+      }
+    });
+  }
+
+  void _calculateRemaining() {
+    if (widget.arrivedAt != null) {
+      final arrivedTime = DateTime.tryParse(widget.arrivedAt!)?.toLocal() ?? DateTime.now();
+      final elapsed = DateTime.now().difference(arrivedTime).inSeconds;
+      _remainingSeconds = max(0, widget.freeWaitTimeSeconds - elapsed);
+    } else {
+      _remainingSeconds = max(0, widget.freeWaitTimeSeconds);
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_remainingSeconds <= 0) {
+      return Text(
+        "⏱️ 00:00 • Waiting charges are now applying",
+        style: AppTextStyles.w700_14.copyWith(color: Colors.red),
+      );
+    }
+
+    final minutes = (_remainingSeconds ~/ 60).toString().padLeft(2, '0');
+    final seconds = (_remainingSeconds % 60).toString().padLeft(2, '0');
+    return Text(
+      "⏱️ Free waiting time: $minutes:$seconds",
+      style: AppTextStyles.w700_14.copyWith(color: Colors.amber.shade900),
     );
   }
 }

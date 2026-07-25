@@ -58,13 +58,17 @@ class SocketIOClientImpl implements SocketClient {
     );
 
     try {
+      final authToken = token.startsWith('Bearer ') ? token : 'Bearer $token';
       _socket = socket_io.io(
         _config.socketUrl,
         socket_io.OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()
-            // Pass token in auth object (NestJS Gateway expects auth.token or auth.accessToken)
-            .setAuth({'token': token})
+            .enableReconnection()
+            .setReconnectionAttempts(double.maxFinite.toInt())
+            .setReconnectionDelay(1000)
+            .setReconnectionDelayMax(5000)
+            .setAuth({'token': authToken})
             .build(),
       );
 
@@ -72,6 +76,17 @@ class SocketIOClientImpl implements SocketClient {
       _socket!.onConnect((_) {
         developer.log('Socket connected successfully', name: 'core.network.socket');
         _connectionStatusController.add(true);
+      });
+
+      _socket!.onReconnect((_) {
+        developer.log('Socket reconnected successfully', name: 'core.network.socket');
+        _connectionStatusController.add(true);
+        _eventListeners.forEach((event, listeners) {
+          for (final callback in listeners) {
+            _socket?.off(event, callback);
+            _socket?.on(event, callback);
+          }
+        });
       });
 
       _socket!.onDisconnect((data) {
