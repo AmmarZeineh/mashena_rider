@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mashena_rider/core/auth/auth_event.dart';
+import 'package:mashena_rider/features/home/data/repositories/rating_repository_impl.dart';
+import 'package:mashena_rider/features/home/domain/repositories/rating_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mashena_rider/app/config/app_config.dart';
@@ -66,6 +68,7 @@ import 'package:mashena_rider/features/home/domain/usecases/cancel_ride_usecase.
 import 'package:mashena_rider/features/home/data/datasources/ride_socket_data_source.dart';
 import 'package:mashena_rider/features/home/data/repositories/ride_repository_impl.dart';
 import 'package:mashena_rider/features/home/presentation/address/cubits/pick_address_cubit/pick_address_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_rating_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -172,10 +175,7 @@ Future<void> configureDependencies() async {
   );
 
   getIt.registerLazySingleton<SocketClient>(
-    () => SocketIOClientImpl(
-      getIt<AppConfig>(),
-      getIt<TokenManager>(),
-    ),
+    () => SocketIOClientImpl(getIt<AppConfig>(), getIt<TokenManager>()),
   );
 
   // =====================================================
@@ -254,10 +254,7 @@ Future<void> configureDependencies() async {
   );
 
   getIt.registerLazySingleton<RideRepository>(
-    () => RideRepositoryImpl(
-      getIt<ApiClient>(),
-      getIt<RideSocketDataSource>(),
-    ),
+    () => RideRepositoryImpl(getIt<ApiClient>(), getIt<RideSocketDataSource>()),
   );
 
   getIt.registerFactory<CreateRideRequestUsecase>(
@@ -282,5 +279,13 @@ Future<void> configureDependencies() async {
       getIt<NominatimService>(),
       getIt<CreateRideRequestUsecase>(),
     ),
+  );
+
+  getIt.registerLazySingleton<RatingRepository>(
+    () => RatingRepositoryImpl(getIt<ApiClient>()),
+  );
+
+  getIt.registerFactory<TripRatingCubit>(
+    () => TripRatingCubit(getIt<RatingRepository>()),
   );
 }

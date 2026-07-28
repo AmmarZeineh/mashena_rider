@@ -8,5 +8,7 @@ class BackendEndpoints {
   static const String getMatchedTrip = '/trips/by-ride';
   static const String cancelRideByRider = '/trips/by-ride';
   static const String refresh = '/auth/refresh';
+  static const String ratingTags = '/rating-tags';
+  static String getSubmitRatingEndpoint(int tripId) => '/trips/$tripId/rate';
 }
 
