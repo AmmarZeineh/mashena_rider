@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
@@ -9,17 +10,16 @@ import 'package:mashena_rider/features/home/data/models/driver_arrived_payload.d
 import '../entities/ride_request.dart';
 
 abstract interface class RideRepository {
-  Future<Either<String, RideEstimateResponse>> createRideRequest(
+  Future<Either<Failure, RideEstimateResponse>> createRideRequest(
     RideRequest request,
   );
 
-  Future<Either<String, RideSubmissionResponse>> submitRideRequest({
+  Future<Either<Failure, RideSubmissionResponse>> submitRideRequest({
     required RideRequest request,
     required int vehicleTypeId,
   });
 
-  Future<Either<String, MatchedTrip>> getMatchedTripDetails(int rideRequestId);
-
+  Future<Either<Failure, MatchedTrip>> getMatchedTripDetails(int rideRequestId);
 
   /// Stream emitting the matched ride request IDs
   Stream<int> get rideMatchedStream;
@@ -51,5 +51,5 @@ abstract interface class RideRepository {
   void stopListeningToRide(int rideRequestId);
 
   /// Cancels the ride request or matched trip
-  Future<Either<String, void>> cancelRide(int rideRequestId);
+  Future<Either<Failure, void>> cancelRide(int rideRequestId);
 }

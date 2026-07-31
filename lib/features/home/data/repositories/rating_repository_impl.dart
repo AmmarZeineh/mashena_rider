@@ -1,6 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:mashena_rider/core/constants/app_backend_endpoints.dart';
+import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/core/network/api_client.dart';
+import 'package:mashena_rider/core/network/api_exception.dart';
+import 'package:mashena_rider/core/network/api_failure_mapper.dart';
 import 'package:mashena_rider/features/home/data/models/rating_tag_model.dart';
 import 'package:mashena_rider/features/home/domain/entities/rating_tag.dart';
 import 'package:mashena_rider/features/home/domain/repositories/rating_repository.dart';
@@ -11,7 +14,7 @@ class RatingRepositoryImpl implements RatingRepository {
   RatingRepositoryImpl(this._apiClient);
 
   @override
-  Future<Either<String, List<RatingTag>>> getTags({
+  Future<Either<Failure, List<RatingTag>>> getTags({
     required String targetType,
     required String sentiment,
   }) async {
@@ -27,7 +30,9 @@ class RatingRepositoryImpl implements RatingRepository {
       );
 
       if (response is! Map) {
-        return const Left('Invalid rating tags response');
+        return const Left(
+          Failure(FailureCode.unknown, rawMessage: 'Invalid rating tags response'),
+        );
       }
 
       final jsonMap = Map<String, dynamic>.from(response);
@@ -45,13 +50,15 @@ class RatingRepositoryImpl implements RatingRepository {
       }
 
       return const Right([]);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e));
     } catch (e) {
-      return Left(e.toString());
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
   }
 
   @override
-  Future<Either<String, void>> submitRating({
+  Future<Either<Failure, void>> submitRating({
     required int tripId,
     required double score,
     String? comment,
@@ -70,8 +77,10 @@ class RatingRepositoryImpl implements RatingRepository {
       );
 
       return const Right(null);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e));
     } catch (e) {
-      return Left(e.toString());
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
   }
 }

@@ -5,6 +5,7 @@ extension LoginUserDtoMapper on LoginUserDto {
   User toEntity() {
     return User(
       id: id,
+      fullName: fullName,
       email: email,
       phoneNumber: phoneNumber,
       createdAt: DateTime.fromMillisecondsSinceEpoch(0),

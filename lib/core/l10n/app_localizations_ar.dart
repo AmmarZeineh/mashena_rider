@@ -468,4 +468,44 @@ class SAr extends S {
 
   @override
   String get tripCancelled => 'Trip cancelled';
+
+  @override
+  String get logoutConfirmationMessage =>
+      'هل ترغب في تسجيل الخروج من هذا الجهاز أو جميع الأجهزة؟';
+
+  @override
+  String get logoutThisDevice => 'هذا الجهاز';
+
+  @override
+  String get logoutAllDevices => 'جميع الأجهزة';
+
+  @override
+  String get drawerMyAccount => 'حسابي';
+
+  @override
+  String get drawerFavourites => 'المفضلة';
+
+  @override
+  String get drawerFaq => 'الأسئلة الشائعة';
+
+  @override
+  String get drawerSos => 'الطوارئ';
+
+  @override
+  String get drawerMakeComplaints => 'تقديم شكوى';
+
+  @override
+  String get drawerNotification => 'الإشعارات';
+
+  @override
+  String get drawerAbout => 'عن التطبيق';
+
+  @override
+  String get drawerPrivacyPolicy => 'سياسة الخصوصية';
+
+  @override
+  String get drawerTermsCondition => 'الشروط والأحكام';
+
+  @override
+  String get drawerGuestUser => 'مستخدم زائر';
 }

@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 enum FailureCode {
   networkTimeout,
   networkConnection,
@@ -8,10 +10,13 @@ enum FailureCode {
   validation,
   server,
   cache,
+  tripCancelledByDriver,
+  tripCancelledByAdmin,
+  tripCancelled,
   unknown,
 }
 
-final class Failure {
+final class Failure extends Equatable {
   const Failure(
     this.code, {
     this.statusCode,
@@ -23,4 +28,7 @@ final class Failure {
   final int? statusCode;
   final List<String> args;
   final String? rawMessage;
+
+  @override
+  List<Object?> get props => [code, statusCode, args, rawMessage];
 }

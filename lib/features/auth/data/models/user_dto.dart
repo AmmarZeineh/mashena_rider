@@ -7,6 +7,7 @@ part 'user_dto.g.dart';
 abstract class UserDto with _$UserDto {
   const factory UserDto({
     required int id,
+    required String fullName,
     required String email,
     required String phoneNumber,
     required DateTime createdAt,

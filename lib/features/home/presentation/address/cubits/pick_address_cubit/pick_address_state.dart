@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/features/home/domain/entities/place_entity.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
@@ -20,7 +21,7 @@ abstract class PickAddressState with _$PickAddressState {
     RideEstimateResponse? rideEstimateResponse,
     RideRequest? rideRequest,
     RideEstimate? selectedRideEstimate,
-    String? errorMessage,
+    Failure? errorMessage,
     String? warningMessage,
   }) = _PickAddressState;
 

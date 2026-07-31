@@ -93,11 +93,7 @@ class AuthInterceptor extends Interceptor {
       final response = await dio.post(
         BackendEndpoints.refresh,
         data: {'refreshToken': refreshToken},
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $refreshToken',
-          },
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $refreshToken'}),
       );
 
       final newAccess = response.data['accessToken'];
@@ -110,7 +106,12 @@ class AuthInterceptor extends Interceptor {
 
       return true;
     } catch (e, stackTrace) {
-      developer.log('Refresh token failed', error: e, stackTrace: stackTrace, name: 'core.network.auth_interceptor');
+      developer.log(
+        'Refresh token failed',
+        error: e,
+        stackTrace: stackTrace,
+        name: 'core.network.auth_interceptor',
+      );
       return false;
     }
   }

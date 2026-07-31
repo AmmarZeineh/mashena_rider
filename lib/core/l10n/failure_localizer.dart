@@ -21,6 +21,12 @@ String failureText(BuildContext context, Failure f) {
       return s.apiValidationError;
     case FailureCode.server:
       return s.apiServerError;
+    case FailureCode.tripCancelledByDriver:
+      return s.tripCancelledByDriver;
+    case FailureCode.tripCancelledByAdmin:
+      return s.tripCancelledByAdmin;
+    case FailureCode.tripCancelled:
+      return s.tripCancelled;
     case FailureCode.unknown:
       return s.apiUnknownError;
     case FailureCode.cache:

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import '../entities/ride_request.dart';
 import '../repositories/ride_repository.dart';
@@ -8,7 +9,7 @@ class SubmitRideRequestUsecase {
 
   SubmitRideRequestUsecase(this._repository);
 
-  Future<Either<String, RideSubmissionResponse>> call({
+  Future<Either<Failure, RideSubmissionResponse>> call({
     required RideRequest request,
     required int vehicleTypeId,
   }) {

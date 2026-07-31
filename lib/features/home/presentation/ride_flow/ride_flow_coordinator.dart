@@ -152,50 +152,7 @@ abstract class RideFlowCoordinator {
     }
   }
 
-  /// Draws an amber driver→pickup route on the map when the ride is confirmed.
-  ///
-  /// Since real-time driver tracking is not yet available, a simulated driver
-  /// position is placed approximately 0.4 km north of the pickup point.
-  static void drawDriverRoute(BuildContext context, MapLatLng pickupLatLng) {
-    final homeCubit = context.read<HomeCubit>();
 
-    // Simulated driver location: ~0.004 degrees north of pickup (~444 m).
-    final driverLatLng = MapLatLng(
-      latitude: pickupLatLng.latitude + 0.004,
-      longitude: pickupLatLng.longitude + 0.001,
-    );
-
-    // Append the driver→pickup polyline (amber, thinner).
-    final updatedPolylines = List<MapPolyline>.from(homeCubit.state.polylines)
-      ..add(
-        MapPolyline(
-          id: 'driver_to_pickup_border',
-          points: [driverLatLng, pickupLatLng],
-          color: Colors.amber.withValues(alpha: 0.3),
-          width: 10,
-        ),
-      )
-      ..add(
-        MapPolyline(
-          id: 'driver_to_pickup',
-          points: [driverLatLng, pickupLatLng],
-          color: Colors.amber,
-          width: 4,
-        ),
-      );
-    homeCubit.setPolylines(updatedPolylines);
-
-    // Append a car marker at the driver position.
-    final updatedMarkers = List<MapMarker>.from(homeCubit.state.markers)
-      ..add(
-        MapMarker(
-          id: 'driver',
-          position: driverLatLng,
-          iconWidget: const DriverMarkerWidget(),
-        ),
-      );
-    homeCubit.setMarkers(updatedMarkers);
-  }
 }
 
 /// A premium styled map point marker with glow effect.

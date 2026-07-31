@@ -473,4 +473,44 @@ class SEn extends S {
 
   @override
   String get tripCancelled => 'Trip cancelled';
+
+  @override
+  String get logoutConfirmationMessage =>
+      'Do you want to logout from this device or all devices?';
+
+  @override
+  String get logoutThisDevice => 'This Device';
+
+  @override
+  String get logoutAllDevices => 'All Devices';
+
+  @override
+  String get drawerMyAccount => 'My Account';
+
+  @override
+  String get drawerFavourites => 'Favourites';
+
+  @override
+  String get drawerFaq => 'FAQ';
+
+  @override
+  String get drawerSos => 'SOS';
+
+  @override
+  String get drawerMakeComplaints => 'Make Complaints';
+
+  @override
+  String get drawerNotification => 'Notification';
+
+  @override
+  String get drawerAbout => 'About';
+
+  @override
+  String get drawerPrivacyPolicy => 'Privacy Policy';
+
+  @override
+  String get drawerTermsCondition => 'Terms & Condition';
+
+  @override
+  String get drawerGuestUser => 'Guest User';
 }

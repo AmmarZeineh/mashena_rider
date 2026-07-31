@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:mashena_rider/core/errors/failure.dart';
 import '../repositories/ride_repository.dart';
 
 class CancelRideUsecase {
@@ -6,7 +7,7 @@ class CancelRideUsecase {
 
   CancelRideUsecase(this._repository);
 
-  Future<Either<String, void>> call(int rideRequestId) {
+  Future<Either<Failure, void>> call(int rideRequestId) {
     return _repository.cancelRide(rideRequestId);
   }
 }

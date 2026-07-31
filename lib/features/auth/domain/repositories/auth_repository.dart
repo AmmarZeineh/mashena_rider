@@ -27,4 +27,5 @@ abstract class AuthRepository {
 
   Future<Either<Failure, AuthSession>> getCachedSession();
   Future<Either<Failure, Unit>> logout();
+  Future<Either<Failure, Unit>> logoutAll();
 }

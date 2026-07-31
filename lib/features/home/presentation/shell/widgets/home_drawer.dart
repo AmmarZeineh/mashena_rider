@@ -1,9 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
+import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:mashena_rider/features/profile/presentation/views/profile_view.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key});
+
+  void _showLogoutDialog(BuildContext context) {
+    bool isLoading = false;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: Text(S.of(context).authLogout),
+            content: isLoading
+                ? SizedBox(
+                    height: 100.h,
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                : Text(S.of(context).logoutConfirmationMessage),
+            actions: isLoading
+                ? []
+                : [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                      },
+                      child: Text(S.of(context).commonCancel),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        setState(() => isLoading = true);
+                        await context.read<AuthCubit>().signOut(
+                          allDevices: false,
+                        );
+                        if (ctx.mounted) {
+                          Navigator.of(ctx).pop();
+                        }
+                      },
+                      child: Text(S.of(context).logoutThisDevice),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        setState(() => isLoading = true);
+                        await context.read<AuthCubit>().signOut(
+                          allDevices: true,
+                        );
+                        if (ctx.mounted) {
+                          Navigator.of(ctx).pop();
+                        }
+                      },
+                      style: TextButton.styleFrom(foregroundColor: Colors.red),
+                      child: Text(S.of(context).logoutAllDevices),
+                    ),
+                  ],
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,15 +77,23 @@ class HomeDrawer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 32),
-              const CircleAvatar(
-                radius: 40,
+              CircleAvatar(
+                radius: 40.r,
                 backgroundColor: Colors.white24,
                 child: Icon(Icons.person, size: 40, color: Colors.white),
               ),
               const SizedBox(height: 16),
-              Text(
-                'Frank Smith',
-                style: AppTextStyles.w700_20.copyWith(color: Colors.white),
+              BlocBuilder<AuthCubit, AuthState>(
+                builder: (context, state) {
+                  final name = state.maybeWhen(
+                    authenticated: (session) => session.user.fullName,
+                    orElse: () => S.of(context).drawerGuestUser,
+                  );
+                  return Text(
+                    name,
+                    style: AppTextStyles.w700_20.copyWith(color: Colors.white),
+                  );
+                },
               ),
               const SizedBox(height: 16),
               const Divider(color: Colors.white24, thickness: 1),
@@ -35,43 +104,54 @@ class HomeDrawer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _DrawerItem(
-                        title: 'My Account',
+                        title: S.of(context).drawerMyAccount,
                         icon: Icons.person_outline,
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const ProfileView(),
+                            ),
+                          );
+                        },
                       ),
                       _DrawerItem(
-                        title: 'Favourites',
+                        title: S.of(context).drawerFavourites,
                         icon: Icons.favorite_border,
                         onTap: () {},
                       ),
                       _DrawerItem(
-                        title: 'FAQ',
+                        title: S.of(context).drawerFaq,
                         icon: Icons.help_outline,
                         onTap: () {},
                       ),
-                      _DrawerItem(title: 'SOS', icon: Icons.sos, onTap: () {}),
                       _DrawerItem(
-                        title: 'Make Complaints',
+                        title: S.of(context).drawerSos,
+                        icon: Icons.sos,
+                        onTap: () {},
+                      ),
+                      _DrawerItem(
+                        title: S.of(context).drawerMakeComplaints,
                         icon: Icons.report_problem_outlined,
                         onTap: () {},
                       ),
                       _DrawerItem(
-                        title: 'Notification',
+                        title: S.of(context).drawerNotification,
                         icon: Icons.notifications_none,
                         onTap: () {},
                       ),
                       _DrawerItem(
-                        title: 'About',
+                        title: S.of(context).drawerAbout,
                         icon: Icons.info_outline,
                         onTap: () {},
                       ),
                       _DrawerItem(
-                        title: 'Privacy Policy',
+                        title: S.of(context).drawerPrivacyPolicy,
                         icon: Icons.privacy_tip_outlined,
                         onTap: () {},
                       ),
                       _DrawerItem(
-                        title: 'Terms & Condition',
+                        title: S.of(context).drawerTermsCondition,
                         icon: Icons.description_outlined,
                         onTap: () {},
                       ),
@@ -81,7 +161,11 @@ class HomeDrawer extends StatelessWidget {
               ),
               const Divider(color: Colors.white24, thickness: 1),
               const SizedBox(height: 8),
-              _DrawerItem(title: 'Logout', icon: Icons.logout, onTap: () {}),
+              _DrawerItem(
+                title: S.of(context).authLogout,
+                icon: Icons.logout,
+                onTap: () => _showLogoutDialog(context),
+              ),
               const SizedBox(height: 16),
             ],
           ),

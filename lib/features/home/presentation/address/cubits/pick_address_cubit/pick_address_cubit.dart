@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
@@ -146,9 +147,11 @@ class PickAddressCubit extends Cubit<PickAddressState> {
       final status = await _locationService.requestPermissionIfNeeded();
       if (!status.serviceEnabled ||
           status.permission != LocationPermissionState.granted) {
-        // Handle denied permission (UI could show a toast or dialog)
         if (kDebugMode) {
-          print('Location permission denied or service disabled.');
+          developer.log(
+            'Location permission denied or service disabled.',
+            name: 'features.home.pick_address',
+          );
         }
         emit(state.copyWith(isReversingGeocode: false));
         return;
@@ -171,9 +174,14 @@ class PickAddressCubit extends Cubit<PickAddressState> {
         ),
       );
       _validateDistances();
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (kDebugMode) {
-        print('PickAddressCubit useDeviceLocation error: $e');
+        developer.log(
+          'PickAddressCubit useDeviceLocation error',
+          name: 'features.home.pick_address',
+          error: e,
+          stackTrace: stackTrace,
+        );
       }
       emit(state.copyWith(isReversingGeocode: false));
     }
@@ -207,9 +215,14 @@ class PickAddressCubit extends Cubit<PickAddressState> {
         language: language,
       );
       emit(state.copyWith(searchResults: results, isSearching: false));
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (kDebugMode) {
-        print('PickAddressCubit _performSearch error: $e');
+        developer.log(
+          'PickAddressCubit _performSearch error',
+          name: 'features.home.pick_address',
+          error: e,
+          stackTrace: stackTrace,
+        );
       }
       emit(state.copyWith(searchResults: [], isSearching: false));
     }
@@ -338,8 +351,8 @@ class PickAddressCubit extends Cubit<PickAddressState> {
     final result = await _createRideRequest(request);
 
     result.fold(
-      (error) => emit(
-        state.copyWith(isCreatingRideRequest: false, errorMessage: error),
+      (failure) => emit(
+        state.copyWith(isCreatingRideRequest: false, errorMessage: failure),
       ),
       (estimateResponse) {
         emit(
@@ -353,8 +366,9 @@ class PickAddressCubit extends Cubit<PickAddressState> {
           ),
         );
         if (kDebugMode) {
-          print(
+          developer.log(
             'Ride Request Created. Estimates: ${estimateResponse.estimates}',
+            name: 'features.home.pick_address',
           );
         }
       },

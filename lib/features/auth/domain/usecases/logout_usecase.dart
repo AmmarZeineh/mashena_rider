@@ -5,5 +5,6 @@ import 'package:mashena_rider/features/auth/domain/repositories/auth_repository.
 class LogoutUsecase {
   final AuthRepository repo;
   LogoutUsecase(this.repo);
-  Future<Either<Failure, Unit>> call() => repo.logout();
+  Future<Either<Failure, Unit>> call({bool allDevices = false}) =>
+      allDevices ? repo.logoutAll() : repo.logout();
 }

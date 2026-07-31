@@ -13,7 +13,7 @@ class HomeState {
   final ConfirmedRideFlowResult? confirmedRideResult;
   final bool isSubmittingRide;
   final bool rideSubmittedSuccessfully;
-  final String? bookingErrorMessage;
+  final Failure? bookingErrorMessage;
   final bool isFetchingRoute;
   final bool isDriverFound;
   final bool isLoadingMatchedTrip;
@@ -94,7 +94,6 @@ class HomeState {
       tripCompletedData = null,
       tripCancelledData = null;
 
-
   HomeState copyWith({
     HomeUiState? ui,
     bool? isLocationGranted,
@@ -107,7 +106,7 @@ class HomeState {
     bool clearConfirmedRide = false,
     bool? isSubmittingRide,
     bool? rideSubmittedSuccessfully,
-    String? bookingErrorMessage,
+    Failure? bookingErrorMessage,
     bool clearBookingError = false,
     RideSubmissionResponse? submissionResponse,
     bool clearSubmissionResponse = false,
@@ -157,22 +156,30 @@ class HomeState {
           ? null
           : (submissionResponse ?? this.submissionResponse),
       isFetchingRoute: isFetchingRoute ?? this.isFetchingRoute,
-      isDriverFound: clearDriverFound ? false : (isDriverFound ?? this.isDriverFound),
+      isDriverFound: clearDriverFound
+          ? false
+          : (isDriverFound ?? this.isDriverFound),
       isLoadingMatchedTrip: isLoadingMatchedTrip ?? this.isLoadingMatchedTrip,
       matchedTrip: clearMatchedTrip ? null : (matchedTrip ?? this.matchedTrip),
-      driverLocation: clearDriverLocation ? null : (driverLocation ?? this.driverLocation),
+      driverLocation: clearDriverLocation
+          ? null
+          : (driverLocation ?? this.driverLocation),
       driverBearing: driverBearing ?? this.driverBearing,
-      driverDistance: clearDriverDistance ? null : (driverDistance ?? this.driverDistance),
+      driverDistance: clearDriverDistance
+          ? null
+          : (driverDistance ?? this.driverDistance),
       driverEta: clearDriverEta ? null : (driverEta ?? this.driverEta),
       isTripEnded: isTripEnded ?? this.isTripEnded,
       isDriverArrived: isDriverArrived ?? this.isDriverArrived,
       isTripStarted: isTripStarted ?? this.isTripStarted,
       freeWaitTimeSeconds: freeWaitTimeSeconds ?? this.freeWaitTimeSeconds,
       arrivedAt: clearArrivedAt ? null : (arrivedAt ?? this.arrivedAt),
-      tripCompletedData: clearTripCompletedData ? null : (tripCompletedData ?? this.tripCompletedData),
-      tripCancelledData: clearTripCancelledData ? null : (tripCancelledData ?? this.tripCancelledData),
+      tripCompletedData: clearTripCompletedData
+          ? null
+          : (tripCompletedData ?? this.tripCompletedData),
+      tripCancelledData: clearTripCancelledData
+          ? null
+          : (tripCancelledData ?? this.tripCancelledData),
     );
   }
-
 }
-

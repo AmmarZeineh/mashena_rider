@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -50,9 +51,14 @@ class NominatimService {
         }).toList();
       }
       return [];
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (kDebugMode) {
-        print('NominatimService searchPlaces error: $e');
+        developer.log(
+          'NominatimService searchPlaces error',
+          name: 'core.services.nominatim',
+          error: e,
+          stackTrace: stackTrace,
+        );
       }
       throw Exception('Failed to search places: $e');
     }
@@ -105,9 +111,14 @@ class NominatimService {
       }
 
       return _fallbackPlace(lat, lng);
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (kDebugMode) {
-        print('NominatimService reverseGeocode error: $e');
+        developer.log(
+          'NominatimService reverseGeocode error',
+          name: 'core.services.nominatim',
+          error: e,
+          stackTrace: stackTrace,
+        );
       }
       return _fallbackPlace(lat, lng);
     }

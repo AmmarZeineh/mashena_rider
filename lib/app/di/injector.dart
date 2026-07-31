@@ -65,6 +65,9 @@ import 'package:mashena_rider/features/home/domain/repositories/ride_repository.
 import 'package:mashena_rider/features/home/domain/usecases/create_ride_request_usecase.dart';
 import 'package:mashena_rider/features/home/domain/usecases/submit_ride_request_usecase.dart';
 import 'package:mashena_rider/features/home/domain/usecases/cancel_ride_usecase.dart';
+import 'package:mashena_rider/features/profile/data/repositories/profile_repository_impl.dart';
+import 'package:mashena_rider/features/profile/domain/repositories/profile_repository.dart';
+import 'package:mashena_rider/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:mashena_rider/features/home/data/datasources/ride_socket_data_source.dart';
 import 'package:mashena_rider/features/home/data/repositories/ride_repository_impl.dart';
 import 'package:mashena_rider/features/home/presentation/address/cubits/pick_address_cubit/pick_address_cubit.dart';
@@ -241,12 +244,22 @@ Future<void> configureDependencies() async {
   // 🔹 8. Features - Auth (Presentation Layer)
   // =====================================================
 
-  getIt.registerFactory<AuthCubit>(
-    () => AuthCubit(getIt<GetCachedSessionUsecase>(), getIt<LogoutUsecase>()),
+  getIt.registerLazySingleton<AuthCubit>(
+    () => AuthCubit(
+      getIt<GetCachedSessionUsecase>(),
+      getIt<LogoutUsecase>(),
+      getIt<AuthEventBus>(),
+    ),
   );
 
   // =====================================================
-  // 🔹 9. Features - Home (Data & Domain)
+  // 🔹  // Features - Profile
+  getIt.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepositoryImpl(getIt()),
+  );
+  getIt.registerFactory(() => ProfileCubit(getIt()));
+
+  // Features - Home (Data & Domain)
   // =====================================================
 
   getIt.registerLazySingleton<RideSocketDataSource>(

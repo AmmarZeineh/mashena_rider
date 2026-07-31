@@ -177,5 +177,18 @@
   "commonPleaseWait": "يرجى الانتظار",
   "rideLookingForDrivers": "جارٍ البحث عن سائقين قريبين...",
   "rideTakesFewMoments": "يستغرق هذا عادة بضع لحظات",
-  "simulateEndTrip": "محاكاة إنهاء الرحلة"
+  "simulateEndTrip": "محاكاة إنهاء الرحلة",
+  "logoutConfirmationMessage": "هل ترغب في تسجيل الخروج من هذا الجهاز أو جميع الأجهزة؟",
+  "logoutThisDevice": "هذا الجهاز",
+  "logoutAllDevices": "جميع الأجهزة",
+  "drawerMyAccount": "حسابي",
+  "drawerFavourites": "المفضلة",
+  "drawerFaq": "الأسئلة الشائعة",
+  "drawerSos": "الطوارئ",
+  "drawerMakeComplaints": "تقديم شكوى",
+  "drawerNotification": "الإشعارات",
+  "drawerAbout": "عن التطبيق",
+  "drawerPrivacyPolicy": "سياسة الخصوصية",
+  "drawerTermsCondition": "الشروط والأحكام",
+  "drawerGuestUser": "مستخدم زائر"
 }

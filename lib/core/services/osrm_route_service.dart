@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
@@ -50,9 +51,14 @@ class OSRMRouteService {
         }
       }
       return [];
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (kDebugMode) {
-        print('OSRMRouteService error: $e');
+        developer.log(
+          'OSRMRouteService error',
+          name: 'core.services.osrm',
+          error: e,
+          stackTrace: stackTrace,
+        );
       }
       // Return empty list instead of throwing to allow best-effort marker display
       return [];
@@ -98,9 +104,14 @@ class OSRMRouteService {
         }
       }
       return null;
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (kDebugMode) {
-        print('OSRMRouteService.getRouteDetails error: $e');
+        developer.log(
+          'OSRMRouteService.getRouteDetails error',
+          name: 'core.services.osrm',
+          error: e,
+          stackTrace: stackTrace,
+        );
       }
       return null;
     }

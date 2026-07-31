@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
+import 'package:mashena_rider/core/l10n/failure_localizer.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/widgets/custom_header_button.dart';
@@ -73,7 +74,11 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
     if (state.errorMessage != null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+      ).showSnackBar(
+        SnackBar(
+          content: Text(failureText(context, state.errorMessage!)),
+        ),
+      );
     }
 
     if (!state.isCreatingRideRequest && state.rideEstimateResponse != null) {

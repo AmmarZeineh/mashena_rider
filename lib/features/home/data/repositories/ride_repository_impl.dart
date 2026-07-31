@@ -1,7 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:mashena_rider/core/constants/app_backend_endpoints.dart';
+import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/network/api_client.dart';
+import 'package:mashena_rider/core/network/api_exception.dart';
+import 'package:mashena_rider/core/network/api_failure_mapper.dart';
 import 'package:mashena_rider/features/home/data/datasources/ride_socket_data_source.dart';
 import 'package:mashena_rider/features/home/data/models/ride_estimate_response_model.dart';
 import 'package:mashena_rider/features/home/data/models/ride_submission_response_model.dart';
@@ -23,7 +26,7 @@ class RideRepositoryImpl implements RideRepository {
   RideRepositoryImpl(this._apiClient, this._rideSocketDataSource);
 
   @override
-  Future<Either<String, MatchedTrip>> getMatchedTripDetails(
+  Future<Either<Failure, MatchedTrip>> getMatchedTripDetails(
     int rideRequestId,
   ) async {
     try {
@@ -32,7 +35,9 @@ class RideRepositoryImpl implements RideRepository {
       );
 
       if (response is! Map) {
-        return const Left('Invalid matched trip details response');
+        return const Left(
+          Failure(FailureCode.unknown, rawMessage: 'Invalid matched trip details response'),
+        );
       }
 
       final jsonMap = Map<String, dynamic>.from(response);
@@ -43,15 +48,15 @@ class RideRepositoryImpl implements RideRepository {
       final matchedTrip = MatchedTripModel.fromJson(data).toEntity();
 
       return Right(matchedTrip);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e));
     } catch (e) {
-      return Left(e.toString());
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
   }
 
-
-
   @override
-  Future<Either<String, RideEstimateResponse>> createRideRequest(
+  Future<Either<Failure, RideEstimateResponse>> createRideRequest(
     RideRequest request,
   ) async {
     try {
@@ -62,20 +67,24 @@ class RideRepositoryImpl implements RideRepository {
       );
 
       if (response is! Map) {
-        return const Left('Invalid ride estimates response');
+        return const Left(
+          Failure(FailureCode.unknown, rawMessage: 'Invalid ride estimates response'),
+        );
       }
 
       final estimates = RideEstimateResponseModel.fromJson(
         Map<String, dynamic>.from(response),
       ).toEntity();
       return Right(estimates);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e));
     } catch (e) {
-      return Left(e.toString());
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
   }
 
   @override
-  Future<Either<String, RideSubmissionResponse>> submitRideRequest({
+  Future<Either<Failure, RideSubmissionResponse>> submitRideRequest({
     required RideRequest request,
     required int vehicleTypeId,
   }) async {
@@ -89,7 +98,9 @@ class RideRepositoryImpl implements RideRepository {
       );
 
       if (response is! Map) {
-        return const Left('Invalid ride submission response');
+        return const Left(
+          Failure(FailureCode.unknown, rawMessage: 'Invalid ride submission response'),
+        );
       }
 
       final result = RideSubmissionResponseModel.fromJson(
@@ -97,8 +108,10 @@ class RideRepositoryImpl implements RideRepository {
       ).toEntity();
 
       return Right(result);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e));
     } catch (e) {
-      return Left(e.toString());
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
   }
 
@@ -139,14 +152,16 @@ class RideRepositoryImpl implements RideRepository {
   }
 
   @override
-  Future<Either<String, void>> cancelRide(int rideRequestId) async {
+  Future<Either<Failure, void>> cancelRide(int rideRequestId) async {
     try {
       await _apiClient.post(
         '${BackendEndpoints.cancelRideByRider}/$rideRequestId/cancel-by-rider',
       );
       return const Right(null);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e));
     } catch (e) {
-      return Left(e.toString());
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
   }
 }

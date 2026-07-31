@@ -186,5 +186,18 @@
   "simulateEndTrip": "Simulate End Trip",
   "tripCancelledByDriver": "Trip cancelled by driver",
   "tripCancelledByAdmin": "Trip cancelled by admin",
-  "tripCancelled": "Trip cancelled"
+  "tripCancelled": "Trip cancelled",
+  "logoutConfirmationMessage": "Do you want to logout from this device or all devices?",
+  "logoutThisDevice": "This Device",
+  "logoutAllDevices": "All Devices",
+  "drawerMyAccount": "My Account",
+  "drawerFavourites": "Favourites",
+  "drawerFaq": "FAQ",
+  "drawerSos": "SOS",
+  "drawerMakeComplaints": "Make Complaints",
+  "drawerNotification": "Notification",
+  "drawerAbout": "About",
+  "drawerPrivacyPolicy": "Privacy Policy",
+  "drawerTermsCondition": "Terms & Condition",
+  "drawerGuestUser": "Guest User"
 }

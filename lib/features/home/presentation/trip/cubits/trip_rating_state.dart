@@ -1,10 +1,18 @@
 import 'package:equatable/equatable.dart';
+import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/features/home/domain/entities/rating_tag.dart';
 
 class TripRatingState extends Equatable {
   final bool isLoadingTags;
   final bool isSubmitting;
-  final String? errorMessage;
+
+  /// API/repository errors — displayed via failureText(context, failure).
+  final Failure? errorMessage;
+
+  /// Local UI validation errors (e.g. "Please select a rating score").
+  /// Shown directly as a string without going through failureText().
+  final String? validationError;
+
   final bool isSuccess;
 
   final List<RatingTag> positiveTags;
@@ -17,6 +25,7 @@ class TripRatingState extends Equatable {
     this.isLoadingTags = false,
     this.isSubmitting = false,
     this.errorMessage,
+    this.validationError,
     this.isSuccess = false,
     this.positiveTags = const [],
     this.negativeTags = const [],
@@ -27,8 +36,10 @@ class TripRatingState extends Equatable {
   TripRatingState copyWith({
     bool? isLoadingTags,
     bool? isSubmitting,
-    String? errorMessage,
-    bool? clearError,
+    Failure? errorMessage,
+    bool clearError = false,
+    String? validationError,
+    bool clearValidationError = false,
     bool? isSuccess,
     List<RatingTag>? positiveTags,
     List<RatingTag>? negativeTags,
@@ -38,7 +49,10 @@ class TripRatingState extends Equatable {
     return TripRatingState(
       isLoadingTags: isLoadingTags ?? this.isLoadingTags,
       isSubmitting: isSubmitting ?? this.isSubmitting,
-      errorMessage: clearError == true ? null : (errorMessage ?? this.errorMessage),
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      validationError: clearValidationError
+          ? null
+          : (validationError ?? this.validationError),
       isSuccess: isSuccess ?? this.isSuccess,
       positiveTags: positiveTags ?? this.positiveTags,
       negativeTags: negativeTags ?? this.negativeTags,
@@ -47,7 +61,7 @@ class TripRatingState extends Equatable {
     );
   }
 
-  // Helper to get the relevant tags for current score
+  /// Returns the relevant tags for the current score.
   List<RatingTag> get currentAvailableTags {
     if (currentScore == 0) return [];
     if (currentScore >= 3) return positiveTags;
@@ -59,6 +73,7 @@ class TripRatingState extends Equatable {
         isLoadingTags,
         isSubmitting,
         errorMessage,
+        validationError,
         isSuccess,
         positiveTags,
         negativeTags,

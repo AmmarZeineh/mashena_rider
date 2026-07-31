@@ -12,6 +12,8 @@ abstract class AuthRemoteDataSource {
   Future<LoginResponseDto> login(LoginRequestDto body);
   Future<void> sendOtp(SendOtpRequestDto body);
   Future<void> verifyOtp(VerifyOtpRequestDto body);
+  Future<void> logout(String refreshToken);
+  Future<void> logoutAll();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -39,5 +41,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> verifyOtp(VerifyOtpRequestDto body) {
     return api.post(BackendEndpoints.verifyOtpRider, body: body.toJson());
+  }
+
+  @override
+  Future<void> logout(String refreshToken) async {
+    await api.post(
+      BackendEndpoints.logout,
+      body: {'refreshToken': refreshToken},
+    );
+  }
+
+  @override
+  Future<void> logoutAll() async {
+    await api.post(BackendEndpoints.logoutAll);
   }
 }

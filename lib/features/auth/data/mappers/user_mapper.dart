@@ -5,6 +5,7 @@ extension UserDtoMapper on UserDto {
   User toEntity() {
     return User(
       id: id,
+      fullName: fullName,
       email: email,
       phoneNumber: phoneNumber,
       createdAt: createdAt,

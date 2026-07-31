@@ -978,6 +978,84 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Trip cancelled'**
   String get tripCancelled;
+
+  /// No description provided for @logoutConfirmationMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to logout from this device or all devices?'**
+  String get logoutConfirmationMessage;
+
+  /// No description provided for @logoutThisDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'This Device'**
+  String get logoutThisDevice;
+
+  /// No description provided for @logoutAllDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'All Devices'**
+  String get logoutAllDevices;
+
+  /// No description provided for @drawerMyAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'My Account'**
+  String get drawerMyAccount;
+
+  /// No description provided for @drawerFavourites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favourites'**
+  String get drawerFavourites;
+
+  /// No description provided for @drawerFaq.
+  ///
+  /// In en, this message translates to:
+  /// **'FAQ'**
+  String get drawerFaq;
+
+  /// No description provided for @drawerSos.
+  ///
+  /// In en, this message translates to:
+  /// **'SOS'**
+  String get drawerSos;
+
+  /// No description provided for @drawerMakeComplaints.
+  ///
+  /// In en, this message translates to:
+  /// **'Make Complaints'**
+  String get drawerMakeComplaints;
+
+  /// No description provided for @drawerNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification'**
+  String get drawerNotification;
+
+  /// No description provided for @drawerAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get drawerAbout;
+
+  /// No description provided for @drawerPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get drawerPrivacyPolicy;
+
+  /// No description provided for @drawerTermsCondition.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Condition'**
+  String get drawerTermsCondition;
+
+  /// No description provided for @drawerGuestUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest User'**
+  String get drawerGuestUser;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

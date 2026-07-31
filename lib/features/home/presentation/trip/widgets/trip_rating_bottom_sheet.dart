@@ -12,6 +12,7 @@ import 'package:mashena_rider/features/home/domain/entities/trip_completed.dart'
 import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_rating_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_rating_state.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
+import 'package:mashena_rider/core/l10n/failure_localizer.dart';
 import 'package:mashena_rider/core/utils/toast_helper.dart';
 
 import 'ride_confirmed_sheet_components/driver_card.dart';
@@ -49,7 +50,12 @@ class _TripRatingBottomSheetState extends State<TripRatingBottomSheet> {
       child: BlocConsumer<TripRatingCubit, TripRatingState>(
         listener: (context, state) {
           if (state.errorMessage != null) {
-            context.showErrorToast(state.errorMessage!);
+            // API/repository error — localized via failureText
+            context.showErrorToast(failureText(context, state.errorMessage!));
+          }
+          if (state.validationError != null) {
+            // Local UI validation — shown as-is
+            context.showErrorToast(state.validationError!);
           }
           if (state.isSuccess) {
             // Dismiss or clear ride flow

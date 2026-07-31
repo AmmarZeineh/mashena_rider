@@ -12,6 +12,7 @@ abstract class AuthLocalDataSource {
   });
 
   Future<String?> getCachedAccessToken();
+  Future<String?> getCachedRefreshToken();
   Future<LoginUserDto?> getCachedUser();
 
   Future<void> clearSession();
@@ -41,6 +42,11 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<String?> getCachedAccessToken() {
     return _tokenManager.getAccessToken();
+  }
+
+  @override
+  Future<String?> getCachedRefreshToken() {
+    return _tokenManager.getRefreshToken();
   }
 
   @override

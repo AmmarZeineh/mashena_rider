@@ -4,6 +4,7 @@ import 'dart:math' show pi, sin, cos, atan2;
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'package:geolocator/geolocator.dart';
+import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_marker.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_polyline.dart';
@@ -193,7 +194,10 @@ class HomeCubit extends Cubit<HomeState> {
     if (state.isTripStarted) {
       emit(
         state.copyWith(
-          bookingErrorMessage: 'Cannot cancel ride after trip has started',
+          bookingErrorMessage: const Failure(
+            FailureCode.unknown,
+            rawMessage: 'Cannot cancel ride after trip has started',
+          ),
         ),
       );
       return;
@@ -313,17 +317,17 @@ class HomeCubit extends Cubit<HomeState> {
       payload,
     ) {
       clearRideFlow();
-      final String errorKey;
+      final Failure cancelFailure;
       if (payload.cancelledBy == 'driver') {
-        errorKey = 'tripCancelledByDriver';
+        cancelFailure = const Failure(FailureCode.tripCancelledByDriver);
       } else if (payload.cancelledBy == 'admin') {
-        errorKey = 'tripCancelledByAdmin';
+        cancelFailure = const Failure(FailureCode.tripCancelledByAdmin);
       } else {
-        errorKey = 'tripCancelled';
+        cancelFailure = const Failure(FailureCode.tripCancelled);
       }
       emit(
         state.copyWith(
-          bookingErrorMessage: errorKey,
+          bookingErrorMessage: cancelFailure,
           tripCancelledData: payload,
         ),
       );
@@ -386,7 +390,7 @@ class HomeCubit extends Cubit<HomeState> {
         return;
       }
 
-      final error = result.fold((l) => l, (r) => '');
+      final error = result.fold((l) => l.rawMessage ?? l.code.name, (r) => '');
       developer.log(
         'Attempt $attempt failed: $error',
         name: 'features.home.cubit',
@@ -403,7 +407,10 @@ class HomeCubit extends Cubit<HomeState> {
           state.copyWith(
             isLoadingMatchedTrip: false,
             isDriverFound: false,
-            bookingErrorMessage: 'failedToLoadDriverDetails',
+            bookingErrorMessage: const Failure(
+              FailureCode.unknown,
+              rawMessage: 'failedToLoadDriverDetails',
+            ),
           ),
         );
       }

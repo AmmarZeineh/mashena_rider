@@ -23,18 +23,19 @@ class TripRatingCubit extends Cubit<TripRatingState> {
     final negativeRes = results[1];
 
     if (positiveRes.isLeft() && negativeRes.isLeft()) {
-      emit(state.copyWith(
-        isLoadingTags: false,
-        errorMessage: 'Failed to load rating tags.',
-      ));
+      // Use the first failure as the representative API error
+      final failure = positiveRes.fold((l) => l, (_) => null)!;
+      emit(state.copyWith(isLoadingTags: false, errorMessage: failure));
       return;
     }
 
-    emit(state.copyWith(
-      isLoadingTags: false,
-      positiveTags: positiveRes.fold((l) => [], (r) => r),
-      negativeTags: negativeRes.fold((l) => [], (r) => r),
-    ));
+    emit(
+      state.copyWith(
+        isLoadingTags: false,
+        positiveTags: positiveRes.fold((l) => [], (r) => r),
+        negativeTags: negativeRes.fold((l) => [], (r) => r),
+      ),
+    );
   }
 
   void setScore(double score) {
@@ -45,7 +46,8 @@ class TripRatingCubit extends Cubit<TripRatingState> {
     final newSentimentIsPositive = score >= 3;
 
     Set<int> selectedTags = state.selectedTagIds;
-    if (state.currentScore != 0 && (oldSentimentIsPositive != newSentimentIsPositive)) {
+    if (state.currentScore != 0 &&
+        (oldSentimentIsPositive != newSentimentIsPositive)) {
       // Clear selected tags if sentiment switches between POSITIVE/NEGATIVE
       selectedTags = {};
     }
@@ -68,11 +70,23 @@ class TripRatingCubit extends Cubit<TripRatingState> {
     required String? comment,
   }) async {
     if (state.currentScore == 0) {
-      emit(state.copyWith(errorMessage: 'Please select a rating score'));
+      // Local UI validation — not an API failure
+      emit(
+        state.copyWith(
+          validationError: 'Please select a rating score',
+          clearValidationError: false,
+        ),
+      );
       return;
     }
 
-    emit(state.copyWith(isSubmitting: true, clearError: true));
+    emit(
+      state.copyWith(
+        isSubmitting: true,
+        clearError: true,
+        clearValidationError: true,
+      ),
+    );
 
     final result = await _ratingRepository.submitRating(
       tripId: tripId,
@@ -82,7 +96,8 @@ class TripRatingCubit extends Cubit<TripRatingState> {
     );
 
     result.fold(
-      (error) => emit(state.copyWith(isSubmitting: false, errorMessage: error)),
+      (failure) =>
+          emit(state.copyWith(isSubmitting: false, errorMessage: failure)),
       (_) => emit(state.copyWith(isSubmitting: false, isSuccess: true)),
     );
   }
