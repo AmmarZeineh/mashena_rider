@@ -9,7 +9,8 @@ import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_marker.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_polyline.dart';
 import 'package:mashena_rider/core/services/osrm_route_service.dart';
-import 'package:mashena_rider/features/home/presentation/shell/cubits/home_cubit/home_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/shell/cubits/map_state_cubit/map_state_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/booking/cubits/ride_booking_cubit/ride_booking_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/common/models/confirmed_ride_flow_result.dart';
 
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
@@ -29,10 +30,11 @@ abstract class RideFlowCoordinator {
 
     if (!context.mounted || result == null) return;
 
-    final homeCubit = context.read<HomeCubit>();
+    final mapStateCubit = context.read<MapStateCubit>();
+    final rideBookingCubit = context.read<RideBookingCubit>();
 
     // Start loading state
-    homeCubit.setFetchingRoute(true);
+    mapStateCubit.setFetchingRoute(isFetching: true);
 
     try {
       // 1. Determine Route Points:
@@ -71,10 +73,10 @@ abstract class RideFlowCoordinator {
       }
 
       // Check if cubit is still open and context is mounted before emitting
-      if (!homeCubit.isClosed && context.mounted) {
+      if (!mapStateCubit.isClosed && context.mounted) {
         // 2. Set Polylines
         if (routePoints.isNotEmpty) {
-          homeCubit.setPolylines([
+          mapStateCubit.setPolylines([
             MapPolyline(
               id: 'ride_route_border',
               points: routePoints,
@@ -129,19 +131,19 @@ abstract class RideFlowCoordinator {
           ),
         );
 
-        homeCubit.setMarkers(markers);
-        homeCubit.setConfirmedRide(result);
+        mapStateCubit.setMarkers(markers);
+        rideBookingCubit.setConfirmedRide(result);
       }
     } catch (e) {
       // Handle or log error
     } finally {
-      if (!homeCubit.isClosed) {
-        homeCubit.setFetchingRoute(false);
+      if (!mapStateCubit.isClosed) {
+        mapStateCubit.setFetchingRoute(isFetching: false);
 
         // Show a helpful message if route drawing failed but we have results
         if (context.mounted &&
-            homeCubit.state.polylines.isEmpty &&
-            homeCubit.state.confirmedRideResult != null) {
+            mapStateCubit.state.polylines.isEmpty &&
+            rideBookingCubit.state.confirmedRideResult != null) {
           AppToast.show(
             context,
             message: S.of(context).homeMapRouteUnavailable,

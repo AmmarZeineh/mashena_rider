@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mashena_rider/core/auth/auth_event.dart';
 import 'package:mashena_rider/features/home/data/repositories/rating_repository_impl.dart';
@@ -71,6 +72,12 @@ import 'package:mashena_rider/features/profile/presentation/cubits/profile_cubit
 import 'package:mashena_rider/features/home/data/datasources/ride_socket_data_source.dart';
 import 'package:mashena_rider/features/home/data/repositories/ride_repository_impl.dart';
 import 'package:mashena_rider/features/home/presentation/address/cubits/pick_address_cubit/pick_address_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/booking/cubits/ride_booking_cubit/ride_booking_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/shell/cubits/home_cubit/home_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/shell/cubits/location_cubit/location_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/shell/cubits/map_state_cubit/map_state_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/trip/cubits/driver_tracking_cubit/driver_tracking_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_lifecycle_cubit/trip_lifecycle_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_rating_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -99,8 +106,12 @@ Future<void> configureDependencies() async {
     () => LocalStorageImpl(getIt<SharedPreferences>()),
   );
 
+  getIt.registerLazySingleton<FlutterSecureStorage>(
+    () => const FlutterSecureStorage(),
+  );
+
   getIt.registerLazySingleton<TokenManager>(
-    () => TokenManagerImpl(getIt<SharedPreferences>()),
+    () => TokenManagerImpl(getIt<FlutterSecureStorage>()),
   );
 
   getIt.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
@@ -300,5 +311,45 @@ Future<void> configureDependencies() async {
 
   getIt.registerFactory<TripRatingCubit>(
     () => TripRatingCubit(getIt<RatingRepository>()),
+  );
+
+  // =====================================================
+  // 🔹 11. Features - Home (New Focused Cubits)
+  // =====================================================
+
+  getIt.registerFactory<LocationCubit>(
+    () => LocationCubit(getIt<LocationService>()),
+  );
+
+  getIt.registerFactory<MapStateCubit>(() => MapStateCubit());
+
+  getIt.registerFactory<TripLifecycleCubit>(
+    () => TripLifecycleCubit(getIt<RideRepository>(), getIt<AuthEventBus>()),
+  );
+
+  getIt.registerFactory<DriverTrackingCubit>(
+    () => DriverTrackingCubit(
+      getIt<RideRepository>(),
+      getIt<OSRMRouteService>(),
+      // MapStateCubit is fetched at the call site from context,
+      // so DriverTrackingCubit is wired by home_view via the provider tree.
+      // Injected here as a placeholder — override in home_view if needed.
+      MapStateCubit(),
+    ),
+  );
+
+  getIt.registerFactory<RideBookingCubit>(
+    () => RideBookingCubit(
+      getIt<SubmitRideRequestUsecase>(),
+      getIt<CancelRideUsecase>(),
+      getIt<RideRepository>(),
+      getIt<TripLifecycleCubit>(),
+      getIt<DriverTrackingCubit>(),
+      getIt<MapStateCubit>(),
+    ),
+  );
+
+  getIt.registerFactory<HomeCubit>(
+    () => HomeCubit(getIt<RideRepository>(), getIt<LocationCubit>()),
   );
 }

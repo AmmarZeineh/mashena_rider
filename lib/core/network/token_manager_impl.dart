@@ -1,10 +1,10 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'token_manager.dart';
 
 final class TokenManagerImpl implements TokenManager {
-  TokenManagerImpl(this._prefs);
+  TokenManagerImpl(this._storage);
 
-  final SharedPreferences _prefs;
+  final FlutterSecureStorage _storage;
 
   static const _kAccess = 'access_token';
   static const _kRefresh = 'refresh_token';
@@ -18,25 +18,25 @@ final class TokenManagerImpl implements TokenManager {
     String? refreshToken,
   }) async {
     _accessToken = accessToken;
-    await _prefs.setString(_kAccess, accessToken);
+    await _storage.write(key: _kAccess, value: accessToken);
 
     if (refreshToken != null) {
       _refreshToken = refreshToken;
-      await _prefs.setString(_kRefresh, refreshToken);
+      await _storage.write(key: _kRefresh, value: refreshToken);
     }
   }
 
   @override
   Future<String?> getAccessToken() async {
     if (_accessToken != null) return _accessToken;
-    _accessToken = _prefs.getString(_kAccess);
+    _accessToken = await _storage.read(key: _kAccess);
     return _accessToken;
   }
 
   @override
   Future<String?> getRefreshToken() async {
     if (_refreshToken != null) return _refreshToken;
-    _refreshToken = _prefs.getString(_kRefresh);
+    _refreshToken = await _storage.read(key: _kRefresh);
     return _refreshToken;
   }
 
@@ -50,7 +50,7 @@ final class TokenManagerImpl implements TokenManager {
   Future<void> clearTokens() async {
     _accessToken = null;
     _refreshToken = null;
-    await _prefs.remove(_kAccess);
-    await _prefs.remove(_kRefresh);
+    await _storage.delete(key: _kAccess);
+    await _storage.delete(key: _kRefresh);
   }
 }

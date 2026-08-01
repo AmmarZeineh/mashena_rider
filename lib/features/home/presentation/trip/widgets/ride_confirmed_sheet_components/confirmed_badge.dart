@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
-import 'package:mashena_rider/features/home/presentation/shell/cubits/home_cubit/home_cubit.dart';
+import 'package:mashena_rider/core/theme/app_colors.dart';
+import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_lifecycle_cubit/trip_lifecycle_cubit.dart';
 
 class ConfirmedBadge extends StatefulWidget {
   const ConfirmedBadge({super.key});
@@ -39,9 +40,9 @@ class _ConfirmedBadgeState extends State<ConfirmedBadge>
 
   @override
   Widget build(BuildContext context) {
-    final homeState = context.watch<HomeCubit>().state;
+    final tripState = context.watch<TripLifecycleCubit>().state;
     final isDriverArrived =
-        homeState.isDriverArrived || homeState.isTripStarted;
+        tripState.isDriverArrived || tripState.isTripStarted;
 
     final badgeText = isDriverArrived
         ? S.of(context).rideDriverArrived
@@ -49,7 +50,7 @@ class _ConfirmedBadgeState extends State<ConfirmedBadge>
     final badgeIcon = isDriverArrived
         ? Icons.location_on_rounded
         : Icons.check_circle_rounded;
-    final badgeColor = Colors.green;
+    final badgeColor = AppColors.success;
 
     return ScaleTransition(
       scale: _scaleAnimation,

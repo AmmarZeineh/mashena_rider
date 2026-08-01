@@ -9,7 +9,7 @@ import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/features/home/presentation/common/widgets/custom_drag_handle.dart';
-import 'package:mashena_rider/features/home/presentation/shell/cubits/home_cubit/home_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_lifecycle_cubit/trip_lifecycle_cubit.dart';
 
 class DriverDetailsBottomSheet extends StatelessWidget {
   const DriverDetailsBottomSheet({super.key});
@@ -18,7 +18,7 @@ class DriverDetailsBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocBuilder<TripLifecycleCubit, TripLifecycleState>(
       builder: (context, state) {
         final matchedTrip = state.matchedTrip;
 
@@ -45,12 +45,12 @@ class DriverDetailsBottomSheet extends StatelessWidget {
         final driverName = matchedTrip.driverFullName;
         final rating = matchedTrip.driverRatingAvg.toStringAsFixed(1);
         final manufacturer = matchedTrip.manufacturer ?? '';
-        final model = matchedTrip.model ?? 'Vehicle';
+        final model = matchedTrip.model ?? S.of(context).rideVehicleDefault;
         final vehicleTitle = manufacturer.isNotEmpty ? '$manufacturer $model' : model;
         final vehicleColor = matchedTrip.color ?? '';
         final vehicleSubtitle = vehicleColor.isNotEmpty
-            ? '$vehicleColor • Standard'
-            : 'Standard';
+            ? S.of(context).rideVehicleColorAndType(vehicleColor, S.of(context).rideVehicleStandard)
+            : S.of(context).rideVehicleStandard;
         final plateNumber = matchedTrip.plateNumber ?? '...';
 
         return Container(
@@ -107,7 +107,7 @@ class DriverDetailsBottomSheet extends StatelessWidget {
                       children: [
                         _buildStatItem(
                           icon: Icons.star_rounded,
-                          iconColor: Colors.amber,
+                          iconColor: AppColors.rating,
                           value: rating,
                           label: S.of(context).driverRating,
                         ),

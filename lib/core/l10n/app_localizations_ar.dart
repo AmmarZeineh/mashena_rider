@@ -492,7 +492,7 @@ class SAr extends S {
   String get drawerSos => 'الطوارئ';
 
   @override
-  String get drawerMakeComplaints => 'تقديم شكوى';
+  String get drawerMakeComplaints => 'تقديم شك≥وى';
 
   @override
   String get drawerNotification => 'الإشعارات';
@@ -508,4 +508,43 @@ class SAr extends S {
 
   @override
   String get drawerGuestUser => 'مستخدم زائر';
+
+  @override
+  String get rideLoadingDriverDetails => 'جاري تحميل تفاصيل السائق...';
+
+  @override
+  String rideVehicleModelAndColor(String vehicleModel, String vehicleColor) {
+    return '$vehicleModel • $vehicleColor';
+  }
+
+  @override
+  String get rideDriverArrivedAtPickup => 'وصل السائق إلى نقطة الانطلاق!';
+
+  @override
+  String get rideWaitingChargesWarning =>
+      '⚠️ قد يتم تطبيق رسوم انتظار بعد انتهاء وقت الانتظار المجاني.';
+
+  @override
+  String get rideInProgressHeadingToDestination =>
+      'قيد التقدم • متوجه إلى الوجهة';
+
+  @override
+  String get rideWaitingChargesApplying =>
+      '⏱️ 00:00 • يتم الآن تطبيق رسوم الانتظار';
+
+  @override
+  String rideFreeWaitingTime(String minutes, String seconds) {
+    return '⏱️ وقت الانتظار المجاني: $minutes:$seconds';
+  }
+
+  @override
+  String get rideVehicleDefault => 'مركبة';
+
+  @override
+  String get rideVehicleStandard => 'قياسي';
+
+  @override
+  String rideVehicleColorAndType(String color, String type) {
+    return '$color • $type';
+  }
 }

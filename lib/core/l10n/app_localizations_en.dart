@@ -513,4 +513,44 @@ class SEn extends S {
 
   @override
   String get drawerGuestUser => 'Guest User';
+
+  @override
+  String get rideLoadingDriverDetails => 'Loading driver details...';
+
+  @override
+  String rideVehicleModelAndColor(String vehicleModel, String vehicleColor) {
+    return '$vehicleModel • $vehicleColor';
+  }
+
+  @override
+  String get rideDriverArrivedAtPickup =>
+      'Your driver has arrived at the pickup location!';
+
+  @override
+  String get rideWaitingChargesWarning =>
+      '⚠️ Waiting charges may apply after the free wait timer expires.';
+
+  @override
+  String get rideInProgressHeadingToDestination =>
+      'In Progress • Heading to Destination';
+
+  @override
+  String get rideWaitingChargesApplying =>
+      '⏱️ 00:00 • Waiting charges are now applying';
+
+  @override
+  String rideFreeWaitingTime(String minutes, String seconds) {
+    return '⏱️ Free waiting time: $minutes:$seconds';
+  }
+
+  @override
+  String get rideVehicleDefault => 'Vehicle';
+
+  @override
+  String get rideVehicleStandard => 'Standard';
+
+  @override
+  String rideVehicleColorAndType(String color, String type) {
+    return '$color • $type';
+  }
 }

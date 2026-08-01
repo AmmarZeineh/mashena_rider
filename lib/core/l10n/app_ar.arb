@@ -185,10 +185,38 @@
   "drawerFavourites": "المفضلة",
   "drawerFaq": "الأسئلة الشائعة",
   "drawerSos": "الطوارئ",
-  "drawerMakeComplaints": "تقديم شكوى",
+  "drawerMakeComplaints": "تقديم شك≥وى",
   "drawerNotification": "الإشعارات",
   "drawerAbout": "عن التطبيق",
   "drawerPrivacyPolicy": "سياسة الخصوصية",
   "drawerTermsCondition": "الشروط والأحكام",
-  "drawerGuestUser": "مستخدم زائر"
+  "drawerGuestUser": "مستخدم زائر",
+  "rideLoadingDriverDetails": "جاري تحميل تفاصيل السائق...",
+  "rideVehicleModelAndColor": "{vehicleModel} • {vehicleColor}",
+  "@rideVehicleModelAndColor": {
+    "placeholders": {
+      "vehicleModel": { "type": "String" },
+      "vehicleColor": { "type": "String" }
+    }
+  },
+  "rideDriverArrivedAtPickup": "وصل السائق إلى نقطة الانطلاق!",
+  "rideWaitingChargesWarning": "⚠️ قد يتم تطبيق رسوم انتظار بعد انتهاء وقت الانتظار المجاني.",
+  "rideInProgressHeadingToDestination": "قيد التقدم • متوجه إلى الوجهة",
+  "rideWaitingChargesApplying": "⏱️ 00:00 • يتم الآن تطبيق رسوم الانتظار",
+  "rideFreeWaitingTime": "⏱️ وقت الانتظار المجاني: {minutes}:{seconds}",
+  "@rideFreeWaitingTime": {
+    "placeholders": {
+      "minutes": { "type": "String" },
+      "seconds": { "type": "String" }
+    }
+  },
+  "rideVehicleDefault": "مركبة",
+  "rideVehicleStandard": "قياسي",
+  "rideVehicleColorAndType": "{color} • {type}",
+  "@rideVehicleColorAndType": {
+    "placeholders": {
+      "color": { "type": "String" },
+      "type": { "type": "String" }
+    }
+  }
 }

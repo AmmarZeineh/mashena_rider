@@ -7,4 +7,6 @@ class AppColors {
   static const Color textfieldHintGrey = Color(0xFFA5A5A5);
   static const lightScaffold = Color(0xFFF8F8FF);
   static const darkScaffold = Color(0xFF0F1115);
+  static const Color success = Color(0xFF4CAF50);
+  static const Color rating = Color(0xFFFFC107);
 }

@@ -83,23 +83,31 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
 
     _socketClient.on('driver:location', (data) {
       developer.log(
-        'Received driver:location event: $data',
+        '🚨🚨🚨 SOCKET: Received driver:location event: $data',
         name: 'features.home.socket',
       );
+      print('🚨🚨🚨 [SOCKET] driver:location => $data');
       try {
         if (data is Map) {
           final lat = data['lat'];
           final lng = data['lng'];
+          print('🚨🚨🚨 [SOCKET PARSED] lat: $lat, lng: $lng');
+          
           if (lat != null && lng != null) {
-            _driverLocationController.add(
-              MapLatLng(
-                latitude: double.parse(lat.toString()),
-                longitude: double.parse(lng.toString()),
-              ),
+            final position = MapLatLng(
+              latitude: double.parse(lat.toString()),
+              longitude: double.parse(lng.toString()),
             );
+            print('🚨🚨🚨 [SOCKET ADDING TO STREAM] $position');
+            _driverLocationController.add(position);
+          } else {
+            print('🚨🚨🚨 [SOCKET ERROR] lat or lng is null!');
           }
+        } else {
+          print('🚨🚨🚨 [SOCKET ERROR] data is NOT a Map! It is: ${data.runtimeType}');
         }
       } catch (e, stackTrace) {
+        print('🚨🚨🚨 [SOCKET EXCEPTION] Error parsing driver:location payload: $e');
         developer.log(
           'Error parsing driver:location payload',
           name: 'features.home.socket',

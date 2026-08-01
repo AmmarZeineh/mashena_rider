@@ -1056,6 +1056,66 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Guest User'**
   String get drawerGuestUser;
+
+  /// No description provided for @rideLoadingDriverDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading driver details...'**
+  String get rideLoadingDriverDetails;
+
+  /// No description provided for @rideVehicleModelAndColor.
+  ///
+  /// In en, this message translates to:
+  /// **'{vehicleModel} • {vehicleColor}'**
+  String rideVehicleModelAndColor(String vehicleModel, String vehicleColor);
+
+  /// No description provided for @rideDriverArrivedAtPickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Your driver has arrived at the pickup location!'**
+  String get rideDriverArrivedAtPickup;
+
+  /// No description provided for @rideWaitingChargesWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ Waiting charges may apply after the free wait timer expires.'**
+  String get rideWaitingChargesWarning;
+
+  /// No description provided for @rideInProgressHeadingToDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress • Heading to Destination'**
+  String get rideInProgressHeadingToDestination;
+
+  /// No description provided for @rideWaitingChargesApplying.
+  ///
+  /// In en, this message translates to:
+  /// **'⏱️ 00:00 • Waiting charges are now applying'**
+  String get rideWaitingChargesApplying;
+
+  /// No description provided for @rideFreeWaitingTime.
+  ///
+  /// In en, this message translates to:
+  /// **'⏱️ Free waiting time: {minutes}:{seconds}'**
+  String rideFreeWaitingTime(String minutes, String seconds);
+
+  /// No description provided for @rideVehicleDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle'**
+  String get rideVehicleDefault;
+
+  /// No description provided for @rideVehicleStandard.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard'**
+  String get rideVehicleStandard;
+
+  /// No description provided for @rideVehicleColorAndType.
+  ///
+  /// In en, this message translates to:
+  /// **'{color} • {type}'**
+  String rideVehicleColorAndType(String color, String type);
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
-import 'package:mashena_rider/features/home/presentation/shell/cubits/home_cubit/home_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_lifecycle_cubit/trip_lifecycle_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/booking/cubits/ride_booking_cubit/ride_booking_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/common/models/confirmed_ride_flow_result.dart';
 import 'package:mashena_rider/features/home/presentation/common/widgets/custom_drag_handle.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
@@ -55,9 +56,9 @@ class _RideConfirmedBottomSheetState extends State<RideConfirmedBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final homeState = context.watch<HomeCubit>().state;
+    final tripLifecycleState = context.watch<TripLifecycleCubit>().state;
     final isDriverArrived =
-        homeState.isDriverArrived || homeState.isTripStarted;
+        tripLifecycleState.isDriverArrived || tripLifecycleState.isTripStarted;
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -115,7 +116,7 @@ class _RideConfirmedBottomSheetState extends State<RideConfirmedBottomSheet> {
                   SizedBox(height: 32.h),
 
                   // Cancel Button
-                  if (!homeState.isTripStarted)
+                  if (!tripLifecycleState.isTripStarted)
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 24.w).copyWith(
                         bottom: MediaQuery.of(context).padding.bottom + 16.h,
@@ -124,7 +125,9 @@ class _RideConfirmedBottomSheetState extends State<RideConfirmedBottomSheet> {
                         children: [
                           CancelRideButton(
                             onPressed: () {
-                              context.read<HomeCubit>().cancelRide();
+                              context.read<RideBookingCubit>().cancelRide(
+                                isTripStarted: tripLifecycleState.isTripStarted,
+                              );
                             },
                             label: S.of(context).rideCancelRide,
                           ),

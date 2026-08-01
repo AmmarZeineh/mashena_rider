@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mashena_rider/features/home/presentation/shell/cubits/home_cubit/home_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_lifecycle_cubit/trip_lifecycle_cubit.dart';
 
 import 'found_driver_details.dart';
 import 'searching_driver_details.dart';
@@ -10,7 +10,7 @@ class DriverCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocBuilder<TripLifecycleCubit, TripLifecycleState>(
       buildWhen: (previous, current) =>
           previous.isDriverFound != current.isDriverFound,
       builder: (context, state) {

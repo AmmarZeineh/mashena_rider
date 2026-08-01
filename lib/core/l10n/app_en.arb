@@ -199,5 +199,33 @@
   "drawerAbout": "About",
   "drawerPrivacyPolicy": "Privacy Policy",
   "drawerTermsCondition": "Terms & Condition",
-  "drawerGuestUser": "Guest User"
+  "drawerGuestUser": "Guest User",
+  "rideLoadingDriverDetails": "Loading driver details...",
+  "rideVehicleModelAndColor": "{vehicleModel} • {vehicleColor}",
+  "@rideVehicleModelAndColor": {
+    "placeholders": {
+      "vehicleModel": { "type": "String" },
+      "vehicleColor": { "type": "String" }
+    }
+  },
+  "rideDriverArrivedAtPickup": "Your driver has arrived at the pickup location!",
+  "rideWaitingChargesWarning": "⚠️ Waiting charges may apply after the free wait timer expires.",
+  "rideInProgressHeadingToDestination": "In Progress • Heading to Destination",
+  "rideWaitingChargesApplying": "⏱️ 00:00 • Waiting charges are now applying",
+  "rideFreeWaitingTime": "⏱️ Free waiting time: {minutes}:{seconds}",
+  "@rideFreeWaitingTime": {
+    "placeholders": {
+      "minutes": { "type": "String" },
+      "seconds": { "type": "String" }
+    }
+  },
+  "rideVehicleDefault": "Vehicle",
+  "rideVehicleStandard": "Standard",
+  "rideVehicleColorAndType": "{color} • {type}",
+  "@rideVehicleColorAndType": {
+    "placeholders": {
+      "color": { "type": "String" },
+      "type": { "type": "String" }
+    }
+  }
 }

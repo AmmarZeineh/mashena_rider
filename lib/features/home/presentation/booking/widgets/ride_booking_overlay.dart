@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate.dart';
-import 'package:mashena_rider/features/home/presentation/shell/cubits/home_cubit/home_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/booking/cubits/ride_booking_cubit/ride_booking_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/ride_flow/ride_flow_coordinator.dart';
 import 'package:mashena_rider/features/home/presentation/booking/widgets/book_ride_button.dart';
 import 'package:mashena_rider/features/home/presentation/booking/widgets/ride_list.dart';
@@ -39,7 +39,7 @@ class _RideBookingOverlayState extends State<RideBookingOverlay> {
     final localizations = S.of(context);
     final estimates = widget.rideResult.estimateResponse.estimates;
 
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocBuilder<RideBookingCubit, RideBookingState>(
       builder: (context, state) {
         return Stack(
           children: [
@@ -63,10 +63,10 @@ class _RideBookingOverlayState extends State<RideBookingOverlay> {
                 onSelect: _select,
                 emptyLabel: localizations.rideNoTypesAvailable,
                 bookLabel: localizations.rideBookRide,
-                isLoading: state.isSubmittingRide,
+                isLoading: state.isSubmitting,
                 onBookPressed: () {
                   if (_selected != null) {
-                    context.read<HomeCubit>().submitRideSelection(
+                    context.read<RideBookingCubit>().submitRideSelection(
                       _selected!.vehicleTypeId,
                     );
                   }
@@ -122,7 +122,7 @@ class _TopEditCard extends StatelessWidget {
           _CircularAction(
             icon: Icons.close_rounded,
             color: colorScheme.error,
-            onPressed: () => context.read<HomeCubit>().clearRideFlow(),
+            onPressed: () => context.read<RideBookingCubit>().clearBooking(),
           ),
         ],
       ),
