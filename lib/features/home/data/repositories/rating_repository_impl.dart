@@ -5,6 +5,7 @@ import 'package:mashena_rider/core/network/api_client.dart';
 import 'package:mashena_rider/core/network/api_exception.dart';
 import 'package:mashena_rider/core/network/api_failure_mapper.dart';
 import 'package:mashena_rider/features/home/data/models/rating_tag_model.dart';
+import 'package:mashena_rider/features/home/data/mappers/rating_tag_mapper.dart';
 import 'package:mashena_rider/features/home/domain/entities/rating_tag.dart';
 import 'package:mashena_rider/features/home/domain/repositories/rating_repository.dart';
 

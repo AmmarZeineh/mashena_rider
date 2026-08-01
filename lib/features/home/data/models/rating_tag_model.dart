@@ -18,18 +18,6 @@ abstract class RatingTagModel with _$RatingTagModel {
   factory RatingTagModel.fromJson(Map<String, dynamic> json) =>
       _$RatingTagModelFromJson(json);
 
-  RatingTag toEntity() {
-    String? finalName = name;
-    if (localizations != null && localizations!.isNotEmpty) {
-      // Just pick the first localization if name is null, ideally match language code
-      finalName ??= localizations!.first.name;
-    }
-    return RatingTag(
-      id: id,
-      code: code,
-      name: finalName,
-    );
-  }
 }
 
 @freezed

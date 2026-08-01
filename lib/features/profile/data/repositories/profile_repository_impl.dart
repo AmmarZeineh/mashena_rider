@@ -5,6 +5,7 @@ import 'package:mashena_rider/core/network/api_client.dart';
 import 'package:mashena_rider/core/network/api_exception.dart';
 import 'package:mashena_rider/core/network/api_failure_mapper.dart';
 import 'package:mashena_rider/features/profile/data/models/rider_profile_model.dart';
+import 'package:mashena_rider/features/profile/data/mappers/rider_profile_mapper.dart';
 import 'package:mashena_rider/features/profile/domain/entities/rider_profile.dart';
 import 'package:mashena_rider/features/profile/domain/repositories/profile_repository.dart';
 

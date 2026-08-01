@@ -1,4 +1,5 @@
 import 'dart:math' show pi;
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -134,8 +135,13 @@ abstract class RideFlowCoordinator {
         mapStateCubit.setMarkers(markers);
         rideBookingCubit.setConfirmedRide(result);
       }
-    } catch (e) {
-      // Handle or log error
+    } catch (e, stackTrace) {
+      developer.log(
+        'Failed to fetch/draw route in openPickAddressAndDrawRoute',
+        name: 'features.home.ride_flow',
+        error: e,
+        stackTrace: stackTrace,
+      );
     } finally {
       if (!mapStateCubit.isClosed) {
         mapStateCubit.setFetchingRoute(isFetching: false);

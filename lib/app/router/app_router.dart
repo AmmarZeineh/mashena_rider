@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mashena_rider/app/di/injector.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/app/router/route_transitions.dart';
-import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_usecase.dart';
+import 'package:mashena_rider/app/router/auth_session_cache.dart';
 import 'package:mashena_rider/features/home/presentation/shell/views/home_view.dart';
 import 'package:mashena_rider/features/home/presentation/address/views/pick_address_view.dart';
 import 'package:mashena_rider/features/onboarding/domain/usecases/get_onboarding_status_usecase.dart';
@@ -35,8 +35,7 @@ final class AppRouter {
 
       if (loc == AppRoutes.onboardingPath) return AppRoutes.loginPath;
 
-      final cached = await getIt<GetCachedSessionUsecase>()();
-      final isAuthed = cached.isRight();
+      final isAuthed = await getIt<AuthSessionCache>().isAuthenticated();
 
       final isAuthRoute =
           loc == AppRoutes.loginPath ||

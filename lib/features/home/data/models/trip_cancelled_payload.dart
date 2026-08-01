@@ -18,11 +18,4 @@ abstract class TripCancelledPayload with _$TripCancelledPayload {
   factory TripCancelledPayload.fromJson(Map<String, dynamic> json) =>
       _$TripCancelledPayloadFromJson(json);
 
-  TripCancelled toEntity() {
-    return TripCancelled(
-      tripId: tripId,
-      canceledAt: canceledAt,
-      cancelledBy: cancelledBy,
-    );
-  }
 }

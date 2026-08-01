@@ -9,6 +9,11 @@ import 'package:mashena_rider/features/home/data/datasources/ride_socket_data_so
 import 'package:mashena_rider/features/home/data/models/ride_estimate_response_model.dart';
 import 'package:mashena_rider/features/home/data/models/ride_submission_response_model.dart';
 import 'package:mashena_rider/features/home/data/models/matched_trip_model.dart';
+import 'package:mashena_rider/features/home/data/mappers/matched_trip_mapper.dart';
+import 'package:mashena_rider/features/home/data/mappers/ride_estimate_response_mapper.dart';
+import 'package:mashena_rider/features/home/data/mappers/ride_submission_response_mapper.dart';
+import 'package:mashena_rider/features/home/data/mappers/trip_cancelled_mapper.dart';
+import 'package:mashena_rider/features/home/data/mappers/trip_completed_mapper.dart';
 import 'package:mashena_rider/features/home/data/models/driver_arrived_payload.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';

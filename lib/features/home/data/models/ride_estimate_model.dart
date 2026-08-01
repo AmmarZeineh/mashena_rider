@@ -80,13 +80,4 @@ class RideEstimateModel {
 
   Map<String, dynamic> toJson() => _$RideEstimateModelToJson(this);
 
-  RideEstimate toEntity() {
-    return RideEstimate(
-      vehicleTypeId: vehicleTypeId,
-      name: name,
-      imageUrl: imageUrl,
-      currency: currency,
-      estimatedFare: estimatedFare,
-    );
-  }
 }

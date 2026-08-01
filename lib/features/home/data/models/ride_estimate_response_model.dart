@@ -143,19 +143,4 @@ class RideEstimateResponseModel {
 
   Map<String, dynamic> toJson() => _$RideEstimateResponseModelToJson(this);
 
-  RideEstimateResponse toEntity() {
-    return RideEstimateResponse(
-      rideRequestId: rideRequestId,
-      distanceKm: distanceKm,
-      durationMin: durationMin,
-      stopsCount: stopsCount,
-      isNight: isNight,
-      pickup: pickup?.toEntity(),
-      destination: destination?.toEntity(),
-      estimates: estimates.map((estimate) => estimate.toEntity()).toList(),
-      polyline: polyline,
-      stops: stops,
-      routePoints: routePoints,
-    );
-  }
 }

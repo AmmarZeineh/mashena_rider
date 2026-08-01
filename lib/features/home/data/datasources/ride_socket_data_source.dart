@@ -35,6 +35,8 @@ abstract interface class RideSocketDataSource {
 
   /// Stops listening to updates for a specific ride request.
   void stopListeningToRide(int rideRequestId);
+
+  Future<void> dispose();
 }
 
 /// Concrete implementation of [RideSocketDataSource].
@@ -83,31 +85,41 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
 
     _socketClient.on('driver:location', (data) {
       developer.log(
-        '🚨🚨🚨 SOCKET: Received driver:location event: $data',
+        'Received driver:location event: $data',
         name: 'features.home.socket',
       );
-      print('🚨🚨🚨 [SOCKET] driver:location => $data');
       try {
         if (data is Map) {
           final lat = data['lat'];
           final lng = data['lng'];
-          print('🚨🚨🚨 [SOCKET PARSED] lat: $lat, lng: $lng');
+          developer.log(
+            'Parsed lat: $lat, lng: $lng',
+            name: 'features.home.socket',
+          );
           
           if (lat != null && lng != null) {
             final position = MapLatLng(
               latitude: double.parse(lat.toString()),
               longitude: double.parse(lng.toString()),
             );
-            print('🚨🚨🚨 [SOCKET ADDING TO STREAM] $position');
+            developer.log(
+              'Adding to driverLocationStream: $position',
+              name: 'features.home.socket',
+            );
             _driverLocationController.add(position);
           } else {
-            print('🚨🚨🚨 [SOCKET ERROR] lat or lng is null!');
+            developer.log(
+              'lat or lng is null in driver:location payload',
+              name: 'features.home.socket',
+            );
           }
         } else {
-          print('🚨🚨🚨 [SOCKET ERROR] data is NOT a Map! It is: ${data.runtimeType}');
+          developer.log(
+            'driver:location payload is not a Map: ${data.runtimeType}',
+            name: 'features.home.socket',
+          );
         }
       } catch (e, stackTrace) {
-        print('🚨🚨🚨 [SOCKET EXCEPTION] Error parsing driver:location payload: $e');
         developer.log(
           'Error parsing driver:location payload',
           name: 'features.home.socket',
@@ -221,19 +233,37 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
   @override
   Future<void> connectSocket() => _socketClient.connect();
 
+  /// NOTE: This is intentionally a no-op beyond logging. The app currently
+  /// supports only one active ride at a time, so all socket streams are
+  /// global and unscoped by [rideRequestId]. If multi-ride support is ever
+  /// added, this method must be extended to filter incoming events by ID.
   @override
   void listenToRide(int rideRequestId) {
     developer.log(
-      'Starting to track ride request $rideRequestId',
+      'Tracking ride request $rideRequestId (global stream, no per-ride filtering)',
+      name: 'features.home.socket',
+    );
+  }
+
+  /// NOTE: This is intentionally a no-op beyond logging. The app currently
+  /// supports only one active ride at a time, so all socket streams are
+  /// global and unscoped by [rideRequestId]. If multi-ride support is ever
+  /// added, this method must be extended to filter incoming events by ID.
+  @override
+  void stopListeningToRide(int rideRequestId) {
+    developer.log(
+      'Stopped tracking ride request $rideRequestId (global stream, no per-ride filtering)',
       name: 'features.home.socket',
     );
   }
 
   @override
-  void stopListeningToRide(int rideRequestId) {
-    developer.log(
-      'Stopped tracking ride request $rideRequestId',
-      name: 'features.home.socket',
-    );
+  Future<void> dispose() async {
+    await _rideMatchedController.close();
+    await _driverLocationController.close();
+    await _driverArrivedController.close();
+    await _driverStartedController.close();
+    await _tripCompletedController.close();
+    await _tripCancelledController.close();
   }
 }

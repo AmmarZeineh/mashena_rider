@@ -72,15 +72,4 @@ class RideSubmissionResponseModel {
 
   Map<String, dynamic> toJson() => _$RideSubmissionResponseModelToJson(this);
 
-  RideSubmissionResponse toEntity() {
-    return RideSubmissionResponse(
-      rideRequestId: rideRequestId,
-      status: status,
-      distanceKm: distanceKm,
-      durationMin: durationMin,
-      isNight: isNight,
-      estimatedFare: estimatedFare,
-      currency: currency,
-    );
-  }
 }

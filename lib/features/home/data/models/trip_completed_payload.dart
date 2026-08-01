@@ -19,12 +19,4 @@ abstract class TripCompletedPayload with _$TripCompletedPayload {
   factory TripCompletedPayload.fromJson(Map<String, dynamic> json) =>
       _$TripCompletedPayloadFromJson(json);
 
-  TripCompleted toEntity() {
-    return TripCompleted(
-      tripId: tripId,
-      completedAt: completedAt,
-      distanceKm: distanceKm,
-      durationSec: durationSec,
-    );
-  }
 }
