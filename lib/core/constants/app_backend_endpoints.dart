@@ -13,5 +13,10 @@ class BackendEndpoints {
   static const String logoutAll = '/auth/logout-all';
   static String getSubmitRatingEndpoint(int tripId) => '/trips/$tripId/rate';
   static String riderProfile(int id) => '/user/riders/$id';
+
+  // External APIs
+  static const String nominatimSearch = 'https://nominatim.openstreetmap.org/search';
+  static const String nominatimReverse = 'https://nominatim.openstreetmap.org/reverse';
+  static const String nominatimCountryCodes = 'sy';
 }
 

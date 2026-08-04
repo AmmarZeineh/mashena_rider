@@ -87,7 +87,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                         autofillHints: const [AutofillHints.password],
                         onSaved: (value) => password = value,
                         validator: (value) {
-                          final err = Validators.password(value);
+                          final err = Validators.required(value);
                           return err == null
                               ? null
                               : validationText(context, err);

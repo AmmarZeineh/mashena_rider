@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:mashena_rider/core/services/logger_service.dart';
 
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/network/socket_client.dart';
@@ -62,7 +62,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
 
   void _initSocketListeners() {
     _socketClient.on('ride:matched', (data) {
-      developer.log(
+      LoggerService.debug(
         'Received ride:matched event: $data',
         name: 'features.home.socket',
       );
@@ -74,7 +74,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           }
         }
       } catch (e, stackTrace) {
-        developer.log(
+        LoggerService.debug(
           'Error parsing ride:matched payload',
           name: 'features.home.socket',
           error: e,
@@ -84,7 +84,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
     });
 
     _socketClient.on('driver:location', (data) {
-      developer.log(
+      LoggerService.debug(
         'Received driver:location event: $data',
         name: 'features.home.socket',
       );
@@ -92,7 +92,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
         if (data is Map) {
           final lat = data['lat'];
           final lng = data['lng'];
-          developer.log(
+          LoggerService.debug(
             'Parsed lat: $lat, lng: $lng',
             name: 'features.home.socket',
           );
@@ -102,25 +102,25 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
               latitude: double.parse(lat.toString()),
               longitude: double.parse(lng.toString()),
             );
-            developer.log(
+            LoggerService.debug(
               'Adding to driverLocationStream: $position',
               name: 'features.home.socket',
             );
             _driverLocationController.add(position);
           } else {
-            developer.log(
+            LoggerService.debug(
               'lat or lng is null in driver:location payload',
               name: 'features.home.socket',
             );
           }
         } else {
-          developer.log(
+          LoggerService.debug(
             'driver:location payload is not a Map: ${data.runtimeType}',
             name: 'features.home.socket',
           );
         }
       } catch (e, stackTrace) {
-        developer.log(
+        LoggerService.debug(
           'Error parsing driver:location payload',
           name: 'features.home.socket',
           error: e,
@@ -130,7 +130,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
     });
 
     _socketClient.on('trip:driver-arrived', (data) {
-      developer.log(
+      LoggerService.debug(
         'Received trip:driver-arrived event: $data',
         name: 'features.home.socket',
       );
@@ -140,7 +140,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           _driverArrivedController.add(payload);
         }
       } catch (e, stackTrace) {
-        developer.log(
+        LoggerService.debug(
           'Error parsing trip:driver-arrived payload',
           name: 'features.home.socket',
           error: e,
@@ -150,7 +150,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
     });
 
     _socketClient.on('trip:driver-started', (data) {
-      developer.log(
+      LoggerService.debug(
         'Received trip:driver-started event: $data',
         name: 'features.home.socket',
       );
@@ -162,7 +162,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           }
         }
       } catch (e, stackTrace) {
-        developer.log(
+        LoggerService.debug(
           'Error parsing trip:driver-started payload',
           name: 'features.home.socket',
           error: e,
@@ -172,7 +172,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
     });
 
     _socketClient.on('trip:completed', (data) {
-      developer.log(
+      LoggerService.debug(
         'Received trip:completed event: $data',
         name: 'features.home.socket',
       );
@@ -182,7 +182,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           _tripCompletedController.add(payload);
         }
       } catch (e, stackTrace) {
-        developer.log(
+        LoggerService.debug(
           'Error parsing trip:completed payload',
           name: 'features.home.socket',
           error: e,
@@ -192,7 +192,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
     });
 
     _socketClient.on('trip:cancelled', (data) {
-      developer.log(
+      LoggerService.debug(
         'Received trip:cancelled event: $data',
         name: 'features.home.socket',
       );
@@ -202,7 +202,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           _tripCancelledController.add(payload);
         }
       } catch (e, stackTrace) {
-        developer.log(
+        LoggerService.debug(
           'Error parsing trip:cancelled payload',
           name: 'features.home.socket',
           error: e,
@@ -239,7 +239,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
   /// added, this method must be extended to filter incoming events by ID.
   @override
   void listenToRide(int rideRequestId) {
-    developer.log(
+    LoggerService.debug(
       'Tracking ride request $rideRequestId (global stream, no per-ride filtering)',
       name: 'features.home.socket',
     );
@@ -251,7 +251,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
   /// added, this method must be extended to filter incoming events by ID.
   @override
   void stopListeningToRide(int rideRequestId) {
-    developer.log(
+    LoggerService.debug(
       'Stopped tracking ride request $rideRequestId (global stream, no per-ride filtering)',
       name: 'features.home.socket',
     );

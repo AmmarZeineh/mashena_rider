@@ -96,7 +96,7 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
         // Driver Tracking Bounds
         BlocListener<DriverTrackingCubit, DriverTrackingState>(
           listenWhen: (prev, curr) =>
-              prev.driverLocation != curr.driverLocation ||
+              (prev.driverLocation == null && curr.driverLocation != null) ||
               prev.isDriverArrived != curr.isDriverArrived ||
               prev.isTripStarted != curr.isTripStarted,
           listener: (context, state) {
@@ -110,7 +110,7 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
         ),
         // My Location Camera Move
         BlocListener<LocationCubit, LocationState>(
-          listenWhen: (prev, curr) => prev.position != curr.position,
+          listenWhen: (prev, curr) => prev.position == null && curr.position != null,
           listener: (context, state) {
             if (_mapController == null) return;
             

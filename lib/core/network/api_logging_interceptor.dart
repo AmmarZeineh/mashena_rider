@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mashena_rider/core/utils/logger.dart';
+import 'package:mashena_rider/core/services/logger_service.dart';
 
 /// Logs request/response/error details for every Dio call.
 ///
@@ -31,11 +31,12 @@ final class ApiLoggingInterceptor extends Interceptor {
     final query = options.queryParameters;
     final body = options.data;
 
-    AppLogger.d(
+    LoggerService.debug(
       '➡️ ${options.method} $uri\n'
       'headers: $headers\n'
       'query: ${_formatValue(query)}\n'
       'body: ${_formatValue(body)}',
+      name: 'core.network',
     );
 
     handler.next(options);
@@ -50,9 +51,10 @@ final class ApiLoggingInterceptor extends Interceptor {
     final status = response.statusCode;
     final data = response.data;
 
-    AppLogger.d(
+    LoggerService.debug(
       '✅ ${req.method} $uri [$status]\n'
       'response: ${_formatValue(data)}',
+      name: 'core.network',
     );
 
     handler.next(response);
@@ -67,11 +69,13 @@ final class ApiLoggingInterceptor extends Interceptor {
     final status = err.response?.statusCode;
     final data = err.response?.data;
 
-    AppLogger.e(
+    LoggerService.error(
       '❌ ${req.method} $uri [$status]\n'
       'type: ${err.type}\n'
       'message: ${err.message}\n'
       'response: ${_formatValue(data)}',
+      name: 'core.network',
+      error: err,
     );
 
     handler.next(err);

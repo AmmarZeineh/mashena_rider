@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mashena_rider/app/di/injector.dart';
-import 'package:mashena_rider/core/auth/auth_event.dart';
+import 'package:mashena_rider/core/auth/auth_event_bus.dart';
 import 'package:mashena_rider/features/home/domain/repositories/ride_repository.dart';
 import 'package:mashena_rider/features/home/presentation/booking/cubits/ride_booking_cubit/ride_booking_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/shell/cubits/home_cubit/home_cubit.dart';

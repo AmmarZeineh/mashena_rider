@@ -6,7 +6,7 @@ import 'package:mashena_rider/features/home/domain/entities/ride_estimate_respon
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_completed.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_cancelled.dart';
-import 'package:mashena_rider/features/home/data/models/driver_arrived_payload.dart';
+import 'package:mashena_rider/features/home/domain/entities/driver_arrived.dart';
 import '../entities/ride_request.dart';
 
 abstract interface class RideRepository {
@@ -28,7 +28,7 @@ abstract interface class RideRepository {
   Stream<MapLatLng> get driverLocationStream;
 
   /// Stream emitting when the driver has arrived
-  Stream<DriverArrivedPayload> get driverArrivedStream;
+  Stream<DriverArrived> get driverArrivedStream;
 
   /// Stream emitting when the driver has started the trip
   Stream<int> get driverStartedStream;

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:mashena_rider/core/services/logger_service.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -145,7 +145,7 @@ class NotificationService {
   static Future<String?> _requestFcmToken() async {
     try {
       if (!await _isApnsTokenAvailable()) {
-        developer.log(
+        LoggerService.debug(
           'APNs token is not available yet.',
           name: 'mashena_rider.notifications',
         );
@@ -156,7 +156,7 @@ class NotificationService {
       _cachedFcmToken = token;
       return token;
     } on FirebaseException catch (error, stackTrace) {
-      developer.log(
+      LoggerService.debug(
         'Failed to retrieve the FCM token.',
         name: 'mashena_rider.notifications',
         error: error,

@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/signup_usecase.dart';

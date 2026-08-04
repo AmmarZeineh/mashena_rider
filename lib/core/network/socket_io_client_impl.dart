@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:mashena_rider/core/services/logger_service.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 
 import 'package:mashena_rider/app/config/app_config.dart';
@@ -33,7 +33,7 @@ class SocketIOClientImpl implements SocketClient {
 
     final token = await _tokenManager.getAccessToken();
     if (token == null || token.isEmpty) {
-      developer.log(
+      LoggerService.debug(
         'Socket connection failed: No access token found.',
         name: 'core.network.socket',
       );
@@ -41,7 +41,7 @@ class SocketIOClientImpl implements SocketClient {
       return;
     }
 
-    developer.log(
+    LoggerService.debug(
       'Socket connecting with token (present: true)',
       name: 'core.network.socket',
     );
@@ -52,7 +52,7 @@ class SocketIOClientImpl implements SocketClient {
       _socket = null;
     }
 
-    developer.log(
+    LoggerService.debug(
       'Connecting to socket server: ${_config.socketUrl}',
       name: 'core.network.socket',
     );
@@ -74,12 +74,12 @@ class SocketIOClientImpl implements SocketClient {
 
       // Register connection status callbacks
       _socket!.onConnect((_) {
-        developer.log('Socket connected successfully', name: 'core.network.socket');
+        LoggerService.debug('Socket connected successfully', name: 'core.network.socket');
         _connectionStatusController.add(true);
       });
 
       _socket!.onReconnect((_) {
-        developer.log('Socket reconnected successfully', name: 'core.network.socket');
+        LoggerService.debug('Socket reconnected successfully', name: 'core.network.socket');
         _connectionStatusController.add(true);
         _eventListeners.forEach((event, listeners) {
           for (final callback in listeners) {
@@ -90,12 +90,12 @@ class SocketIOClientImpl implements SocketClient {
       });
 
       _socket!.onDisconnect((data) {
-        developer.log('Socket disconnected: $data', name: 'core.network.socket');
+        LoggerService.debug('Socket disconnected: $data', name: 'core.network.socket');
         _connectionStatusController.add(false);
       });
 
       _socket!.onConnectError((err) {
-        developer.log('Socket connection error: $err', name: 'core.network.socket');
+        LoggerService.debug('Socket connection error: $err', name: 'core.network.socket');
         _connectionStatusController.add(false);
       });
 
@@ -108,7 +108,7 @@ class SocketIOClientImpl implements SocketClient {
 
       _socket!.connect();
     } catch (e, stackTrace) {
-      developer.log(
+      LoggerService.debug(
         'Error during socket initialization',
         name: 'core.network.socket',
         error: e,
@@ -121,7 +121,7 @@ class SocketIOClientImpl implements SocketClient {
   @override
   void disconnect() {
     if (_socket != null) {
-      developer.log('Disconnecting socket...', name: 'core.network.socket');
+      LoggerService.debug('Disconnecting socket...', name: 'core.network.socket');
       _socket!.disconnect();
       _socket!.destroy();
       _socket = null;
@@ -132,13 +132,13 @@ class SocketIOClientImpl implements SocketClient {
   @override
   void emit(String event, [dynamic data]) {
     if (_socket != null) {
-      developer.log(
+      LoggerService.debug(
         'Emitting event: $event with data: $data',
         name: 'core.network.socket',
       );
       _socket!.emit(event, data);
     } else {
-      developer.log(
+      LoggerService.debug(
         'Cannot emit event $event. Socket is not initialized.',
         name: 'core.network.socket',
       );

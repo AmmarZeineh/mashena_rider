@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:mashena_rider/features/profile/domain/entities/rider_profile.dart';
 
 part 'rider_profile_model.freezed.dart';
 part 'rider_profile_model.g.dart';
@@ -19,7 +18,6 @@ abstract class RiderProfileModel with _$RiderProfileModel {
 
   factory RiderProfileModel.fromJson(Map<String, dynamic> json) =>
       _$RiderProfileModelFromJson(json);
-
 }
 
 @freezed

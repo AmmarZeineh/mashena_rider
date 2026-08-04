@@ -1,4 +1,7 @@
-class MatchedTrip {
+import 'package:equatable/equatable.dart';
+import 'package:mashena_rider/features/home/domain/entities/ride_location.dart';
+
+class MatchedTrip extends Equatable {
   final int tripId;
   final String tripStatus;
   final int rideRequestId;
@@ -17,7 +20,7 @@ class MatchedTrip {
   final String? manufacturer;
   final String? model;
   final int? vehicleTypeId;
-  final List<dynamic> stops;
+  final List<RideLocation> stops;
 
   const MatchedTrip({
     required this.tripId,
@@ -40,4 +43,27 @@ class MatchedTrip {
     this.vehicleTypeId,
     required this.stops,
   });
+
+  @override
+  List<Object?> get props => [
+        tripId,
+        tripStatus,
+        rideRequestId,
+        pickupLat,
+        pickupLng,
+        destinationLat,
+        destinationLng,
+        matchedAt,
+        driverId,
+        driverFullName,
+        driverProfileImage,
+        driverRatingAvg,
+        vehicleId,
+        plateNumber,
+        color,
+        manufacturer,
+        model,
+        vehicleTypeId,
+        stops,
+      ];
 }

@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
+import 'package:mashena_rider/features/home/data/models/ride_location_model.dart';
 
 part 'matched_trip_model.freezed.dart';
 part 'matched_trip_model.g.dart';
@@ -29,10 +29,9 @@ abstract class MatchedTripModel with _$MatchedTripModel {
     String? manufacturer,
     String? model,
     int? vehicleTypeId,
-    @Default([]) List<dynamic> stops,
+    @Default([]) List<RideLocationModel> stops,
   }) = _MatchedTripModel;
 
   factory MatchedTripModel.fromJson(Map<String, dynamic> json) =>
       _$MatchedTripModelFromJson(json);
-
 }

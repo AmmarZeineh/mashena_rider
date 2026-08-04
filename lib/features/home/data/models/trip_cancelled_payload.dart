@@ -1,7 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:mashena_rider/features/home/domain/entities/trip_cancelled.dart';
-
 part 'trip_cancelled_payload.freezed.dart';
 part 'trip_cancelled_payload.g.dart';
 
@@ -17,5 +15,4 @@ abstract class TripCancelledPayload with _$TripCancelledPayload {
 
   factory TripCancelledPayload.fromJson(Map<String, dynamic> json) =>
       _$TripCancelledPayloadFromJson(json);
-
 }

@@ -24,4 +24,10 @@ abstract class RideLocationModel with _$RideLocationModel {
         address: entity.address,
       );
 
+  RideLocation toEntity() => RideLocation(
+        lat: lat,
+        lng: lng,
+        address: address,
+      );
+
 }

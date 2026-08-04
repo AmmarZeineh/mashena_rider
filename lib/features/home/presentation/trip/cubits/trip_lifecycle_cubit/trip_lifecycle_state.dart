@@ -1,7 +1,7 @@
 part of 'trip_lifecycle_cubit.dart';
 
 /// State for all post-submission trip lifecycle events.
-class TripLifecycleState {
+class TripLifecycleState extends Equatable {
   const TripLifecycleState({
     this.isDriverFound = false,
     this.isLoadingMatchedTrip = false,
@@ -30,6 +30,24 @@ class TripLifecycleState {
   /// Set when the trip is cancelled by driver/admin or when the
   /// matched-trip fetch exhausts all retries.
   final Failure? tripError;
+
+  @override
+  List<Object?> get props => [
+        isDriverFound,
+        isLoadingMatchedTrip,
+        matchedTrip,
+        isDriverArrived,
+        isTripStarted,
+        isTripEnded,
+        freeWaitTimeSeconds,
+        arrivedAt,
+        tripCompletedData,
+        tripCancelledData,
+        tripError,
+      ];
+
+  @override
+  bool get stringify => true;
 
   TripLifecycleState copyWith({
     bool? isDriverFound,

@@ -1,7 +1,8 @@
-import 'dart:developer' as developer;
+import 'package:mashena_rider/core/services/logger_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mashena_rider/core/constants/app_backend_endpoints.dart';
 import 'package:mashena_rider/features/home/domain/entities/place_entity.dart';
 
 class NominatimService {
@@ -25,13 +26,13 @@ class NominatimService {
   }) async {
     try {
       final response = await _dio.get(
-        'https://nominatim.openstreetmap.org/search',
+        BackendEndpoints.nominatimSearch,
         queryParameters: {
           'q': query,
           'format': 'json',
           'addressdetails': 1,
           'limit': 10,
-          'countrycodes': 'sy',
+          'countrycodes': BackendEndpoints.nominatimCountryCodes,
           'accept-language': language ?? _languageCode,
         },
       );
@@ -53,7 +54,7 @@ class NominatimService {
       return [];
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        developer.log(
+        LoggerService.debug(
           'NominatimService searchPlaces error',
           name: 'core.services.nominatim',
           error: e,
@@ -71,7 +72,7 @@ class NominatimService {
   }) async {
     try {
       final response = await _dio.get(
-        'https://nominatim.openstreetmap.org/reverse',
+        BackendEndpoints.nominatimReverse,
         queryParameters: {
           'lat': lat,
           'lon': lng,
@@ -113,7 +114,7 @@ class NominatimService {
       return _fallbackPlace(lat, lng);
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        developer.log(
+        LoggerService.debug(
           'NominatimService reverseGeocode error',
           name: 'core.services.nominatim',
           error: e,

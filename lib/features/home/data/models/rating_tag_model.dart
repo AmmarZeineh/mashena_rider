@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:mashena_rider/features/home/domain/entities/rating_tag.dart';
 
 part 'rating_tag_model.freezed.dart';
 part 'rating_tag_model.g.dart';
@@ -17,7 +16,6 @@ abstract class RatingTagModel with _$RatingTagModel {
 
   factory RatingTagModel.fromJson(Map<String, dynamic> json) =>
       _$RatingTagModelFromJson(json);
-
 }
 
 @freezed

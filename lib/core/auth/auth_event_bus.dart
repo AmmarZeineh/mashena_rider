@@ -1,1 +1,17 @@
-enum AuthEvent { loggedOut, tokenRefreshed }
+import 'dart:async';
+
+import 'package:mashena_rider/core/auth/auth_event.dart';
+
+class AuthEventBus {
+  final _controller = StreamController<AuthEvent>.broadcast();
+
+  Stream<AuthEvent> get stream => _controller.stream;
+
+  void emit(AuthEvent event) {
+    _controller.add(event);
+  }
+
+  void dispose() {
+    _controller.close();
+  }
+}

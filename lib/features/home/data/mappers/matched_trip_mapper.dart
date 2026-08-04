@@ -32,7 +32,7 @@ extension MatchedTripModelMapper on MatchedTripModel {
       manufacturer: manufacturer,
       model: model,
       vehicleTypeId: vehicleTypeId,
-      stops: stops,
+      stops: stops.map((s) => s.toEntity()).toList(),
     );
   }
 }

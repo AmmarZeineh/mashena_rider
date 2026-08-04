@@ -1,37 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mashena_rider/features/home/domain/entities/ride_estimate.dart';
+import 'package:mashena_rider/core/network/json_readers.dart';
 
 part 'ride_estimate_model.g.dart';
-
-int _readInt(Object? value) {
-  if (value is int) return value;
-  if (value is num) return value.toInt();
-  if (value is String) return int.tryParse(value) ?? 0;
-  return 0;
-}
-
-double _readDouble(Object? value) {
-  if (value is num) return value.toDouble();
-  if (value is String) return double.tryParse(value) ?? 0;
-  return 0;
-}
-
-String? _readImageUrl(Object? value) {
-  if (value is String && value.trim().isNotEmpty) return value.trim();
-
-  if (value is Map) {
-    for (final key in const ['url', 'imageUrl', 'path', 'src']) {
-      final nestedValue = value[key];
-      if (nestedValue is String && nestedValue.trim().isNotEmpty) {
-        return nestedValue.trim();
-      }
-    }
-  }
-
-  return null;
-}
-
-String _readStringOrEmpty(Object? value) => (value as String?)?.trim() ?? '';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class RideEstimateModel {
@@ -63,21 +33,20 @@ class RideEstimateModel {
     return _$RideEstimateModelFromJson(normalized);
   }
 
-  @JsonKey(fromJson: _readInt)
+  @JsonKey(fromJson: readInt)
   final int vehicleTypeId;
 
-  @JsonKey(fromJson: _readStringOrEmpty)
+  @JsonKey(fromJson: readStringOrEmpty)
   final String name;
 
-  @JsonKey(fromJson: _readImageUrl)
+  @JsonKey(fromJson: readImageUrl)
   final String? imageUrl;
 
-  @JsonKey(fromJson: _readStringOrEmpty)
+  @JsonKey(fromJson: readStringOrEmpty)
   final String currency;
 
-  @JsonKey(fromJson: _readDouble)
+  @JsonKey(fromJson: readDouble)
   final double estimatedFare;
 
   Map<String, dynamic> toJson() => _$RideEstimateModelToJson(this);
-
 }

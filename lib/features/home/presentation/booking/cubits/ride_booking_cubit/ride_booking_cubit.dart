@@ -1,5 +1,6 @@
-import 'dart:developer' as developer;
+import 'package:mashena_rider/core/services/logger_service.dart';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
@@ -69,7 +70,7 @@ class RideBookingCubit extends Cubit<RideBookingState> {
           ),
         );
 
-        developer.log(
+        LoggerService.debug(
           'Ride submitted: ${submissionResult.rideRequestId}',
           name: 'features.home.booking',
         );
@@ -87,7 +88,7 @@ class RideBookingCubit extends Cubit<RideBookingState> {
         state.copyWith(
           error: const Failure(
             FailureCode.unknown,
-            rawMessage: 'Cannot cancel ride after trip has started',
+            rawMessage: 'error_cannot_cancel_started_trip',
           ),
         ),
       );

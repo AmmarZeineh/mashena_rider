@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:mashena_rider/core/services/logger_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
@@ -148,7 +148,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
       if (!status.serviceEnabled ||
           status.permission != LocationPermissionState.granted) {
         if (kDebugMode) {
-          developer.log(
+          LoggerService.debug(
             'Location permission denied or service disabled.',
             name: 'features.home.pick_address',
           );
@@ -176,7 +176,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
       _validateDistances();
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        developer.log(
+        LoggerService.debug(
           'PickAddressCubit useDeviceLocation error',
           name: 'features.home.pick_address',
           error: e,
@@ -217,7 +217,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
       emit(state.copyWith(searchResults: results, isSearching: false));
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        developer.log(
+        LoggerService.debug(
           'PickAddressCubit _performSearch error',
           name: 'features.home.pick_address',
           error: e,
@@ -284,8 +284,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
       if (meters < 50) {
         emit(
           state.copyWith(
-            warningMessage:
-                "Some stops are very close to each other. Please check your route.",
+            warningMessage: 'error_stops_too_close',
           ),
         );
         return;
@@ -366,7 +365,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
           ),
         );
         if (kDebugMode) {
-          developer.log(
+          LoggerService.debug(
             'Ride Request Created. Estimates: ${estimateResponse.estimates}',
             name: 'features.home.pick_address',
           );

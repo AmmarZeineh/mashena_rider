@@ -73,7 +73,7 @@ class TripRatingCubit extends Cubit<TripRatingState> {
       // Local UI validation — not an API failure
       emit(
         state.copyWith(
-          validationError: 'Please select a rating score',
+          validationError: 'error_select_rating_score',
           clearValidationError: false,
         ),
       );

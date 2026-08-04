@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mashena_rider/core/auth/auth_event.dart';
+import 'package:mashena_rider/core/auth/auth_event_bus.dart';
 import 'package:mashena_rider/features/home/data/repositories/rating_repository_impl.dart';
 import 'package:mashena_rider/features/home/domain/repositories/rating_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +15,7 @@ import 'package:mashena_rider/app/config/app_config.dart';
 import 'package:mashena_rider/core/network/api_client.dart';
 import 'package:mashena_rider/core/network/dio_client.dart';
 import 'package:mashena_rider/core/network/auth_interceptor.dart';
+import 'package:mashena_rider/core/network/api_logging_interceptor.dart';
 import 'package:mashena_rider/core/network/network_info.dart';
 import 'package:mashena_rider/core/network/socket_client.dart';
 import 'package:mashena_rider/core/network/socket_io_client_impl.dart';
@@ -168,20 +169,18 @@ Future<void> configureDependencies() async {
 
   getIt.registerLazySingleton<AuthInterceptor>(
     () => AuthInterceptor(
+      dio: getIt<Dio>(),
       tokenManager: getIt<TokenManager>(),
       authEventBus: getIt<AuthEventBus>(),
-      baseUrl: getIt<AppConfig>().baseUrl,
     ),
   );
 
-  getIt.registerLazySingleton<ApiClient>(
-    () => DioApiClient(
-      dio: getIt<Dio>(),
-      authInterceptor: getIt<AuthInterceptor>(),
-      tokenManager: getIt.get<TokenManager>(),
-      baseUrl: getIt.get<AppConfig>().baseUrl,
-    ),
-  );
+  getIt.registerLazySingleton<ApiClient>(() {
+    final dio = getIt<Dio>();
+    dio.interceptors.add(ApiLoggingInterceptor());
+    dio.interceptors.add(getIt<AuthInterceptor>());
+    return DioApiClient(dio: dio);
+  });
 
   getIt.registerLazySingleton<SocketClient>(
     () => SocketIOClientImpl(getIt<AppConfig>(), getIt<TokenManager>()),

@@ -1,6 +1,5 @@
 import '../../domain/entities/ride_estimate_response.dart';
 import '../models/ride_estimate_response_model.dart';
-import 'ride_location_mapper.dart';
 import 'ride_estimate_mapper.dart';
 
 extension RideEstimateResponseModelMapper on RideEstimateResponseModel {

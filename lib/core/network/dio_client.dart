@@ -1,48 +1,24 @@
 import 'package:dio/dio.dart';
 import 'package:mashena_rider/core/network/api_client.dart';
 import 'package:mashena_rider/core/network/api_exception.dart';
-import 'package:mashena_rider/core/network/api_logging_interceptor.dart';
-import 'package:mashena_rider/core/network/auth_interceptor.dart';
-import 'package:mashena_rider/core/network/token_manager.dart';
 
 final class DioApiClient implements ApiClient {
-  DioApiClient({
-    required TokenManager tokenManager,
-    required String baseUrl,
-    required AuthInterceptor authInterceptor,
-
-    Dio? dio,
-  }) : _dio = dio ?? Dio() {
-    _setup(baseUrl);
-    _dio.interceptors.add(ApiLoggingInterceptor());
-    _dio.interceptors.add(authInterceptor);
-  }
+  DioApiClient({required Dio dio}) : _dio = dio;
 
   final Dio _dio;
 
-  void _setup(String baseUrl) {
-    _dio.options = BaseOptions(
-      baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      sendTimeout: const Duration(seconds: 30),
-      headers: const {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    );
-
-    // The authInterceptor handles token injection and refresh logic.
-  }
-
-  @override
-  Future<dynamic> get(String path, {Map<String, dynamic>? query}) async {
+  Future<dynamic> _execute(Future<Response<dynamic>> Function() request) async {
     try {
-      final res = await _dio.get(path, queryParameters: query);
+      final res = await request();
       return _handle(res);
     } on DioException catch (e) {
       throw _map(e);
     }
+  }
+
+  @override
+  Future<dynamic> get(String path, {Map<String, dynamic>? query}) {
+    return _execute(() => _dio.get(path, queryParameters: query));
   }
 
   @override
@@ -50,13 +26,8 @@ final class DioApiClient implements ApiClient {
     String path, {
     dynamic body,
     Map<String, dynamic>? query,
-  }) async {
-    try {
-      final res = await _dio.post(path, data: body, queryParameters: query);
-      return _handle(res);
-    } on DioException catch (e) {
-      throw _map(e);
-    }
+  }) {
+    return _execute(() => _dio.post(path, data: body, queryParameters: query));
   }
 
   @override
@@ -64,13 +35,8 @@ final class DioApiClient implements ApiClient {
     String path, {
     dynamic body,
     Map<String, dynamic>? query,
-  }) async {
-    try {
-      final res = await _dio.put(path, data: body, queryParameters: query);
-      return _handle(res);
-    } on DioException catch (e) {
-      throw _map(e);
-    }
+  }) {
+    return _execute(() => _dio.put(path, data: body, queryParameters: query));
   }
 
   @override
@@ -78,13 +44,8 @@ final class DioApiClient implements ApiClient {
     String path, {
     dynamic body,
     Map<String, dynamic>? query,
-  }) async {
-    try {
-      final res = await _dio.patch(path, data: body, queryParameters: query);
-      return _handle(res);
-    } on DioException catch (e) {
-      throw _map(e);
-    }
+  }) {
+    return _execute(() => _dio.patch(path, data: body, queryParameters: query));
   }
 
   @override
@@ -92,13 +53,8 @@ final class DioApiClient implements ApiClient {
     String path, {
     dynamic body,
     Map<String, dynamic>? query,
-  }) async {
-    try {
-      final res = await _dio.delete(path, data: body, queryParameters: query);
-      return _handle(res);
-    } on DioException catch (e) {
-      throw _map(e);
-    }
+  }) {
+    return _execute(() => _dio.delete(path, data: body, queryParameters: query));
   }
 
   @override
@@ -106,19 +62,16 @@ final class DioApiClient implements ApiClient {
     String path, {
     required Map<String, dynamic> data,
     Map<String, dynamic>? query,
-  }) async {
-    try {
-      final form = FormData.fromMap(data);
-      final res = await _dio.post(
+  }) {
+    final form = FormData.fromMap(data);
+    return _execute(
+      () => _dio.post(
         path,
         data: form,
         queryParameters: query,
         options: Options(headers: {'Content-Type': 'multipart/form-data'}),
-      );
-      return _handle(res);
-    } on DioException catch (e) {
-      throw _map(e);
-    }
+      ),
+    );
   }
 
   dynamic _handle(Response response) {

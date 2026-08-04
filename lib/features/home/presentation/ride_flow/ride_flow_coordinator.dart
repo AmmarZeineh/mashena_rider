@@ -1,5 +1,5 @@
 import 'dart:math' show pi;
-import 'dart:developer' as developer;
+import 'package:mashena_rider/core/services/logger_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -66,11 +66,14 @@ abstract class RideFlowCoordinator {
 
       if (routePoints.isEmpty) {
         final routeService = getIt<OSRMRouteService>();
-        routePoints = await routeService.getRoute([
+        final details = await routeService.getRouteDetails([
           result.pickup,
           ...result.estimateResponse.stops,
           result.destination,
         ]);
+        if (details != null) {
+          routePoints = details.points;
+        }
       }
 
       // Check if cubit is still open and context is mounted before emitting
@@ -136,7 +139,7 @@ abstract class RideFlowCoordinator {
         rideBookingCubit.setConfirmedRide(result);
       }
     } catch (e, stackTrace) {
-      developer.log(
+      LoggerService.error(
         'Failed to fetch/draw route in openPickAddressAndDrawRoute',
         name: 'features.home.ride_flow',
         error: e,

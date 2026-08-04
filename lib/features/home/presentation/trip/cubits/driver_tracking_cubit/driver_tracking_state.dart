@@ -1,7 +1,7 @@
 part of 'driver_tracking_cubit.dart';
 
 /// Real-time driver tracking data: location, bearing, ETA, distance.
-class DriverTrackingState {
+class DriverTrackingState extends Equatable {
   const DriverTrackingState({
     this.driverLocation,
     this.driverBearing = 0.0,
@@ -26,6 +26,21 @@ class DriverTrackingState {
   final bool isTripStarted;
 
   bool get isTracking => pickup != null && destination != null;
+
+  @override
+  List<Object?> get props => [
+        driverLocation,
+        driverBearing,
+        driverDistance,
+        driverEta,
+        pickup,
+        destination,
+        isDriverArrived,
+        isTripStarted,
+      ];
+
+  @override
+  bool get stringify => true;
 
   DriverTrackingState copyWith({
     MapLatLng? driverLocation,

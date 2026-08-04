@@ -1,7 +1,7 @@
 part of 'ride_booking_cubit.dart';
 
 /// State for the ride booking flow.
-class RideBookingState {
+class RideBookingState extends Equatable {
   const RideBookingState({
     this.confirmedRideResult,
     this.submissionResponse,
@@ -16,6 +16,17 @@ class RideBookingState {
 
   /// True once a ride has been submitted successfully.
   bool get isSubmitted => submissionResponse != null;
+
+  @override
+  List<Object?> get props => [
+        confirmedRideResult,
+        submissionResponse,
+        isSubmitting,
+        error,
+      ];
+
+  @override
+  bool get stringify => true;
 
   RideBookingState copyWith({
     ConfirmedRideFlowResult? confirmedRideResult,

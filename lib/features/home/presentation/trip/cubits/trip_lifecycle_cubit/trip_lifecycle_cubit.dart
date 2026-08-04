@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:equatable/equatable.dart';
+import 'package:mashena_rider/core/services/logger_service.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mashena_rider/core/auth/auth_event.dart';
 import 'package:mashena_rider/core/auth/auth_event_bus.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
-import 'package:mashena_rider/features/home/data/models/driver_arrived_payload.dart';
+import 'package:mashena_rider/features/home/domain/entities/driver_arrived.dart';
 import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_cancelled.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_completed.dart';
@@ -32,7 +33,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
   final AuthEventBus _authEventBus;
 
   StreamSubscription<int>? _rideMatchedSubscription;
-  StreamSubscription<DriverArrivedPayload>? _driverArrivedSubscription;
+  StreamSubscription<DriverArrived>? _driverArrivedSubscription;
   StreamSubscription<int>? _driverStartedSubscription;
   StreamSubscription<TripCompleted>? _tripCompletedSubscription;
   StreamSubscription<TripCancelled>? _tripCancelledSubscription;
@@ -107,7 +108,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
   void _subscribeToAuthEvents() {
     _authEventSubscription = _authEventBus.stream.listen((event) {
       if (event == AuthEvent.tokenRefreshed) {
-        developer.log(
+        LoggerService.debug(
           'Token refreshed, reconnecting socket...',
           name: 'features.home.trip_lifecycle',
         );
@@ -123,7 +124,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
     for (int attempt = 1; attempt <= maxRetries; attempt++) {
       if (isClosed) return;
 
-      developer.log(
+      LoggerService.debug(
         'Fetching matched trip (attempt $attempt/$maxRetries, id: $rideRequestId)',
         name: 'features.home.trip_lifecycle',
       );
@@ -133,7 +134,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
 
       if (result.isRight()) {
         final trip = result.getOrElse(() => throw Exception());
-        developer.log(
+        LoggerService.debug(
           'Matched trip loaded: ${trip.driverFullName} (${trip.model}) - status: ${trip.tripStatus}',
           name: 'features.home.trip_lifecycle',
         );
@@ -157,7 +158,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
       }
 
       final errMsg = result.fold((l) => l.rawMessage ?? l.code.name, (r) => '');
-      developer.log(
+      LoggerService.debug(
         'Attempt $attempt failed: $errMsg',
         name: 'features.home.trip_lifecycle',
       );

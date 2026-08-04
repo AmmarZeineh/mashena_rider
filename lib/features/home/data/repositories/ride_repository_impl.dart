@@ -14,7 +14,8 @@ import 'package:mashena_rider/features/home/data/mappers/ride_estimate_response_
 import 'package:mashena_rider/features/home/data/mappers/ride_submission_response_mapper.dart';
 import 'package:mashena_rider/features/home/data/mappers/trip_cancelled_mapper.dart';
 import 'package:mashena_rider/features/home/data/mappers/trip_completed_mapper.dart';
-import 'package:mashena_rider/features/home/data/models/driver_arrived_payload.dart';
+import 'package:mashena_rider/features/home/domain/entities/driver_arrived.dart';
+import 'package:mashena_rider/features/home/data/mappers/driver_arrived_mapper.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
@@ -41,7 +42,10 @@ class RideRepositoryImpl implements RideRepository {
 
       if (response is! Map) {
         return const Left(
-          Failure(FailureCode.unknown, rawMessage: 'Invalid matched trip details response'),
+          Failure(
+            FailureCode.unknown,
+            rawMessage: 'Invalid matched trip details response',
+          ),
         );
       }
 
@@ -73,7 +77,10 @@ class RideRepositoryImpl implements RideRepository {
 
       if (response is! Map) {
         return const Left(
-          Failure(FailureCode.unknown, rawMessage: 'Invalid ride estimates response'),
+          Failure(
+            FailureCode.unknown,
+            rawMessage: 'Invalid ride estimates response',
+          ),
         );
       }
 
@@ -104,7 +111,10 @@ class RideRepositoryImpl implements RideRepository {
 
       if (response is! Map) {
         return const Left(
-          Failure(FailureCode.unknown, rawMessage: 'Invalid ride submission response'),
+          Failure(
+            FailureCode.unknown,
+            rawMessage: 'Invalid ride submission response',
+          ),
         );
       }
 
@@ -128,20 +138,23 @@ class RideRepositoryImpl implements RideRepository {
       _rideSocketDataSource.driverLocationStream;
 
   @override
-  Stream<DriverArrivedPayload> get driverArrivedStream =>
-      _rideSocketDataSource.driverArrivedStream;
+  Stream<DriverArrived> get driverArrivedStream => _rideSocketDataSource
+      .driverArrivedStream
+      .map((payload) => payload.toEntity());
 
   @override
   Stream<int> get driverStartedStream =>
       _rideSocketDataSource.driverStartedStream;
 
   @override
-  Stream<TripCompleted> get tripCompletedStream =>
-      _rideSocketDataSource.tripCompletedStream.map((payload) => payload.toEntity());
+  Stream<TripCompleted> get tripCompletedStream => _rideSocketDataSource
+      .tripCompletedStream
+      .map((payload) => payload.toEntity());
 
   @override
-  Stream<TripCancelled> get tripCancelledStream =>
-      _rideSocketDataSource.tripCancelledStream.map((payload) => payload.toEntity());
+  Stream<TripCancelled> get tripCancelledStream => _rideSocketDataSource
+      .tripCancelledStream
+      .map((payload) => payload.toEntity());
 
   @override
   Future<void> connectSocket() => _rideSocketDataSource.connectSocket();

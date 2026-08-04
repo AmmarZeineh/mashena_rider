@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'dart:developer' as developer;
+import 'package:mashena_rider/core/services/logger_service.dart';
 import 'dart:math' show pi, sin, cos, atan2;
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_marker.dart';
@@ -126,7 +127,7 @@ class DriverTrackingCubit extends Cubit<DriverTrackingState> {
       ),
     );
 
-    developer.log(
+    LoggerService.debug(
       'Driver at $driverLocation → bearing $bearing°, ETA $etaText',
       name: 'features.home.driver_tracking',
     );

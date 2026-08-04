@@ -1,27 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
+
+import 'package:mashena_rider/core/network/json_readers.dart';
 
 part 'ride_submission_response_model.g.dart';
-
-int _readInt(Object? value) {
-  if (value is int) return value;
-  if (value is num) return value.toInt();
-  if (value is String) return int.tryParse(value) ?? 0;
-  return 0;
-}
-
-double _readDouble(Object? value) {
-  if (value is num) return value.toDouble();
-  if (value is String) return double.tryParse(value) ?? 0;
-  return 0;
-}
-
-bool _readBool(Object? value) {
-  if (value is bool) return value;
-  if (value is String) return value.toLowerCase() == 'true';
-  if (value is num) return value != 0;
-  return false;
-}
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class RideSubmissionResponseModel {
@@ -51,25 +32,24 @@ class RideSubmissionResponseModel {
     return _$RideSubmissionResponseModelFromJson(normalized);
   }
 
-  @JsonKey(fromJson: _readInt)
+  @JsonKey(fromJson: readInt)
   final int rideRequestId;
 
   final String status;
 
-  @JsonKey(fromJson: _readDouble)
+  @JsonKey(fromJson: readDouble)
   final double distanceKm;
 
-  @JsonKey(fromJson: _readDouble)
+  @JsonKey(fromJson: readDouble)
   final double durationMin;
 
-  @JsonKey(fromJson: _readBool)
+  @JsonKey(fromJson: readBool)
   final bool isNight;
 
-  @JsonKey(fromJson: _readDouble)
+  @JsonKey(fromJson: readDouble)
   final double estimatedFare;
 
   final String currency;
 
   Map<String, dynamic> toJson() => _$RideSubmissionResponseModelToJson(this);
-
 }

@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/features/home/data/models/ride_estimate_model.dart';
 import 'package:mashena_rider/features/home/data/models/ride_location_model.dart';
-import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
 
 part 'ride_estimate_response_model.g.dart';
 
@@ -64,10 +63,7 @@ List<MapLatLng> _readRoutePoints(Object? value) {
         if (e is Map) {
           final lat = (e['lat'] ?? e['latitude'] ?? 0) as num;
           final lng = (e['lng'] ?? e['longitude'] ?? 0) as num;
-          return MapLatLng(
-            latitude: lat.toDouble(),
-            longitude: lng.toDouble(),
-          );
+          return MapLatLng(latitude: lat.toDouble(), longitude: lng.toDouble());
         }
         return const MapLatLng(latitude: 0, longitude: 0);
       }).toList();
@@ -106,8 +102,7 @@ class RideEstimateResponseModel {
     normalized['estimates'] = data['estimates'] ?? data['vehicle_types'];
     normalized['polyline'] =
         data['polyline'] ?? data['geometry'] ?? data['route'];
-    normalized['route_points'] =
-        data['route_points'] ?? data['routeGeometry'];
+    normalized['route_points'] = data['route_points'] ?? data['routeGeometry'];
 
     return _$RideEstimateResponseModelFromJson(normalized);
   }
@@ -142,5 +137,4 @@ class RideEstimateResponseModel {
   final List<MapLatLng> routePoints;
 
   Map<String, dynamic> toJson() => _$RideEstimateResponseModelToJson(this);
-
 }

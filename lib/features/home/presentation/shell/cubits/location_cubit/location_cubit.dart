@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mashena_rider/core/services/location_service.dart';

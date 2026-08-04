@@ -1,7 +1,7 @@
 part of 'location_cubit.dart';
 
 /// Holds GPS permission status and the last known device position.
-class LocationState {
+class LocationState extends Equatable {
   const LocationState({
     this.isGranted = false,
     this.isServiceEnabled = true,
@@ -19,6 +19,17 @@ class LocationState {
   final bool isServiceEnabled;
   final bool isDeniedForever;
   final Position? position;
+
+  @override
+  List<Object?> get props => [
+        isGranted,
+        isServiceEnabled,
+        isDeniedForever,
+        position,
+      ];
+
+  @override
+  bool get stringify => true;
 
   LocationState copyWith({
     bool? isGranted,
