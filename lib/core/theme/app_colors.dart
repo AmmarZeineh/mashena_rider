@@ -9,4 +9,7 @@ class AppColors {
   static const darkScaffold = Color(0xFF0F1115);
   static const Color success = Color(0xFF4CAF50);
   static const Color rating = Color(0xFFFFC107);
+  static const Color errorColor = Color(0xFFEF4444);
+  static const Color shieldGreen = Color(0xFF10B981);
+  static const Color white = Colors.white;
 }

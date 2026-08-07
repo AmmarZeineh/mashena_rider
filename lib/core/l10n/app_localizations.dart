@@ -979,6 +979,30 @@ abstract class S {
   /// **'Trip cancelled'**
   String get tripCancelled;
 
+  /// No description provided for @tripCancelledSubtitleDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Your driver cancelled the ride request. You can request a new ride anytime.'**
+  String get tripCancelledSubtitleDriver;
+
+  /// No description provided for @tripCancelledSubtitleAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'The ride was cancelled by the system administrator.'**
+  String get tripCancelledSubtitleAdmin;
+
+  /// No description provided for @tripCancelledSubtitleGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'Your trip request has been cancelled.'**
+  String get tripCancelledSubtitleGeneral;
+
+  /// No description provided for @noCancellationFeeNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'No cancellation fee was charged for this ride.'**
+  String get noCancellationFeeNotice;
+
   /// No description provided for @logoutConfirmationMessage.
   ///
   /// In en, this message translates to:
@@ -1116,6 +1140,174 @@ abstract class S {
   /// In en, this message translates to:
   /// **'{color} • {type}'**
   String rideVehicleColorAndType(String color, String type);
+
+  /// No description provided for @drawerCoupons.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupons'**
+  String get drawerCoupons;
+
+  /// No description provided for @applyCouponTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Coupon'**
+  String get applyCouponTitle;
+
+  /// No description provided for @enterCouponHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter coupon code'**
+  String get enterCouponHint;
+
+  /// No description provided for @applyButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyButton;
+
+  /// No description provided for @activeCouponsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Coupons'**
+  String get activeCouponsSection;
+
+  /// No description provided for @couponHistorySection.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon History'**
+  String get couponHistorySection;
+
+  /// No description provided for @noActiveCoupons.
+  ///
+  /// In en, this message translates to:
+  /// **'No active coupons available'**
+  String get noActiveCoupons;
+
+  /// No description provided for @noCouponHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No coupon history found'**
+  String get noCouponHistory;
+
+  /// No description provided for @remainingUsages.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} usages remaining'**
+  String remainingUsages(num count);
+
+  /// No description provided for @couponStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get couponStatusActive;
+
+  /// No description provided for @couponStatusUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Used'**
+  String get couponStatusUsed;
+
+  /// No description provided for @couponStatusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get couponStatusExpired;
+
+  /// No description provided for @expiresOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires on {date}'**
+  String expiresOn(String date);
+
+  /// No description provided for @couponAppliedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon applied successfully'**
+  String get couponAppliedSuccess;
+
+  /// No description provided for @enterValidCouponCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a coupon code'**
+  String get enterValidCouponCode;
+
+  /// No description provided for @appCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'SYP'**
+  String get appCurrency;
+
+  /// No description provided for @shareRide.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Ride'**
+  String get shareRide;
+
+  /// No description provided for @shareRideSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your live trip tracking link with family or friends'**
+  String get shareRideSubtitle;
+
+  /// No description provided for @shareRideLinkLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Live tracking link'**
+  String get shareRideLinkLabel;
+
+  /// No description provided for @shareRideCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip link copied to clipboard'**
+  String get shareRideCopied;
+
+  /// No description provided for @shareRideRevoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Sharing'**
+  String get shareRideRevoke;
+
+  /// No description provided for @shareRideRevoking.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoking...'**
+  String get shareRideRevoking;
+
+  /// No description provided for @shareRideActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip sharing is active'**
+  String get shareRideActive;
+
+  /// No description provided for @shareRideShareVia.
+  ///
+  /// In en, this message translates to:
+  /// **'Share via...'**
+  String get shareRideShareVia;
+
+  /// No description provided for @shareRideFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create share link'**
+  String get shareRideFailed;
+
+  /// No description provided for @shareRideRevokeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to revoke share link'**
+  String get shareRideRevokeFailed;
+
+  /// No description provided for @rideExpiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride Request Expired'**
+  String get rideExpiredTitle;
+
+  /// No description provided for @rideExpiredSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No drivers were available in your area. Please try again.'**
+  String get rideExpiredSubtitle;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

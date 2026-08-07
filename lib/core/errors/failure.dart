@@ -13,6 +13,7 @@ enum FailureCode {
   tripCancelledByDriver,
   tripCancelledByAdmin,
   tripCancelled,
+  rideExpired,
   unknown,
 }
 

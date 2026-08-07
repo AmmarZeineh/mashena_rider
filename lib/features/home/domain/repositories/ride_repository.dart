@@ -1,12 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
+import 'package:mashena_rider/features/home/domain/entities/driver_arrived.dart';
 import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_completed.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_cancelled.dart';
-import 'package:mashena_rider/features/home/domain/entities/driver_arrived.dart';
+import 'package:mashena_rider/features/home/domain/entities/trip_share.dart';
 import '../entities/ride_request.dart';
 
 abstract interface class RideRepository {
@@ -39,6 +40,9 @@ abstract interface class RideRepository {
   /// Stream emitting when the trip is cancelled
   Stream<TripCancelled> get tripCancelledStream;
 
+  /// Stream emitting when the ride request expires
+  Stream<int> get rideExpiredStream;
+
   /// Connects the underlying socket to the server.
   /// Should be called early (on screen init) so the rider is registered
   /// in the gateway before submitting a ride request.
@@ -52,4 +56,10 @@ abstract interface class RideRepository {
 
   /// Cancels the ride request or matched trip
   Future<Either<Failure, void>> cancelRide(int rideRequestId);
+
+  /// Creates or retrieves a public trip share URL for the ride request
+  Future<Either<Failure, TripShare>> shareTrip(int rideRequestId);
+
+  /// Revokes public trip sharing for the ride request
+  Future<Either<Failure, bool>> revokeShareTrip(int rideRequestId);
 }

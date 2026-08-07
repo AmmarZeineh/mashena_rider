@@ -50,3 +50,5 @@ app.*.map.json
 **/*.g.dart
 **/*.freezed.dart
 AGENTS.md
+.agents
+setup_antigravity_flutter_rules.sh

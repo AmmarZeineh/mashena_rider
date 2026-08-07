@@ -2,8 +2,15 @@
   "ar": [
     "enterYourNumberRegister",
     "validationPasswordsNotMatch",
-    "tripCancelledByDriver",
-    "tripCancelledByAdmin",
-    "tripCancelled"
+    "shareRide",
+    "shareRideSubtitle",
+    "shareRideLinkLabel",
+    "shareRideCopied",
+    "shareRideRevoke",
+    "shareRideRevoking",
+    "shareRideActive",
+    "shareRideShareVia",
+    "shareRideFailed",
+    "shareRideRevokeFailed"
   ]
 }

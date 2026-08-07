@@ -68,6 +68,9 @@ import 'package:mashena_rider/features/home/domain/repositories/ride_repository.
 import 'package:mashena_rider/features/home/domain/usecases/create_ride_request_usecase.dart';
 import 'package:mashena_rider/features/home/domain/usecases/submit_ride_request_usecase.dart';
 import 'package:mashena_rider/features/home/domain/usecases/cancel_ride_usecase.dart';
+import 'package:mashena_rider/features/home/domain/usecases/share_trip_usecase.dart';
+import 'package:mashena_rider/features/home/domain/usecases/revoke_share_trip_usecase.dart';
+import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_share_cubit/trip_share_cubit.dart';
 import 'package:mashena_rider/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:mashena_rider/features/profile/domain/repositories/profile_repository.dart';
 import 'package:mashena_rider/features/profile/presentation/cubits/profile_cubit.dart';
@@ -75,6 +78,9 @@ import 'package:mashena_rider/features/home/data/datasources/ride_socket_data_so
 import 'package:mashena_rider/features/home/data/repositories/ride_repository_impl.dart';
 import 'package:mashena_rider/features/home/presentation/address/cubits/pick_address_cubit/pick_address_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_rating_cubit.dart';
+import 'package:mashena_rider/features/coupons/data/repositories/coupons_repository_impl.dart';
+import 'package:mashena_rider/features/coupons/domain/repositories/coupons_repository.dart';
+import 'package:mashena_rider/features/coupons/presentation/cubits/coupons_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -291,6 +297,21 @@ Future<void> configureDependencies() async {
     () => CancelRideUsecase(getIt<RideRepository>()),
   );
 
+  getIt.registerFactory<ShareTripUsecase>(
+    () => ShareTripUsecase(getIt<RideRepository>()),
+  );
+
+  getIt.registerFactory<RevokeShareTripUsecase>(
+    () => RevokeShareTripUsecase(getIt<RideRepository>()),
+  );
+
+  getIt.registerFactory<TripShareCubit>(
+    () => TripShareCubit(
+      getIt<ShareTripUsecase>(),
+      getIt<RevokeShareTripUsecase>(),
+    ),
+  );
+
   // =====================================================
   // 🔹 10. Features - Home (Presentation Layer)
   // =====================================================
@@ -309,6 +330,18 @@ Future<void> configureDependencies() async {
 
   getIt.registerFactory<TripRatingCubit>(
     () => TripRatingCubit(getIt<RatingRepository>()),
+  );
+
+  // =====================================================
+  // 🔹 11. Features - Coupons
+  // =====================================================
+
+  getIt.registerLazySingleton<CouponsRepository>(
+    () => CouponsRepositoryImpl(getIt<ApiClient>()),
+  );
+
+  getIt.registerFactory<CouponsCubit>(
+    () => CouponsCubit(getIt<CouponsRepository>()),
   );
 
 }

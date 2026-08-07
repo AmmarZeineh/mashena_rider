@@ -5,6 +5,7 @@ import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:mashena_rider/features/coupons/presentation/views/coupons_view.dart';
 import 'package:mashena_rider/features/profile/presentation/views/profile_view.dart';
 
 class HomeDrawer extends StatelessWidget {
@@ -111,6 +112,18 @@ class HomeDrawer extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => const ProfileView(),
+                            ),
+                          );
+                        },
+                      ),
+                      _DrawerItem(
+                        title: S.of(context).drawerCoupons,
+                        icon: Icons.confirmation_number_outlined,
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const CouponsView(),
                             ),
                           );
                         },

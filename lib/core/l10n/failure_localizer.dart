@@ -27,6 +27,8 @@ String failureText(BuildContext context, Failure f) {
       return s.tripCancelledByAdmin;
     case FailureCode.tripCancelled:
       return s.tripCancelled;
+    case FailureCode.rideExpired:
+      return s.rideExpiredTitle;
     case FailureCode.unknown:
       return s.apiUnknownError;
     case FailureCode.cache:

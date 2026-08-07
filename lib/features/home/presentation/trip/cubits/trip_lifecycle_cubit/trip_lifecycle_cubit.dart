@@ -37,6 +37,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
   StreamSubscription<int>? _driverStartedSubscription;
   StreamSubscription<TripCompleted>? _tripCompletedSubscription;
   StreamSubscription<TripCancelled>? _tripCancelledSubscription;
+  StreamSubscription<int>? _rideExpiredSubscription;
   StreamSubscription<AuthEvent>? _authEventSubscription;
 
   void _subscribeToSocketStreams() {
@@ -99,6 +100,15 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
         state.copyWith(
           tripError: cancelFailure,
           tripCancelledData: payload,
+          clearMatchedTrip: true,
+        ),
+      );
+    });
+
+    _rideExpiredSubscription = _rideRepository.rideExpiredStream.listen((_) {
+      emit(
+        state.copyWith(
+          isRideExpired: true,
           clearMatchedTrip: true,
         ),
       );
@@ -192,6 +202,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
     _driverStartedSubscription?.cancel();
     _tripCompletedSubscription?.cancel();
     _tripCancelledSubscription?.cancel();
+    _rideExpiredSubscription?.cancel();
     _authEventSubscription?.cancel();
     return super.close();
   }

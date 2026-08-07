@@ -27,6 +27,9 @@ abstract interface class RideSocketDataSource {
   /// Stream that fires when the trip is cancelled.
   Stream<TripCancelledPayload> get tripCancelledStream;
 
+  /// Stream that fires when the ride request expires without finding a driver.
+  Stream<int> get rideExpiredStream;
+
   /// Connects the underlying socket to the server.
   Future<void> connectSocket();
 
@@ -55,6 +58,8 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
       StreamController<TripCompletedPayload>.broadcast();
   final StreamController<TripCancelledPayload> _tripCancelledController =
       StreamController<TripCancelledPayload>.broadcast();
+  final StreamController<int> _rideExpiredController =
+      StreamController<int>.broadcast();
 
   RideSocketDataSourceImpl(this._socketClient) {
     _initSocketListeners();
@@ -210,6 +215,28 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
         );
       }
     });
+
+    _socketClient.on('ride:expired', (data) {
+      LoggerService.debug(
+        'Received ride:expired event: $data',
+        name: 'features.home.socket',
+      );
+      try {
+        if (data is Map) {
+          final rideRequestId = data['rideRequestId'];
+          if (rideRequestId != null) {
+            _rideExpiredController.add(int.parse(rideRequestId.toString()));
+          }
+        }
+      } catch (e, stackTrace) {
+        LoggerService.debug(
+          'Error parsing ride:expired payload',
+          name: 'features.home.socket',
+          error: e,
+          stackTrace: stackTrace,
+        );
+      }
+    });
   }
 
   @override
@@ -229,6 +256,9 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
 
   @override
   Stream<TripCancelledPayload> get tripCancelledStream => _tripCancelledController.stream;
+
+  @override
+  Stream<int> get rideExpiredStream => _rideExpiredController.stream;
 
   @override
   Future<void> connectSocket() => _socketClient.connect();
@@ -265,5 +295,6 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
     await _driverStartedController.close();
     await _tripCompletedController.close();
     await _tripCancelledController.close();
+    await _rideExpiredController.close();
   }
 }

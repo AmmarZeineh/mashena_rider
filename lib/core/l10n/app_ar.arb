@@ -178,6 +178,13 @@
   "rideLookingForDrivers": "جارٍ البحث عن سائقين قريبين...",
   "rideTakesFewMoments": "يستغرق هذا عادة بضع لحظات",
   "simulateEndTrip": "محاكاة إنهاء الرحلة",
+  "tripCancelledByDriver": "تم إلغاء الرحلة من قبل السائق",
+  "tripCancelledByAdmin": "تم إلغاء الرحلة من قبل الإدارة",
+  "tripCancelled": "تم إلغاء الرحلة",
+  "tripCancelledSubtitleDriver": "قام السائق بإلغاء طلب الرحلة. يمكنك طلب رحلة جديدة في أي وقت.",
+  "tripCancelledSubtitleAdmin": "تم إلغاء الرحلة من قبل إدارة النظام.",
+  "tripCancelledSubtitleGeneral": "تم إلغاء طلب الرحلة الحالي.",
+  "noCancellationFeeNotice": "لم يتم خصم أي رسوم إلغاء لهذه الرحلة.",
   "logoutConfirmationMessage": "هل ترغب في تسجيل الخروج من هذا الجهاز أو جميع الأجهزة؟",
   "logoutThisDevice": "هذا الجهاز",
   "logoutAllDevices": "جميع الأجهزة",
@@ -218,5 +225,33 @@
       "color": { "type": "String" },
       "type": { "type": "String" }
     }
-  }
+  },
+  "drawerCoupons": "الكوبونات",
+  "applyCouponTitle": "إدخال كود الكوبون",
+  "enterCouponHint": "أدخل كود الكوبون",
+  "applyButton": "تطبيق",
+  "activeCouponsSection": "الكوبونات المفعلة",
+  "couponHistorySection": "سجل الكوبونات",
+  "noActiveCoupons": "لا توجد كوبونات مفعلة حالياً",
+  "noCouponHistory": "لا يوجد سجل للكوبونات",
+  "remainingUsages": "متبقي {count} استخدامات",
+  "@remainingUsages": {
+    "placeholders": {
+      "count": { "type": "num" }
+    }
+  },
+  "couponStatusActive": "مفعل",
+  "couponStatusUsed": "مُستخدم",
+  "couponStatusExpired": "منتهي",
+  "expiresOn": "ينتهي في {date}",
+  "@expiresOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "couponAppliedSuccess": "تم تطبيق الكوبون بنجاح",
+  "enterValidCouponCode": "يرجى إدخال كود الكوبون",
+  "appCurrency": "ل.س",
+  "rideExpiredTitle": "انتهت صلاحية طلب الرحلة",
+  "rideExpiredSubtitle": "لم يكن هناك سائقون متاحون في منطقتك. يرجى المحاولة مرة أخرى."
 }

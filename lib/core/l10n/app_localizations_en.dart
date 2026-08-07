@@ -475,6 +475,22 @@ class SEn extends S {
   String get tripCancelled => 'Trip cancelled';
 
   @override
+  String get tripCancelledSubtitleDriver =>
+      'Your driver cancelled the ride request. You can request a new ride anytime.';
+
+  @override
+  String get tripCancelledSubtitleAdmin =>
+      'The ride was cancelled by the system administrator.';
+
+  @override
+  String get tripCancelledSubtitleGeneral =>
+      'Your trip request has been cancelled.';
+
+  @override
+  String get noCancellationFeeNotice =>
+      'No cancellation fee was charged for this ride.';
+
+  @override
   String get logoutConfirmationMessage =>
       'Do you want to logout from this device or all devices?';
 
@@ -553,4 +569,94 @@ class SEn extends S {
   String rideVehicleColorAndType(String color, String type) {
     return '$color • $type';
   }
+
+  @override
+  String get drawerCoupons => 'Coupons';
+
+  @override
+  String get applyCouponTitle => 'Apply Coupon';
+
+  @override
+  String get enterCouponHint => 'Enter coupon code';
+
+  @override
+  String get applyButton => 'Apply';
+
+  @override
+  String get activeCouponsSection => 'Active Coupons';
+
+  @override
+  String get couponHistorySection => 'Coupon History';
+
+  @override
+  String get noActiveCoupons => 'No active coupons available';
+
+  @override
+  String get noCouponHistory => 'No coupon history found';
+
+  @override
+  String remainingUsages(num count) {
+    return '$count usages remaining';
+  }
+
+  @override
+  String get couponStatusActive => 'Active';
+
+  @override
+  String get couponStatusUsed => 'Used';
+
+  @override
+  String get couponStatusExpired => 'Expired';
+
+  @override
+  String expiresOn(String date) {
+    return 'Expires on $date';
+  }
+
+  @override
+  String get couponAppliedSuccess => 'Coupon applied successfully';
+
+  @override
+  String get enterValidCouponCode => 'Please enter a coupon code';
+
+  @override
+  String get appCurrency => 'SYP';
+
+  @override
+  String get shareRide => 'Share Ride';
+
+  @override
+  String get shareRideSubtitle =>
+      'Share your live trip tracking link with family or friends';
+
+  @override
+  String get shareRideLinkLabel => 'Live tracking link';
+
+  @override
+  String get shareRideCopied => 'Trip link copied to clipboard';
+
+  @override
+  String get shareRideRevoke => 'Stop Sharing';
+
+  @override
+  String get shareRideRevoking => 'Revoking...';
+
+  @override
+  String get shareRideActive => 'Trip sharing is active';
+
+  @override
+  String get shareRideShareVia => 'Share via...';
+
+  @override
+  String get shareRideFailed => 'Failed to create share link';
+
+  @override
+  String get shareRideRevokeFailed => 'Failed to revoke share link';
+
+  @override
+  String get rideExpiredTitle => 'Ride Request Expired';
+
+  @override
+  String get rideExpiredSubtitle =>
+      'No drivers were available in your area. Please try again.';
 }

@@ -461,13 +461,27 @@ class SAr extends S {
   String get simulateEndTrip => 'محاكاة إنهاء الرحلة';
 
   @override
-  String get tripCancelledByDriver => 'Trip cancelled by driver';
+  String get tripCancelledByDriver => 'تم إلغاء الرحلة من قبل السائق';
 
   @override
-  String get tripCancelledByAdmin => 'Trip cancelled by admin';
+  String get tripCancelledByAdmin => 'تم إلغاء الرحلة من قبل الإدارة';
 
   @override
-  String get tripCancelled => 'Trip cancelled';
+  String get tripCancelled => 'تم إلغاء الرحلة';
+
+  @override
+  String get tripCancelledSubtitleDriver =>
+      'قام السائق بإلغاء طلب الرحلة. يمكنك طلب رحلة جديدة في أي وقت.';
+
+  @override
+  String get tripCancelledSubtitleAdmin =>
+      'تم إلغاء الرحلة من قبل إدارة النظام.';
+
+  @override
+  String get tripCancelledSubtitleGeneral => 'تم إلغاء طلب الرحلة الحالي.';
+
+  @override
+  String get noCancellationFeeNotice => 'لم يتم خصم أي رسوم إلغاء لهذه الرحلة.';
 
   @override
   String get logoutConfirmationMessage =>
@@ -547,4 +561,94 @@ class SAr extends S {
   String rideVehicleColorAndType(String color, String type) {
     return '$color • $type';
   }
+
+  @override
+  String get drawerCoupons => 'الكوبونات';
+
+  @override
+  String get applyCouponTitle => 'إدخال كود الكوبون';
+
+  @override
+  String get enterCouponHint => 'أدخل كود الكوبون';
+
+  @override
+  String get applyButton => 'تطبيق';
+
+  @override
+  String get activeCouponsSection => 'الكوبونات المفعلة';
+
+  @override
+  String get couponHistorySection => 'سجل الكوبونات';
+
+  @override
+  String get noActiveCoupons => 'لا توجد كوبونات مفعلة حالياً';
+
+  @override
+  String get noCouponHistory => 'لا يوجد سجل للكوبونات';
+
+  @override
+  String remainingUsages(num count) {
+    return 'متبقي $count استخدامات';
+  }
+
+  @override
+  String get couponStatusActive => 'مفعل';
+
+  @override
+  String get couponStatusUsed => 'مُستخدم';
+
+  @override
+  String get couponStatusExpired => 'منتهي';
+
+  @override
+  String expiresOn(String date) {
+    return 'ينتهي في $date';
+  }
+
+  @override
+  String get couponAppliedSuccess => 'تم تطبيق الكوبون بنجاح';
+
+  @override
+  String get enterValidCouponCode => 'يرجى إدخال كود الكوبون';
+
+  @override
+  String get appCurrency => 'ل.س';
+
+  @override
+  String get shareRide => 'Share Ride';
+
+  @override
+  String get shareRideSubtitle =>
+      'Share your live trip tracking link with family or friends';
+
+  @override
+  String get shareRideLinkLabel => 'Live tracking link';
+
+  @override
+  String get shareRideCopied => 'Trip link copied to clipboard';
+
+  @override
+  String get shareRideRevoke => 'Stop Sharing';
+
+  @override
+  String get shareRideRevoking => 'Revoking...';
+
+  @override
+  String get shareRideActive => 'Trip sharing is active';
+
+  @override
+  String get shareRideShareVia => 'Share via...';
+
+  @override
+  String get shareRideFailed => 'Failed to create share link';
+
+  @override
+  String get shareRideRevokeFailed => 'Failed to revoke share link';
+
+  @override
+  String get rideExpiredTitle => 'انتهت صلاحية طلب الرحلة';
+
+  @override
+  String get rideExpiredSubtitle =>
+      'لم يكن هناك سائقون متاحون في منطقتك. يرجى المحاولة مرة أخرى.';
 }

@@ -6,8 +6,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
+import 'package:mashena_rider/app/di/injector.dart';
 import 'package:mashena_rider/features/home/presentation/trip/cubits/driver_tracking_cubit/driver_tracking_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_lifecycle_cubit/trip_lifecycle_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_share_cubit/trip_share_cubit.dart';
+import 'package:mashena_rider/features/home/presentation/trip/widgets/trip_share_bottom_sheet.dart';
 
 import 'driver_details_bottom_sheet.dart';
 
@@ -313,11 +316,30 @@ class FoundDriverDetails extends StatelessWidget {
               Row(
                 children: [
                   DriverActionCircle(
+                    icon: Icons.share_rounded,
+                    color: colorScheme.tertiary,
+                    onPressed: () {
+                      final rideRequestId = matchedTrip.rideRequestId;
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (_) => BlocProvider<TripShareCubit>(
+                          create: (_) => getIt<TripShareCubit>(),
+                          child: TripShareBottomSheet(
+                            rideRequestId: rideRequestId,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(width: 8.w),
+                  DriverActionCircle(
                     icon: Icons.chat_bubble_outline_rounded,
                     color: colorScheme.secondary,
                     onPressed: () {},
                   ),
-                  SizedBox(width: 12.w),
+                  SizedBox(width: 8.w),
                   DriverActionCircle(
                     icon: Icons.phone_rounded,
                     color: colorScheme.primary,
