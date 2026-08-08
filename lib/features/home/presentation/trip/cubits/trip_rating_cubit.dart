@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:mashena_rider/core/constants/app_constants.dart';
 import 'package:mashena_rider/features/home/domain/repositories/rating_repository.dart';
 
 import 'trip_rating_state.dart';
@@ -52,7 +53,13 @@ class TripRatingCubit extends Cubit<TripRatingState> {
       selectedTags = {};
     }
 
-    emit(state.copyWith(currentScore: score, selectedTagIds: selectedTags));
+    emit(
+      state.copyWith(
+        currentScore: score,
+        selectedTagIds: selectedTags,
+        clearValidationError: true,
+      ),
+    );
   }
 
   void toggleTag(int tagId) {
@@ -62,7 +69,9 @@ class TripRatingCubit extends Cubit<TripRatingState> {
     } else {
       updatedTags.add(tagId);
     }
-    emit(state.copyWith(selectedTagIds: updatedTags));
+    emit(
+      state.copyWith(selectedTagIds: updatedTags, clearValidationError: true),
+    );
   }
 
   Future<void> submitRating({
@@ -70,10 +79,21 @@ class TripRatingCubit extends Cubit<TripRatingState> {
     required String? comment,
   }) async {
     if (state.currentScore == 0) {
-      // Local UI validation — not an API failure
+      // Local UI validation — missing star score
       emit(
         state.copyWith(
-          validationError: 'error_select_rating_score',
+          validationError: AppConstants.errorSelectRatingScore,
+          clearValidationError: false,
+        ),
+      );
+      return;
+    }
+
+    if (state.selectedTagIds.isEmpty) {
+      // Local UI validation — missing tag
+      emit(
+        state.copyWith(
+          validationError: AppConstants.errorSelectRatingTag,
           clearValidationError: false,
         ),
       );

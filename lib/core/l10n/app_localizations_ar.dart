@@ -651,4 +651,34 @@ class SAr extends S {
   @override
   String get rideExpiredSubtitle =>
       'لم يكن هناك سائقون متاحون في منطقتك. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get drawerTripHistory => 'سجل الرحلات';
+
+  @override
+  String get tripHistoryTitle => 'سجل الرحلات';
+
+  @override
+  String get noTripHistory => 'لا يوجد سجل رحلات';
+
+  @override
+  String get statusCompleted => 'مكتملة';
+
+  @override
+  String get statusCancelled => 'ملغاة';
+
+  @override
+  String get statusInProgress => 'قيد التنفيذ';
+
+  @override
+  String get commonAll => 'الكل';
+
+  @override
+  String get ratingPleaseSelectScore => 'يرجى اختيار تقييم بالنجوم';
+
+  @override
+  String get ratingPleaseSelectTag => 'يرجى اختيار وسم واحد على الأقل';
+
+  @override
+  String get ratingDontRate => 'عدم التقييم';
 }

@@ -9,6 +9,7 @@ class BackendEndpoints {
   static const String cancelRideByRider = '/trips/by-ride';
   static String shareTripByRide(int rideRequestId) =>
       '/trips/by-ride/$rideRequestId/share';
+  static const String riderTripHistory = '/trips/rider/history';
   static const String refresh = '/auth/refresh';
   static const String ratingTags = '/rating-tags';
   static const String logout = '/auth/logout';

@@ -1308,6 +1308,66 @@ abstract class S {
   /// In en, this message translates to:
   /// **'No drivers were available in your area. Please try again.'**
   String get rideExpiredSubtitle;
+
+  /// No description provided for @drawerTripHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip History'**
+  String get drawerTripHistory;
+
+  /// No description provided for @tripHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip History'**
+  String get tripHistoryTitle;
+
+  /// No description provided for @noTripHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No trip history found'**
+  String get noTripHistory;
+
+  /// No description provided for @statusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get statusCompleted;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get statusCancelled;
+
+  /// No description provided for @statusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get statusInProgress;
+
+  /// No description provided for @commonAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get commonAll;
+
+  /// No description provided for @ratingPleaseSelectScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a star rating'**
+  String get ratingPleaseSelectScore;
+
+  /// No description provided for @ratingPleaseSelectTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select at least one tag'**
+  String get ratingPleaseSelectTag;
+
+  /// No description provided for @ratingDontRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t Rate'**
+  String get ratingDontRate;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

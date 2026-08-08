@@ -3,4 +3,8 @@ final class AppConstants {
 
   static const String tokenKey = 'token';
   static const String isOnboardingSeenKey = 'isOnboardingSeen';
+
+  static const String errorSelectRatingScore = 'ratingPleaseSelectScore';
+  static const String errorSelectRatingTag = 'ratingPleaseSelectTag';
 }
+

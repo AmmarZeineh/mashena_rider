@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mashena_rider/app/di/injector.dart';
+import 'package:mashena_rider/core/constants/app_constants.dart';
+import 'package:mashena_rider/core/widgets/custom_elevated_button.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import 'package:mashena_rider/features/home/presentation/booking/cubits/ride_booking_cubit/ride_booking_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/common/models/confirmed_ride_flow_result.dart';
@@ -16,7 +18,6 @@ import 'package:mashena_rider/core/l10n/failure_localizer.dart';
 import 'package:mashena_rider/core/utils/toast_helper.dart';
 
 import 'ride_confirmed_sheet_components/driver_card.dart';
-
 
 class TripRatingBottomSheet extends StatefulWidget {
   const TripRatingBottomSheet({
@@ -48,14 +49,27 @@ class _TripRatingBottomSheetState extends State<TripRatingBottomSheet> {
     return BlocProvider(
       create: (context) => getIt<TripRatingCubit>(),
       child: BlocConsumer<TripRatingCubit, TripRatingState>(
+        listenWhen: (previous, current) =>
+            (current.errorMessage != null &&
+                previous.errorMessage != current.errorMessage) ||
+            (current.validationError != null &&
+                previous.validationError != current.validationError) ||
+            (current.isSuccess && !previous.isSuccess),
         listener: (context, state) {
           if (state.errorMessage != null) {
             // API/repository error — localized via failureText
             context.showErrorToast(failureText(context, state.errorMessage!));
           }
           if (state.validationError != null) {
-            // Local UI validation — shown as-is
-            context.showErrorToast(state.validationError!);
+            // Local UI validation — map constant to localized string
+            final String message = switch (state.validationError) {
+              AppConstants.errorSelectRatingScore =>
+                S.of(context).ratingPleaseSelectScore,
+              AppConstants.errorSelectRatingTag =>
+                S.of(context).ratingPleaseSelectTag,
+              _ => state.validationError!,
+            };
+            context.showErrorToast(message);
           }
           if (state.isSuccess) {
             // Dismiss or clear ride flow
@@ -71,22 +85,30 @@ class _TripRatingBottomSheetState extends State<TripRatingBottomSheet> {
           String duration;
           if (widget.tripCompletedData != null &&
               widget.tripCompletedData!.durationSec != null) {
-            final durationMin =
-                (widget.tripCompletedData!.durationSec! / 60).ceil();
+            final durationMin = (widget.tripCompletedData!.durationSec! / 60)
+                .ceil();
             duration = durationMin.toString();
           } else {
             duration = widget.submissionResponse.durationMin.toStringAsFixed(0);
           }
-          final price = widget.submissionResponse.estimatedFare.toStringAsFixed(2);
+          final price = widget.submissionResponse.estimatedFare.toStringAsFixed(
+            2,
+          );
           final currency = widget.submissionResponse.currency;
-          final activeTripId = widget.tripCompletedData?.tripId ?? widget.submissionResponse.rideRequestId; // We need trip ID, fallback to ride request ID if missing or map correctly
+          final activeTripId =
+              widget.tripCompletedData?.tripId ??
+              widget
+                  .submissionResponse
+                  .rideRequestId; // We need trip ID, fallback to ride request ID if missing or map correctly
 
           return Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               decoration: BoxDecoration(
                 color: colorScheme.surface,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(32),
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
@@ -173,11 +195,15 @@ class _TripRatingBottomSheetState extends State<TripRatingBottomSheet> {
                         return IconButton(
                           iconSize: 40.w,
                           icon: Icon(
-                            index < state.currentScore ? Icons.star : Icons.star_border,
+                            index < state.currentScore
+                                ? Icons.star
+                                : Icons.star_border,
                             color: Colors.amber,
                           ),
                           onPressed: () {
-                            context.read<TripRatingCubit>().setScore((index + 1).toDouble());
+                            context.read<TripRatingCubit>().setScore(
+                              (index + 1).toDouble(),
+                            );
                           },
                         );
                       }),
@@ -194,14 +220,20 @@ class _TripRatingBottomSheetState extends State<TripRatingBottomSheet> {
                           spacing: 8.w,
                           runSpacing: 8.h,
                           children: state.currentAvailableTags.map((tag) {
-                            final isSelected = state.selectedTagIds.contains(tag.id);
+                            final isSelected = state.selectedTagIds.contains(
+                              tag.id,
+                            );
                             return FilterChip(
                               label: Text(tag.name ?? tag.code),
                               selected: isSelected,
                               onSelected: (_) {
-                                context.read<TripRatingCubit>().toggleTag(tag.id);
+                                context.read<TripRatingCubit>().toggleTag(
+                                  tag.id,
+                                );
                               },
-                              selectedColor: AppColors.primaryColor.withValues(alpha: 0.2),
+                              selectedColor: AppColors.primaryColor.withValues(
+                                alpha: 0.2,
+                              ),
                               checkmarkColor: AppColors.primaryColor,
                             );
                           }).toList(),
@@ -235,42 +267,39 @@ class _TripRatingBottomSheetState extends State<TripRatingBottomSheet> {
                     ),
                     SizedBox(height: 32.h),
 
-                    // Submit Button
+                    // Buttons (Submit & Skip / Don't Rate)
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 24.w).copyWith(
                         bottom: MediaQuery.of(context).padding.bottom + 16.h,
                       ),
-                      child: ElevatedButton(
-                        onPressed: state.isSubmitting
-                            ? null
-                            : () {
-                                context.read<TripRatingCubit>().submitRating(
-                                      tripId: activeTripId,
-                                      comment: _commentController.text,
-                                    );
-                              },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(vertical: 16.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          CustomElevatedButton(
+                            title: S.of(context).ratingSubmitRating,
+                            isLoading: state.isSubmitting,
+                            onPressed: () {
+                              context.read<TripRatingCubit>().submitRating(
+                                tripId: activeTripId,
+                                comment: _commentController.text,
+                              );
+                            },
                           ),
-                        ),
-                        child: state.isSubmitting
-                            ? SizedBox(
-                                height: 20.h,
-                                width: 20.h,
-                                child: const CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text(
-                                S.of(context).ratingSubmitRating,
-                                style: AppTextStyles.w600_16.copyWith(
-                                    color: Colors.white),
-                              ),
+                          SizedBox(height: 12.h),
+                          CustomElevatedButton(
+                            title: S.of(context).ratingDontRate,
+                            backgroundColor:
+                                colorScheme.surfaceContainerHighest,
+                            textColor: colorScheme.onSurfaceVariant,
+                            onPressed: state.isSubmitting
+                                ? null
+                                : () {
+                                    context
+                                        .read<RideBookingCubit>()
+                                        .clearBooking();
+                                  },
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -305,9 +334,7 @@ class _TripRatingBottomSheetState extends State<TripRatingBottomSheet> {
           child: Text(
             value,
             textAlign: TextAlign.end,
-            style: AppTextStyles.w600_14.copyWith(
-              color: colorScheme.onSurface,
-            ),
+            style: AppTextStyles.w600_14.copyWith(color: colorScheme.onSurface),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

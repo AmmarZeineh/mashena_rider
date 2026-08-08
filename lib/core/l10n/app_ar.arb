@@ -253,5 +253,16 @@
   "enterValidCouponCode": "يرجى إدخال كود الكوبون",
   "appCurrency": "ل.س",
   "rideExpiredTitle": "انتهت صلاحية طلب الرحلة",
-  "rideExpiredSubtitle": "لم يكن هناك سائقون متاحون في منطقتك. يرجى المحاولة مرة أخرى."
+  "rideExpiredSubtitle": "لم يكن هناك سائقون متاحون في منطقتك. يرجى المحاولة مرة أخرى.",
+  "drawerTripHistory": "سجل الرحلات",
+  "tripHistoryTitle": "سجل الرحلات",
+  "noTripHistory": "لا يوجد سجل رحلات",
+  "statusCompleted": "مكتملة",
+  "statusCancelled": "ملغاة",
+  "statusInProgress": "قيد التنفيذ",
+  "commonAll": "الكل",
+  "ratingPleaseSelectScore": "يرجى اختيار تقييم بالنجوم",
+  "ratingPleaseSelectTag": "يرجى اختيار وسم واحد على الأقل",
+  "ratingDontRate": "عدم التقييم"
 }
+

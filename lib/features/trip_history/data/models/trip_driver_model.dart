@@ -1,0 +1,27 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mashena_rider/features/trip_history/domain/entities/trip_history_item.dart';
+
+part 'trip_driver_model.freezed.dart';
+part 'trip_driver_model.g.dart';
+
+@freezed
+abstract class TripDriverModel with _$TripDriverModel {
+  const factory TripDriverModel({
+    required int id,
+    String? fullName,
+    String? phoneNumber,
+    double? ratingAvg,
+  }) = _TripDriverModel;
+
+  factory TripDriverModel.fromJson(Map<String, dynamic> json) =>
+      _$TripDriverModelFromJson(json);
+}
+
+extension TripDriverModelMapper on TripDriverModel {
+  TripDriverEntity toEntity() => TripDriverEntity(
+        id: id,
+        fullName: fullName,
+        phoneNumber: phoneNumber,
+        ratingAvg: ratingAvg,
+      );
+}

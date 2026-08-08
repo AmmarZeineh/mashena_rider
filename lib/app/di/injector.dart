@@ -80,7 +80,9 @@ import 'package:mashena_rider/features/home/presentation/address/cubits/pick_add
 import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_rating_cubit.dart';
 import 'package:mashena_rider/features/coupons/data/repositories/coupons_repository_impl.dart';
 import 'package:mashena_rider/features/coupons/domain/repositories/coupons_repository.dart';
-import 'package:mashena_rider/features/coupons/presentation/cubits/coupons_cubit.dart';
+import 'package:mashena_rider/features/trip_history/data/repositories/trip_history_repository_impl.dart';
+import 'package:mashena_rider/features/trip_history/domain/repositories/trip_history_repository.dart';
+import 'package:mashena_rider/features/trip_history/presentation/cubits/trip_history_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -264,7 +266,8 @@ Future<void> configureDependencies() async {
   );
 
   getIt.registerLazySingleton<AuthSessionCache>(
-    () => AuthSessionCache(getIt<GetCachedSessionUsecase>(), getIt<AuthCubit>()),
+    () =>
+        AuthSessionCache(getIt<GetCachedSessionUsecase>(), getIt<AuthCubit>()),
   );
 
   // =====================================================
@@ -340,8 +343,15 @@ Future<void> configureDependencies() async {
     () => CouponsRepositoryImpl(getIt<ApiClient>()),
   );
 
-  getIt.registerFactory<CouponsCubit>(
-    () => CouponsCubit(getIt<CouponsRepository>()),
+  // =====================================================
+  // 🔹 12. Features - Trip History
+  // =====================================================
+
+  getIt.registerLazySingleton<TripHistoryRepository>(
+    () => TripHistoryRepositoryImpl(getIt<ApiClient>()),
   );
 
+  getIt.registerFactory<TripHistoryCubit>(
+    () => TripHistoryCubit(getIt<TripHistoryRepository>()),
+  );
 }

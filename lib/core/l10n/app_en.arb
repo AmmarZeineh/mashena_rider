@@ -269,5 +269,16 @@
   "shareRideFailed": "Failed to create share link",
   "shareRideRevokeFailed": "Failed to revoke share link",
   "rideExpiredTitle": "Ride Request Expired",
-  "rideExpiredSubtitle": "No drivers were available in your area. Please try again."
+  "rideExpiredSubtitle": "No drivers were available in your area. Please try again.",
+  "drawerTripHistory": "Trip History",
+  "tripHistoryTitle": "Trip History",
+  "noTripHistory": "No trip history found",
+  "statusCompleted": "Completed",
+  "statusCancelled": "Cancelled",
+  "statusInProgress": "In Progress",
+  "commonAll": "All",
+  "ratingPleaseSelectScore": "Please select a star rating",
+  "ratingPleaseSelectTag": "Please select at least one tag",
+  "ratingDontRate": "Don't Rate"
 }
+

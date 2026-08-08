@@ -659,4 +659,34 @@ class SEn extends S {
   @override
   String get rideExpiredSubtitle =>
       'No drivers were available in your area. Please try again.';
+
+  @override
+  String get drawerTripHistory => 'Trip History';
+
+  @override
+  String get tripHistoryTitle => 'Trip History';
+
+  @override
+  String get noTripHistory => 'No trip history found';
+
+  @override
+  String get statusCompleted => 'Completed';
+
+  @override
+  String get statusCancelled => 'Cancelled';
+
+  @override
+  String get statusInProgress => 'In Progress';
+
+  @override
+  String get commonAll => 'All';
+
+  @override
+  String get ratingPleaseSelectScore => 'Please select a star rating';
+
+  @override
+  String get ratingPleaseSelectTag => 'Please select at least one tag';
+
+  @override
+  String get ratingDontRate => 'Don\'t Rate';
 }
