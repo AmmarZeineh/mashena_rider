@@ -13,7 +13,8 @@ class DriverArrivedPayload {
     return DriverArrivedPayload(
       tripId: int.tryParse(json['tripId']?.toString() ?? '0') ?? 0,
       arrivedAt: json['arrivedAt']?.toString(),
-      freeWaitTimeSeconds: int.tryParse(json['freeWaitTimeSeconds']?.toString() ?? '300') ?? 300,
+      freeWaitTimeSeconds:
+          int.tryParse(json['freeWaitTimeSeconds']?.toString() ?? '300') ?? 300,
     );
   }
 }

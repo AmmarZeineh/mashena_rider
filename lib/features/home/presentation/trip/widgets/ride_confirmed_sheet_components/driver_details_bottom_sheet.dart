@@ -26,7 +26,9 @@ class DriverDetailsBottomSheet extends StatelessWidget {
           return Container(
             decoration: BoxDecoration(
               color: colorScheme.surface,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(32),
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.1),
@@ -36,9 +38,7 @@ class DriverDetailsBottomSheet extends StatelessWidget {
               ],
             ),
             padding: EdgeInsets.symmetric(vertical: 48.h),
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
+            child: const Center(child: CircularProgressIndicator()),
           );
         }
 
@@ -46,10 +46,17 @@ class DriverDetailsBottomSheet extends StatelessWidget {
         final rating = matchedTrip.driverRatingAvg.toStringAsFixed(1);
         final manufacturer = matchedTrip.manufacturer ?? '';
         final model = matchedTrip.model ?? S.of(context).rideVehicleDefault;
-        final vehicleTitle = manufacturer.isNotEmpty ? '$manufacturer $model' : model;
+        final vehicleTitle = manufacturer.isNotEmpty
+            ? '$manufacturer $model'
+            : model;
         final vehicleColor = matchedTrip.color ?? '';
         final vehicleSubtitle = vehicleColor.isNotEmpty
-            ? S.of(context).rideVehicleColorAndType(vehicleColor, S.of(context).rideVehicleStandard)
+            ? S
+                  .of(context)
+                  .rideVehicleColorAndType(
+                    vehicleColor,
+                    S.of(context).rideVehicleStandard,
+                  )
             : S.of(context).rideVehicleStandard;
         final plateNumber = matchedTrip.plateNumber ?? '...';
 
@@ -80,7 +87,9 @@ class DriverDetailsBottomSheet extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 48.r,
-                      backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
+                      backgroundColor: colorScheme.primary.withValues(
+                        alpha: 0.1,
+                      ),
                       child: Icon(
                         Icons.person,
                         color: colorScheme.primary,
@@ -115,7 +124,9 @@ class DriverDetailsBottomSheet extends StatelessWidget {
                         Container(
                           width: 1.w,
                           height: 32.h,
-                          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                          color: colorScheme.outlineVariant.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                         SizedBox(width: 16.w),
                         _buildStatItem(
@@ -128,7 +139,9 @@ class DriverDetailsBottomSheet extends StatelessWidget {
                         Container(
                           width: 1.w,
                           height: 32.h,
-                          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                          color: colorScheme.outlineVariant.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                         SizedBox(width: 16.w),
                         _buildStatItem(
@@ -182,7 +195,9 @@ class DriverDetailsBottomSheet extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: MediaQuery.of(context).padding.bottom + 24.h),
+                    SizedBox(
+                      height: MediaQuery.of(context).padding.bottom + 24.h,
+                    ),
                   ],
                 ),
               ),
@@ -192,7 +207,6 @@ class DriverDetailsBottomSheet extends StatelessWidget {
       },
     );
   }
-
 
   Widget _buildStatItem({
     required IconData icon,

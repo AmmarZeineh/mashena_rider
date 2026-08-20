@@ -7,4 +7,3 @@ final class AppConstants {
   static const String errorSelectRatingScore = 'ratingPleaseSelectScore';
   static const String errorSelectRatingTag = 'ratingPleaseSelectTag';
 }
-

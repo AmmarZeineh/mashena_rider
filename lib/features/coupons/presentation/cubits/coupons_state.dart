@@ -4,6 +4,7 @@ import 'package:mashena_rider/features/coupons/domain/entities/coupon_history_it
 import 'package:mashena_rider/features/coupons/domain/entities/user_coupon_entity.dart';
 
 enum CouponsStatus { initial, loading, loaded, error }
+
 enum ActivationStatus { initial, loading, success, error }
 
 class CouponsState extends Equatable {
@@ -47,12 +48,12 @@ class CouponsState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
-        activationStatus,
-        activeCoupons,
-        historyItems,
-        failure,
-        activationFailure,
-        newlyActivatedCoupon,
-      ];
+    status,
+    activationStatus,
+    activeCoupons,
+    historyItems,
+    failure,
+    activationFailure,
+    newlyActivatedCoupon,
+  ];
 }

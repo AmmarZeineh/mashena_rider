@@ -23,6 +23,11 @@ ENABLE_NETWORK_LOGS=false
   });
 
   testWidgets('renders the app shell', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 2.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(
       ScreenUtilInit(designSize: const Size(428, 926), child: const App()),
     );

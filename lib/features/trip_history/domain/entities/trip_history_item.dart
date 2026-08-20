@@ -23,11 +23,7 @@ class TripVehicleEntity extends Equatable {
   final String? model;
   final String? color;
 
-  const TripVehicleEntity({
-    this.plateNumber,
-    this.model,
-    this.color,
-  });
+  const TripVehicleEntity({this.plateNumber, this.model, this.color});
 
   @override
   List<Object?> get props => [plateNumber, model, color];
@@ -79,7 +75,8 @@ class TripHistoryItem extends Equatable {
   });
 
   bool get isCompleted =>
-      statusEnum == RiderTripStatus.completed || status.toLowerCase() == 'completed';
+      statusEnum == RiderTripStatus.completed ||
+      status.toLowerCase() == 'completed';
 
   bool get isCancelled =>
       statusEnum == RiderTripStatus.canceled ||
@@ -88,17 +85,17 @@ class TripHistoryItem extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        rideRequestId,
-        status,
-        statusEnum,
-        pickupAddress,
-        destAddress,
-        finalFare,
-        distanceKm,
-        durationSec,
-        createdAt,
-        driver,
-        vehicle,
-      ];
+    id,
+    rideRequestId,
+    status,
+    statusEnum,
+    pickupAddress,
+    destAddress,
+    finalFare,
+    distanceKm,
+    durationSec,
+    createdAt,
+    driver,
+    vehicle,
+  ];
 }

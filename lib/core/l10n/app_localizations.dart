@@ -397,6 +397,264 @@ abstract class S {
   /// **'Request Ride'**
   String get rideRequestRide;
 
+  /// No description provided for @rideRequestSharedTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared Trip'**
+  String get rideRequestSharedTrip;
+
+  /// No description provided for @rideSharedTripSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share & save'**
+  String get rideSharedTripSubtitle;
+
+  /// No description provided for @sharedTripAvailableRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Shared Trips'**
+  String get sharedTripAvailableRooms;
+
+  /// No description provided for @sharedTripSearchRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get sharedTripSearchRooms;
+
+  /// No description provided for @sharedTripChangeLocations.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get sharedTripChangeLocations;
+
+  /// No description provided for @sharedTripPickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup'**
+  String get sharedTripPickup;
+
+  /// No description provided for @sharedTripDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination'**
+  String get sharedTripDestination;
+
+  /// No description provided for @sharedTripSearchingRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching for available shared trips...'**
+  String get sharedTripSearchingRooms;
+
+  /// No description provided for @sharedTripNoRoomsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No shared trips found for this route.'**
+  String get sharedTripNoRoomsFound;
+
+  /// No description provided for @sharedTripFarePerSeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Fare per seat'**
+  String get sharedTripFarePerSeat;
+
+  /// No description provided for @sharedTripAvailableSeats.
+  ///
+  /// In en, this message translates to:
+  /// **'Available seats'**
+  String get sharedTripAvailableSeats;
+
+  /// No description provided for @sharedTripSeatsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{available} of {total} seats'**
+  String sharedTripSeatsCount(int available, int total);
+
+  /// No description provided for @sharedTripDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver'**
+  String get sharedTripDriver;
+
+  /// No description provided for @sharedTripVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle'**
+  String get sharedTripVehicle;
+
+  /// No description provided for @sharedTripDepartureTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure Time'**
+  String get sharedTripDepartureTime;
+
+  /// No description provided for @sharedTripOriginDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} km from pickup'**
+  String sharedTripOriginDistance(String distance);
+
+  /// No description provided for @sharedTripDestDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} km from destination'**
+  String sharedTripDestDistance(String distance);
+
+  /// No description provided for @currencySyp.
+  ///
+  /// In en, this message translates to:
+  /// **'SYP'**
+  String get currencySyp;
+
+  /// No description provided for @sharedTripStatusOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get sharedTripStatusOpen;
+
+  /// No description provided for @sharedTripRoomDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip Details'**
+  String get sharedTripRoomDetailsTitle;
+
+  /// No description provided for @sharedTripRouteOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Route Overview'**
+  String get sharedTripRouteOverview;
+
+  /// No description provided for @sharedTripTotalDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Distance'**
+  String get sharedTripTotalDistance;
+
+  /// No description provided for @sharedTripEstDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Est. Duration'**
+  String get sharedTripEstDuration;
+
+  /// No description provided for @sharedTripDriverNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Notes & Instructions'**
+  String get sharedTripDriverNotes;
+
+  /// No description provided for @sharedTripOccupancy.
+  ///
+  /// In en, this message translates to:
+  /// **'Seat Occupancy'**
+  String get sharedTripOccupancy;
+
+  /// No description provided for @sharedTripOccupiedSeats.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} occupied'**
+  String sharedTripOccupiedSeats(int count);
+
+  /// No description provided for @sharedTripFreeSeats.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} available'**
+  String sharedTripFreeSeats(int count);
+
+  /// No description provided for @sharedTripFullFare.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Route Fare'**
+  String get sharedTripFullFare;
+
+  /// No description provided for @sharedTripMinFare.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Fare'**
+  String get sharedTripMinFare;
+
+  /// No description provided for @sharedTripBaseCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Base Fare'**
+  String get sharedTripBaseCost;
+
+  /// No description provided for @sharedTripJoinRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Shared Trip'**
+  String get sharedTripJoinRoom;
+
+  /// No description provided for @sharedTripRoomFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip is Full'**
+  String get sharedTripRoomFull;
+
+  /// No description provided for @sharedTripRoomClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip is Closed'**
+  String get sharedTripRoomClosed;
+
+  /// No description provided for @sharedTripPassengers.
+  ///
+  /// In en, this message translates to:
+  /// **'Passengers'**
+  String get sharedTripPassengers;
+
+  /// No description provided for @sharedTripNoNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'No special instructions provided.'**
+  String get sharedTripNoNotes;
+
+  /// No description provided for @sharedTripSelectSeatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Seats'**
+  String get sharedTripSelectSeatsTitle;
+
+  /// No description provided for @sharedTripSeatsNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Seats Needed'**
+  String get sharedTripSeatsNeeded;
+
+  /// No description provided for @sharedTripJoinSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined shared trip successfully!'**
+  String get sharedTripJoinSuccess;
+
+  /// No description provided for @sharedTripArrivedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You Have Arrived!'**
+  String get sharedTripArrivedTitle;
+
+  /// No description provided for @sharedTripArrivedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hope you enjoyed your shared trip.'**
+  String get sharedTripArrivedSubtitle;
+
+  /// No description provided for @sharedTripBackToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get sharedTripBackToHome;
+
+  /// No description provided for @sharedTripFinalFare.
+  ///
+  /// In en, this message translates to:
+  /// **'Final Fare'**
+  String get sharedTripFinalFare;
+
+  /// No description provided for @sharedTripConfirmJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm & Join'**
+  String get sharedTripConfirmJoin;
+
   /// No description provided for @rideFindingDriver.
   ///
   /// In en, this message translates to:
@@ -1368,6 +1626,42 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Don\'t Rate'**
   String get ratingDontRate;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get noNotifications;
+
+  /// No description provided for @notificationsEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll notify you when you receive new updates'**
+  String get notificationsEmptySubtitle;
+
+  /// No description provided for @unreadNotificationsBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} unread'**
+  String unreadNotificationsBadge(int count);
+
+  /// No description provided for @notificationTripId.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip #{id}'**
+  String notificationTripId(int id);
+
+  /// No description provided for @notificationRideRequestId.
+  ///
+  /// In en, this message translates to:
+  /// **'Request #{id}'**
+  String notificationRideRequestId(int id);
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

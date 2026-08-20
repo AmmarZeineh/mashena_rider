@@ -27,14 +27,18 @@ class TripDetails extends StatelessWidget {
         Container(width: 1, height: 30.h, color: colorScheme.outlineVariant),
         _DetailItem(
           icon: Icons.speed_rounded,
-          value: S.of(context).rideDistanceKm(_formatNum(submissionResponse.distanceKm)),
+          value: S
+              .of(context)
+              .rideDistanceKm(_formatNum(submissionResponse.distanceKm)),
           label: S.of(context).rideDistance,
           color: colorScheme.primary,
         ),
         Container(width: 1, height: 30.h, color: colorScheme.outlineVariant),
         _DetailItem(
           icon: Icons.access_time_rounded,
-          value: S.of(context).rideDurationMin(_formatNum(submissionResponse.durationMin)),
+          value: S
+              .of(context)
+              .rideDurationMin(_formatNum(submissionResponse.durationMin)),
           label: S.of(context).rideDuration,
           color: colorScheme.secondary,
         ),

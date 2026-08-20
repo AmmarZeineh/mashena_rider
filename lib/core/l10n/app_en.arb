@@ -50,6 +50,75 @@
   "noInternetConnection": "No internet connection",
   "makeSureInternetConnection": "Please check your internet connection and try again.",
   "rideRequestRide": "Request Ride",
+  "rideRequestSharedTrip": "Shared Trip",
+  "rideSharedTripSubtitle": "Share & save",
+  "sharedTripAvailableRooms": "Available Shared Trips",
+  "sharedTripSearchRooms": "Search",
+  "sharedTripChangeLocations": "Change",
+  "sharedTripPickup": "Pickup",
+  "sharedTripDestination": "Destination",
+  "sharedTripSearchingRooms": "Searching for available shared trips...",
+  "sharedTripNoRoomsFound": "No shared trips found for this route.",
+  "sharedTripFarePerSeat": "Fare per seat",
+  "sharedTripAvailableSeats": "Available seats",
+  "sharedTripSeatsCount": "{available} of {total} seats",
+  "@sharedTripSeatsCount": {
+    "placeholders": {
+      "available": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "sharedTripDriver": "Driver",
+  "sharedTripVehicle": "Vehicle",
+  "sharedTripDepartureTime": "Departure Time",
+  "sharedTripOriginDistance": "{distance} km from pickup",
+  "@sharedTripOriginDistance": {
+    "placeholders": {
+      "distance": {"type": "String"}
+    }
+  },
+  "sharedTripDestDistance": "{distance} km from destination",
+  "@sharedTripDestDistance": {
+    "placeholders": {
+      "distance": {"type": "String"}
+    }
+  },
+  "currencySyp": "SYP",
+  "sharedTripStatusOpen": "Available",
+  "sharedTripRoomDetailsTitle": "Trip Details",
+  "sharedTripRouteOverview": "Route Overview",
+  "sharedTripTotalDistance": "Total Distance",
+  "sharedTripEstDuration": "Est. Duration",
+  "sharedTripDriverNotes": "Driver Notes & Instructions",
+  "sharedTripOccupancy": "Seat Occupancy",
+  "sharedTripOccupiedSeats": "{count} occupied",
+  "@sharedTripOccupiedSeats": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "sharedTripFreeSeats": "{count} available",
+  "@sharedTripFreeSeats": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "sharedTripFullFare": "Full Route Fare",
+  "sharedTripMinFare": "Minimum Fare",
+  "sharedTripBaseCost": "Total Base Fare",
+  "sharedTripJoinRoom": "Join Shared Trip",
+  "sharedTripRoomFull": "Trip is Full",
+  "sharedTripRoomClosed": "Trip is Closed",
+  "sharedTripPassengers": "Passengers",
+  "sharedTripNoNotes": "No special instructions provided.",
+  "sharedTripSelectSeatsTitle": "Select Seats",
+  "sharedTripSeatsNeeded": "Seats Needed",
+  "sharedTripJoinSuccess": "Joined shared trip successfully!",
+  "sharedTripArrivedTitle": "You Have Arrived!",
+  "sharedTripArrivedSubtitle": "Hope you enjoyed your shared trip.",
+  "sharedTripBackToHome": "Back to Home",
+  "sharedTripFinalFare": "Final Fare",
+  "sharedTripConfirmJoin": "Confirm & Join",
   "rideFindingDriver": "Finding a driver...",
   "rideDriverOnWay": "Driver is on the way",
   "rideDriverArrived": "Driver arrived",
@@ -279,6 +348,27 @@
   "commonAll": "All",
   "ratingPleaseSelectScore": "Please select a star rating",
   "ratingPleaseSelectTag": "Please select at least one tag",
-  "ratingDontRate": "Don't Rate"
+  "ratingDontRate": "Don't Rate",
+  "notificationsTitle": "Notifications",
+  "noNotifications": "No notifications yet",
+  "notificationsEmptySubtitle": "We'll notify you when you receive new updates",
+  "unreadNotificationsBadge": "{count} unread",
+  "@unreadNotificationsBadge": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "notificationTripId": "Trip #{id}",
+  "@notificationTripId": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "notificationRideRequestId": "Request #{id}",
+  "@notificationRideRequestId": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  }
 }
 

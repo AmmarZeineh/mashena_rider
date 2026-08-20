@@ -19,11 +19,11 @@ class RideBookingState extends Equatable {
 
   @override
   List<Object?> get props => [
-        confirmedRideResult,
-        submissionResponse,
-        isSubmitting,
-        error,
-      ];
+    confirmedRideResult,
+    submissionResponse,
+    isSubmitting,
+    error,
+  ];
 
   @override
   bool get stringify => true;

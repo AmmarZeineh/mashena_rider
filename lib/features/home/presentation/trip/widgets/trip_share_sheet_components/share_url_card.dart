@@ -7,10 +7,7 @@ import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/utils/toast_helper.dart';
 
 class ShareUrlCard extends StatelessWidget {
-  const ShareUrlCard({
-    super.key,
-    required this.shareUrl,
-  });
+  const ShareUrlCard({super.key, required this.shareUrl});
 
   final String shareUrl;
 
@@ -49,9 +46,7 @@ class ShareUrlCard extends StatelessWidget {
               SizedBox(width: 8.w),
               Text(
                 s.shareRideActive,
-                style: AppTextStyles.w600_12.copyWith(
-                  color: AppColors.success,
-                ),
+                style: AppTextStyles.w600_12.copyWith(color: AppColors.success),
               ),
             ],
           ),

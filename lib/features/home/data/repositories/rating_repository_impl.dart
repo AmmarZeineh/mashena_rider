@@ -32,7 +32,10 @@ class RatingRepositoryImpl implements RatingRepository {
 
       if (response is! Map) {
         return const Left(
-          Failure(FailureCode.unknown, rawMessage: 'Invalid rating tags response'),
+          Failure(
+            FailureCode.unknown,
+            rawMessage: 'Invalid rating tags response',
+          ),
         );
       }
 

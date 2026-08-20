@@ -37,19 +37,19 @@ class TripLifecycleState extends Equatable {
 
   @override
   List<Object?> get props => [
-        isDriverFound,
-        isLoadingMatchedTrip,
-        matchedTrip,
-        isDriverArrived,
-        isTripStarted,
-        isTripEnded,
-        freeWaitTimeSeconds,
-        arrivedAt,
-        tripCompletedData,
-        tripCancelledData,
-        tripError,
-        isRideExpired,
-      ];
+    isDriverFound,
+    isLoadingMatchedTrip,
+    matchedTrip,
+    isDriverArrived,
+    isTripStarted,
+    isTripEnded,
+    freeWaitTimeSeconds,
+    arrivedAt,
+    tripCompletedData,
+    tripCancelledData,
+    tripError,
+    isRideExpired,
+  ];
 
   @override
   bool get stringify => true;
@@ -73,8 +73,7 @@ class TripLifecycleState extends Equatable {
     return TripLifecycleState(
       isDriverFound: isDriverFound ?? this.isDriverFound,
       isLoadingMatchedTrip: isLoadingMatchedTrip ?? this.isLoadingMatchedTrip,
-      matchedTrip:
-          clearMatchedTrip ? null : (matchedTrip ?? this.matchedTrip),
+      matchedTrip: clearMatchedTrip ? null : (matchedTrip ?? this.matchedTrip),
       isDriverArrived: isDriverArrived ?? this.isDriverArrived,
       isTripStarted: isTripStarted ?? this.isTripStarted,
       isTripEnded: isTripEnded ?? this.isTripEnded,

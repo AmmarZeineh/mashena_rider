@@ -29,10 +29,7 @@ class TripHistoryCubit extends Cubit<TripHistoryState> {
 
     result.fold(
       (failure) => emit(
-        state.copyWith(
-          status: TripHistoryStatus.failure,
-          failure: failure,
-        ),
+        state.copyWith(status: TripHistoryStatus.failure, failure: failure),
       ),
       (newItems) => emit(
         state.copyWith(
@@ -59,12 +56,8 @@ class TripHistoryCubit extends Cubit<TripHistoryState> {
     );
 
     result.fold(
-      (failure) => emit(
-        state.copyWith(
-          isLoadingMore: false,
-          loadMoreFailure: failure,
-        ),
-      ),
+      (failure) =>
+          emit(state.copyWith(isLoadingMore: false, loadMoreFailure: failure)),
       (newItems) {
         final hasMorePages = newItems.length >= AppPagination.defaultPageSize;
         emit(

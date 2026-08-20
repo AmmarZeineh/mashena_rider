@@ -24,9 +24,7 @@ class CouponHistoryListTab extends StatelessWidget {
       itemCount: historyItems.length,
       padding: EdgeInsets.only(top: 4.h, bottom: 16.h),
       itemBuilder: (context, index) {
-        return CouponHistoryCard(
-          historyItem: historyItems[index],
-        );
+        return CouponHistoryCard(historyItem: historyItems[index]);
       },
     );
   }

@@ -8,10 +8,6 @@ extension RatingTagModelMapper on RatingTagModel {
       // Just pick the first localization if name is null, ideally match language code
       finalName ??= localizations!.first.name;
     }
-    return RatingTag(
-      id: id,
-      code: code,
-      name: finalName,
-    );
+    return RatingTag(id: id, code: code, name: finalName);
   }
 }

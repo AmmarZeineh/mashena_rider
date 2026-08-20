@@ -75,7 +75,8 @@ class _TripHistoryContentState extends State<_TripHistoryContent> {
 
             // Filter Tabs Bar
             BlocBuilder<TripHistoryCubit, TripHistoryState>(
-              buildWhen: (p, c) => p.selectedStatusFilter != c.selectedStatusFilter,
+              buildWhen: (p, c) =>
+                  p.selectedStatusFilter != c.selectedStatusFilter,
               builder: (context, state) {
                 return TripStatusFilterBar(
                   selectedStatus: state.selectedStatusFilter,
@@ -93,7 +94,8 @@ class _TripHistoryContentState extends State<_TripHistoryContent> {
               child: BlocBuilder<TripHistoryCubit, TripHistoryState>(
                 builder: (context, state) {
                   // Initial Full-Screen Loading
-                  if (state.status == TripHistoryStatus.loading && state.items.isEmpty) {
+                  if (state.status == TripHistoryStatus.loading &&
+                      state.items.isEmpty) {
                     return const Center(
                       child: CircularProgressIndicator(
                         color: AppColors.primaryColor,
@@ -102,7 +104,8 @@ class _TripHistoryContentState extends State<_TripHistoryContent> {
                   }
 
                   // Initial Full-Screen Error
-                  if (state.status == TripHistoryStatus.failure && state.items.isEmpty) {
+                  if (state.status == TripHistoryStatus.failure &&
+                      state.items.isEmpty) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -113,13 +116,12 @@ class _TripHistoryContentState extends State<_TripHistoryContent> {
                             color: AppColors.errorColor,
                           ),
                           SizedBox(height: 12.h),
-                          Text(
-                            s.commonError,
-                            style: AppTextStyles.w600_16,
-                          ),
+                          Text(s.commonError, style: AppTextStyles.w600_16),
                           SizedBox(height: 16.h),
                           ElevatedButton(
-                            onPressed: () => context.read<TripHistoryCubit>().fetchInitialTrips(),
+                            onPressed: () => context
+                                .read<TripHistoryCubit>()
+                                .fetchInitialTrips(),
                             child: Text(s.commonRetry),
                           ),
                         ],
@@ -130,7 +132,8 @@ class _TripHistoryContentState extends State<_TripHistoryContent> {
                   // Empty State
                   if (state.items.isEmpty) {
                     return RefreshIndicator(
-                      onRefresh: () => context.read<TripHistoryCubit>().refresh(),
+                      onRefresh: () =>
+                          context.read<TripHistoryCubit>().refresh(),
                       color: AppColors.primaryColor,
                       child: ListView(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -143,7 +146,9 @@ class _TripHistoryContentState extends State<_TripHistoryContent> {
                                 Container(
                                   padding: EdgeInsets.all(20.r),
                                   decoration: BoxDecoration(
-                                    color: AppColors.primaryColor.withValues(alpha: 0.08),
+                                    color: AppColors.primaryColor.withValues(
+                                      alpha: 0.08,
+                                    ),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
@@ -156,7 +161,9 @@ class _TripHistoryContentState extends State<_TripHistoryContent> {
                                 Text(
                                   s.noTripHistory,
                                   style: AppTextStyles.w600_16.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurface,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                   ),
                                 ),
                               ],
@@ -173,7 +180,10 @@ class _TripHistoryContentState extends State<_TripHistoryContent> {
                     color: AppColors.primaryColor,
                     child: ListView.builder(
                       controller: _scrollController,
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.h,
+                      ),
                       // Add +1 slot at the bottom for trailing load-more indicator or retry button
                       itemCount: state.items.length + 1,
                       itemBuilder: (context, index) {
@@ -201,7 +211,9 @@ class _TripHistoryContentState extends State<_TripHistoryContent> {
                             padding: EdgeInsets.symmetric(vertical: 16.h),
                             child: Center(
                               child: TextButton.icon(
-                                onPressed: () => context.read<TripHistoryCubit>().loadNextPage(),
+                                onPressed: () => context
+                                    .read<TripHistoryCubit>()
+                                    .loadNextPage(),
                                 icon: const Icon(Icons.refresh, size: 18),
                                 label: Text(
                                   s.commonRetry,

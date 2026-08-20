@@ -8,22 +8,32 @@ import 'package:mashena_rider/features/trip_history/domain/entities/trip_history
 class TripHistoryCard extends StatelessWidget {
   final TripHistoryItem item;
 
-  const TripHistoryCard({
-    super.key,
-    required this.item,
-  });
+  const TripHistoryCard({super.key, required this.item});
 
   String _formatDateTime(String? rawIsoDate) {
     if (rawIsoDate == null || rawIsoDate.isEmpty) return '';
     try {
       final dt = DateTime.parse(rawIsoDate).toLocal();
       final monthNames = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
       ];
       final month = monthNames[dt.month - 1];
       final day = dt.day.toString().padLeft(2, '0');
-      final hour = (dt.hour % 12 == 0 ? 12 : dt.hour % 12).toString().padLeft(2, '0');
+      final hour = (dt.hour % 12 == 0 ? 12 : dt.hour % 12).toString().padLeft(
+        2,
+        '0',
+      );
       final minute = dt.minute.toString().padLeft(2, '0');
       final period = dt.hour >= 12 ? 'PM' : 'AM';
       return '$day $month ${dt.year} • $hour:$minute $period';
@@ -102,16 +112,17 @@ class TripHistoryCard extends StatelessWidget {
                 SizedBox(width: 8.w),
                 // Status Chip
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 4.h,
+                  ),
                   decoration: BoxDecoration(
                     color: statusColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
                     statusText,
-                    style: AppTextStyles.w600_12.copyWith(
-                      color: statusColor,
-                    ),
+                    style: AppTextStyles.w600_12.copyWith(color: statusColor),
                   ),
                 ),
               ],
@@ -224,7 +235,9 @@ class TripHistoryCard extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: 14.r,
-                            backgroundColor: AppColors.primaryColor.withValues(alpha: 0.1),
+                            backgroundColor: AppColors.primaryColor.withValues(
+                              alpha: 0.1,
+                            ),
                             child: Icon(
                               Icons.person,
                               size: 16.r,
@@ -277,7 +290,8 @@ class TripHistoryCard extends StatelessWidget {
                           ),
                         ),
                       ],
-                      if (item.durationSec != null && item.durationSec! > 0) ...[
+                      if (item.durationSec != null &&
+                          item.durationSec! > 0) ...[
                         SizedBox(width: 10.w),
                         Icon(
                           Icons.access_time_rounded,

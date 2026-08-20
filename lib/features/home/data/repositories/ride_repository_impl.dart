@@ -159,8 +159,7 @@ class RideRepositoryImpl implements RideRepository {
       .map((payload) => payload.toEntity());
 
   @override
-  Stream<int> get rideExpiredStream =>
-      _rideSocketDataSource.rideExpiredStream;
+  Stream<int> get rideExpiredStream => _rideSocketDataSource.rideExpiredStream;
 
   @override
   Future<void> connectSocket() => _rideSocketDataSource.connectSocket();
@@ -220,9 +219,7 @@ class RideRepositoryImpl implements RideRepository {
   @override
   Future<Either<Failure, bool>> revokeShareTrip(int rideRequestId) async {
     try {
-      await _apiClient.delete(
-        BackendEndpoints.shareTripByRide(rideRequestId),
-      );
+      await _apiClient.delete(BackendEndpoints.shareTripByRide(rideRequestId));
       return const Right(true);
     } on ApiException catch (e) {
       return Left(mapApiExceptionToFailure(e));

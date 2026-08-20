@@ -72,12 +72,8 @@ class _PickAddressViewBodyState extends State<PickAddressViewBody> {
     _syncControllers(state);
 
     if (state.errorMessage != null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(
-        SnackBar(
-          content: Text(failureText(context, state.errorMessage!)),
-        ),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(failureText(context, state.errorMessage!))),
       );
     }
 

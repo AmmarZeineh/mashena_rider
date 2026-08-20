@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
+import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/features/home/presentation/ride_flow/ride_flow_coordinator.dart';
 
-/// Entry CTA for the address picker flow.
+/// Entry CTA for ride requests on the home screen.
 ///
-/// This replaces the old draggable "where to" sheet.
+/// Provides a side-by-side row of actions allowing the rider
+/// to choose between a standard private ride or a shared trip.
 class SetDestinationCta extends StatelessWidget {
-  const SetDestinationCta({super.key});
+  const SetDestinationCta({
+    super.key,
+    this.onRequestRide,
+    this.onRequestSharedTrip,
+  });
+
+  /// Optional callback for standard ride request.
+  /// Defaults to [RideFlowCoordinator.openPickAddressAndDrawRoute].
+  final VoidCallback? onRequestRide;
+
+  /// Optional callback for shared trip request.
+  final VoidCallback? onRequestSharedTrip;
 
   @override
   Widget build(BuildContext context) {
@@ -16,105 +31,129 @@ class SetDestinationCta extends StatelessWidget {
       top: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-        child: Material(
-          elevation: 10,
-          borderRadius: BorderRadius.circular(22),
-          color: colorScheme.surface,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(22),
-            onTap: () =>
-                RideFlowCoordinator.openPickAddressAndDrawRoute(context),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: _CtaContentRow(),
+        child: Row(
+          children: [
+            Expanded(
+              child: _CtaCardItem(
+                icon: Icons.local_taxi_rounded,
+                iconColor: colorScheme.primary,
+                title: S.of(context).rideRequestRide,
+                subtitle: S.of(context).homeWhereTo,
+                onTap:
+                    onRequestRide ??
+                    () => RideFlowCoordinator.openPickAddressAndDrawRoute(
+                      context,
+                    ),
+              ),
             ),
-          ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _CtaCardItem(
+                icon: Icons.groups_rounded,
+                iconColor: AppColors.shieldGreen,
+                title: S.of(context).rideRequestSharedTrip,
+                subtitle: S.of(context).rideSharedTripSubtitle,
+                onTap:
+                    onRequestSharedTrip ??
+                    () => context.push(AppRoutes.sharedTripPickAddressPath),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _CtaContentRow extends StatelessWidget {
-  const _CtaContentRow();
+class _CtaCardItem extends StatelessWidget {
+  const _CtaCardItem({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        _CtaIcon(),
-        SizedBox(width: 12),
-        Expanded(child: _CtaText()),
-        _CtaArrow(),
-      ],
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Material(
+      elevation: 8,
+      borderRadius: BorderRadius.circular(20),
+      color: colorScheme.surface,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+          child: Row(
+            children: [
+              _CtaIcon(icon: icon, iconColor: iconColor),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
 
 class _CtaIcon extends StatelessWidget {
-  const _CtaIcon();
+  const _CtaIcon({required this.icon, required this.iconColor});
+
+  final IconData icon;
+  final Color iconColor;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return Container(
-      width: 44,
-      height: 44,
+      width: 40,
+      height: 40,
       decoration: BoxDecoration(
-        color: colorScheme.primary,
-        borderRadius: BorderRadius.circular(14),
+        color: iconColor,
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.primary.withValues(alpha: 0.35),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
+            color: iconColor.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Icon(Icons.local_taxi_rounded, color: colorScheme.onPrimary),
-    );
-  }
-}
-
-class _CtaText extends StatelessWidget {
-  const _CtaText();
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          S.of(context).rideRequestRide,
-          style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          S.of(context).homeWhereTo,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _CtaArrow extends StatelessWidget {
-  const _CtaArrow();
-
-  @override
-  Widget build(BuildContext context) {
-    return Icon(
-      Icons.arrow_forward_ios_rounded,
-      size: 16,
-      color: Theme.of(context).colorScheme.onSurfaceVariant,
+      child: Icon(icon, color: Colors.white, size: 22),
     );
   }
 }

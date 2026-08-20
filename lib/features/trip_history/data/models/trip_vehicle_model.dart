@@ -17,9 +17,6 @@ abstract class TripVehicleModel with _$TripVehicleModel {
 }
 
 extension TripVehicleModelMapper on TripVehicleModel {
-  TripVehicleEntity toEntity() => TripVehicleEntity(
-        plateNumber: plateNumber,
-        model: model,
-        color: color,
-      );
+  TripVehicleEntity toEntity() =>
+      TripVehicleEntity(plateNumber: plateNumber, model: model, color: color);
 }

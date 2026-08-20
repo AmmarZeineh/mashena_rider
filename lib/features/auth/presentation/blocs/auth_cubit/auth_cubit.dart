@@ -13,7 +13,7 @@ part 'auth_cubit.freezed.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this._getCached, this._logout, this._authEventBus)
-      : super(const AuthState.initial()) {
+    : super(const AuthState.initial()) {
     _subscription = _authEventBus.stream.listen((event) {
       if (event == AuthEvent.loggedOut) {
         emit(const AuthState.unauthenticated());

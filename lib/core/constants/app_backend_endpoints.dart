@@ -17,14 +17,24 @@ class BackendEndpoints {
   static String getSubmitRatingEndpoint(int tripId) => '/trips/$tripId/rate';
   static String riderProfile(int id) => '/user/riders/$id';
 
+  // Shared Rides
+  static const String searchSharedRides = '/shared-rides/search';
+  static String getSharedRideDetails(int id) => '/shared-rides/$id';
+  static String joinSharedRide(int id) => '/shared-rides/$id/join';
+  static String leaveSharedRide(int id) => '/shared-rides/$id/leave';
+
   // Coupons
   static const String activateCoupon = '/coupons/activate';
   static const String myCoupons = '/coupons/my-coupons';
   static const String myCouponHistory = '/coupons/my-history';
 
+  // Notifications
+  static const String notifications = '/notifications';
+
   // External APIs
-  static const String nominatimSearch = 'https://nominatim.openstreetmap.org/search';
-  static const String nominatimReverse = 'https://nominatim.openstreetmap.org/reverse';
+  static const String nominatimSearch =
+      'https://nominatim.openstreetmap.org/search';
+  static const String nominatimReverse =
+      'https://nominatim.openstreetmap.org/reverse';
   static const String nominatimCountryCodes = 'sy';
 }
-

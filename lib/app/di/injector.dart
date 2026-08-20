@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mashena_rider/core/auth/auth_event_bus.dart';
 import 'package:mashena_rider/features/home/data/repositories/rating_repository_impl.dart';
 import 'package:mashena_rider/features/home/domain/repositories/rating_repository.dart';
+import 'package:mashena_rider/features/shared_trip/presentation/cubits/pick_shared_trip_address_cubit/pick_shared_trip_address_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mashena_rider/app/config/app_config.dart';
@@ -19,6 +20,7 @@ import 'package:mashena_rider/core/network/api_logging_interceptor.dart';
 import 'package:mashena_rider/core/network/network_info.dart';
 import 'package:mashena_rider/core/network/socket_client.dart';
 import 'package:mashena_rider/core/network/socket_io_client_impl.dart';
+import 'package:mashena_rider/core/network/token_refresh_service.dart';
 
 // ======================
 // Core - Auth
@@ -80,9 +82,24 @@ import 'package:mashena_rider/features/home/presentation/address/cubits/pick_add
 import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_rating_cubit.dart';
 import 'package:mashena_rider/features/coupons/data/repositories/coupons_repository_impl.dart';
 import 'package:mashena_rider/features/coupons/domain/repositories/coupons_repository.dart';
+import 'package:mashena_rider/features/coupons/presentation/cubits/coupons_cubit.dart';
 import 'package:mashena_rider/features/trip_history/data/repositories/trip_history_repository_impl.dart';
 import 'package:mashena_rider/features/trip_history/domain/repositories/trip_history_repository.dart';
 import 'package:mashena_rider/features/trip_history/presentation/cubits/trip_history_cubit.dart';
+import 'package:mashena_rider/features/notifications/data/repositories/notifications_repository_impl.dart';
+import 'package:mashena_rider/features/notifications/domain/repositories/notifications_repository.dart';
+import 'package:mashena_rider/features/notifications/presentation/cubits/notifications_cubit.dart';
+import 'package:mashena_rider/features/shared_trip/data/datasources/shared_trip_remote_data_source.dart';
+import 'package:mashena_rider/features/shared_trip/data/datasources/shared_trip_socket_data_source.dart';
+import 'package:mashena_rider/features/shared_trip/data/repositories/shared_trip_repository_impl.dart';
+import 'package:mashena_rider/features/shared_trip/domain/repositories/shared_trip_repository.dart';
+import 'package:mashena_rider/features/shared_trip/domain/usecases/search_shared_rides_usecase.dart';
+import 'package:mashena_rider/features/shared_trip/domain/usecases/get_shared_ride_details_usecase.dart';
+import 'package:mashena_rider/features/shared_trip/domain/usecases/join_shared_ride_usecase.dart';
+import 'package:mashena_rider/features/shared_trip/domain/usecases/leave_shared_ride_usecase.dart';
+import 'package:mashena_rider/features/shared_trip/presentation/cubits/shared_trip_rooms_cubit/shared_trip_rooms_cubit.dart';
+import 'package:mashena_rider/features/shared_trip/presentation/cubits/shared_trip_room_details_cubit/shared_trip_room_details_cubit.dart';
+import 'package:mashena_rider/features/shared_trip/presentation/models/shared_trip_rooms_args.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -175,11 +192,19 @@ Future<void> configureDependencies() async {
     return dio;
   });
 
+  getIt.registerLazySingleton<TokenRefreshService>(
+    () => TokenRefreshServiceImpl(
+      dio: getIt<Dio>(),
+      tokenManager: getIt<TokenManager>(),
+      authEventBus: getIt<AuthEventBus>(),
+    ),
+  );
+
   getIt.registerLazySingleton<AuthInterceptor>(
     () => AuthInterceptor(
       dio: getIt<Dio>(),
       tokenManager: getIt<TokenManager>(),
-      authEventBus: getIt<AuthEventBus>(),
+      tokenRefreshService: getIt<TokenRefreshService>(),
     ),
   );
 
@@ -191,7 +216,7 @@ Future<void> configureDependencies() async {
   });
 
   getIt.registerLazySingleton<SocketClient>(
-    () => SocketIOClientImpl(getIt<AppConfig>(), getIt<TokenManager>()),
+    () => SocketIOClientImpl(getIt<AppConfig>(), getIt<TokenRefreshService>()),
   );
 
   // =====================================================
@@ -327,6 +352,14 @@ Future<void> configureDependencies() async {
     ),
   );
 
+  getIt.registerFactory<PickSharedTripAddressCubit>(
+    () => PickSharedTripAddressCubit(
+      getIt<LocationService>(),
+      getIt<NominatimService>(),
+      getIt<CreateRideRequestUsecase>(),
+    ),
+  );
+
   getIt.registerLazySingleton<RatingRepository>(
     () => RatingRepositoryImpl(getIt<ApiClient>()),
   );
@@ -343,6 +376,10 @@ Future<void> configureDependencies() async {
     () => CouponsRepositoryImpl(getIt<ApiClient>()),
   );
 
+  getIt.registerFactory<CouponsCubit>(
+    () => CouponsCubit(getIt<CouponsRepository>()),
+  );
+
   // =====================================================
   // 🔹 12. Features - Trip History
   // =====================================================
@@ -353,5 +390,70 @@ Future<void> configureDependencies() async {
 
   getIt.registerFactory<TripHistoryCubit>(
     () => TripHistoryCubit(getIt<TripHistoryRepository>()),
+  );
+
+  // =====================================================
+  // 🔹 13. Features - Shared Rides
+  // =====================================================
+
+  getIt.registerLazySingleton<SharedTripRemoteDataSource>(
+    () => SharedTripRemoteDataSourceImpl(getIt<ApiClient>()),
+  );
+
+  getIt.registerLazySingleton<SharedTripSocketDataSource>(
+    () => SharedTripSocketDataSourceImpl(getIt<SocketClient>()),
+  );
+
+  getIt.registerLazySingleton<SharedTripRepository>(
+    () => SharedTripRepositoryImpl(
+      remoteDataSource: getIt<SharedTripRemoteDataSource>(),
+      socketDataSource: getIt<SharedTripSocketDataSource>(),
+    ),
+  );
+
+  getIt.registerFactory<SearchSharedRidesUsecase>(
+    () => SearchSharedRidesUsecase(getIt<SharedTripRepository>()),
+  );
+
+  getIt.registerFactory<GetSharedRideDetailsUsecase>(
+    () => GetSharedRideDetailsUsecase(getIt<SharedTripRepository>()),
+  );
+
+  getIt.registerFactory<JoinSharedRideUsecase>(
+    () => JoinSharedRideUsecase(getIt<SharedTripRepository>()),
+  );
+
+  getIt.registerFactory<LeaveSharedRideUsecase>(
+    () => LeaveSharedRideUsecase(getIt<SharedTripRepository>()),
+  );
+
+  getIt.registerFactoryParam<SharedTripRoomsCubit, SharedTripRoomsArgs, void>(
+    (args, _) => SharedTripRoomsCubit(
+      searchSharedRidesUsecase: getIt<SearchSharedRidesUsecase>(),
+      args: args,
+    ),
+  );
+
+  getIt.registerFactoryParam<SharedTripRoomDetailsCubit, int, void>(
+    (roomId, _) => SharedTripRoomDetailsCubit(
+      getSharedRideDetailsUsecase: getIt<GetSharedRideDetailsUsecase>(),
+      joinSharedRideUsecase: getIt<JoinSharedRideUsecase>(),
+      leaveSharedRideUsecase: getIt<LeaveSharedRideUsecase>(),
+      repository: getIt<SharedTripRepository>(),
+      getCachedSessionUsecase: getIt<GetCachedSessionUsecase>(),
+      roomId: roomId,
+    ),
+  );
+
+  // =====================================================
+  // 🔹 14. Features - Notifications
+  // =====================================================
+
+  getIt.registerLazySingleton<NotificationsRepository>(
+    () => NotificationsRepositoryImpl(getIt<ApiClient>()),
+  );
+
+  getIt.registerFactory<NotificationsCubit>(
+    () => NotificationsCubit(getIt<NotificationsRepository>()),
   );
 }

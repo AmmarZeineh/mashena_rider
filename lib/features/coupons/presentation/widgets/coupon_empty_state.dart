@@ -6,10 +6,7 @@ import 'package:mashena_rider/core/utils/app_font_styles.dart';
 class CouponEmptyState extends StatelessWidget {
   final String emptyMessage;
 
-  const CouponEmptyState({
-    super.key,
-    required this.emptyMessage,
-  });
+  const CouponEmptyState({super.key, required this.emptyMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +22,7 @@ class CouponEmptyState extends StatelessWidget {
           SizedBox(height: 12.h),
           Text(
             emptyMessage,
-            style: AppTextStyles.w400_14.copyWith(
-              color: AppColors.textGrey,
-            ),
+            style: AppTextStyles.w400_14.copyWith(color: AppColors.textGrey),
           ),
         ],
       ),

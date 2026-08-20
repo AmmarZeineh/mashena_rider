@@ -33,9 +33,7 @@ class CustomElevatedButton extends StatelessWidget {
             : effectiveBgColor.withValues(alpha: 0.5),
         disabledBackgroundColor: effectiveBgColor.withValues(alpha: 0.5),
         elevation: isEnabled ? 2 : 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
@@ -51,11 +49,12 @@ class CustomElevatedButton extends StatelessWidget {
             : Text(
                 title,
                 style: AppTextStyles.w600_18.copyWith(
-                  color: effectiveTextColor.withValues(alpha: isEnabled ? 1 : 0.7),
+                  color: effectiveTextColor.withValues(
+                    alpha: isEnabled ? 1 : 0.7,
+                  ),
                 ),
               ),
       ),
     );
   }
 }
-

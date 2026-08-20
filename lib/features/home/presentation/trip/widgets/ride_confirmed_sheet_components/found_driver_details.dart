@@ -146,7 +146,9 @@ class FoundDriverDetails extends StatelessWidget {
                     tripLifecycleState.isTripStarted
                         ? S.of(context).rideInProgressHeadingToDestination
                         : S.of(context).rideDriverArrived,
-                    style: AppTextStyles.w700_14.copyWith(color: AppColors.success),
+                    style: AppTextStyles.w700_14.copyWith(
+                      color: AppColors.success,
+                    ),
                   ),
                 ),
               ],
@@ -436,7 +438,9 @@ class _FreeWaitTimerWidgetState extends State<_FreeWaitTimerWidget> {
     if (_remainingSeconds <= 0) {
       return Text(
         S.of(context).rideWaitingChargesApplying,
-        style: AppTextStyles.w700_14.copyWith(color: Theme.of(context).colorScheme.error),
+        style: AppTextStyles.w700_14.copyWith(
+          color: Theme.of(context).colorScheme.error,
+        ),
       );
     }
 
@@ -444,7 +448,9 @@ class _FreeWaitTimerWidgetState extends State<_FreeWaitTimerWidget> {
     final seconds = (_remainingSeconds % 60).toString().padLeft(2, '0');
     return Text(
       S.of(context).rideFreeWaitingTime(minutes, seconds),
-      style: AppTextStyles.w700_14.copyWith(color: Theme.of(context).colorScheme.onTertiaryContainer),
+      style: AppTextStyles.w700_14.copyWith(
+        color: Theme.of(context).colorScheme.onTertiaryContainer,
+      ),
     );
   }
 }

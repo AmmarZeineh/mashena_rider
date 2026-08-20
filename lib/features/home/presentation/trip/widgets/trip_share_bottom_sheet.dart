@@ -11,10 +11,7 @@ import 'trip_share_sheet_components/share_header_section.dart';
 import 'trip_share_sheet_components/share_url_card.dart';
 
 class TripShareBottomSheet extends StatefulWidget {
-  const TripShareBottomSheet({
-    super.key,
-    required this.rideRequestId,
-  });
+  const TripShareBottomSheet({super.key, required this.rideRequestId});
 
   final int rideRequestId;
 
@@ -69,9 +66,7 @@ class _TripShareBottomSheetState extends State<TripShareBottomSheet> {
                     child: Center(
                       child: Column(
                         children: [
-                          CircularProgressIndicator(
-                            color: colorScheme.primary,
-                          ),
+                          CircularProgressIndicator(color: colorScheme.primary),
                           SizedBox(height: 12.h),
                           Text(
                             s.commonLoading,
@@ -100,9 +95,9 @@ class _TripShareBottomSheetState extends State<TripShareBottomSheet> {
                         SizedBox(height: 16.h),
                         ElevatedButton(
                           onPressed: () {
-                            context
-                                .read<TripShareCubit>()
-                                .shareTrip(widget.rideRequestId);
+                            context.read<TripShareCubit>().shareTrip(
+                              widget.rideRequestId,
+                            );
                           },
                           child: Text(s.commonRetry),
                         ),
@@ -125,9 +120,9 @@ class _TripShareBottomSheetState extends State<TripShareBottomSheet> {
                         shareUrl: tripShare.shareUrl,
                         isRevoking: isRevoking,
                         onRevokePressed: () {
-                          context
-                              .read<TripShareCubit>()
-                              .revokeShareTrip(widget.rideRequestId);
+                          context.read<TripShareCubit>().revokeShareTrip(
+                            widget.rideRequestId,
+                          );
                         },
                       ),
                     ],

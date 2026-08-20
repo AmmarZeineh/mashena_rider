@@ -6,6 +6,7 @@ import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_cubit.dart';
 import 'package:mashena_rider/features/coupons/presentation/views/coupons_view.dart';
+import 'package:mashena_rider/features/notifications/presentation/views/notifications_view.dart';
 import 'package:mashena_rider/features/profile/presentation/views/profile_view.dart';
 import 'package:mashena_rider/features/trip_history/presentation/views/trip_history_view.dart';
 
@@ -150,7 +151,14 @@ class HomeDrawer extends StatelessWidget {
                       _DrawerItem(
                         title: S.of(context).drawerNotification,
                         icon: Icons.notifications_none,
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const NotificationsView(),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

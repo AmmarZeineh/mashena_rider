@@ -43,6 +43,74 @@
   "homeCurrentLocation": "موقعي الحالي",
   "homeSearchDestination": "ابحث عن وجهة",
   "rideRequestRide": "طلب رحلة",
+  "rideRequestSharedTrip": "رحلة مشتركة",
+  "rideSharedTripSubtitle": "شارك ووفر",
+  "sharedTripAvailableRooms": "الرحلات المشتركة المتاحة",
+  "sharedTripSearchRooms": "بحث",
+  "sharedTripChangeLocations": "تعديل",
+  "sharedTripPickup": "نقطة الانطلاق",
+  "sharedTripDestination": "الوجهة",
+  "sharedTripSearchingRooms": "جارٍ البحث عن رحلات مشتركة متاحة...",
+  "sharedTripNoRoomsFound": "لا توجد رحلات مشتركة متاحة لهذا المسار حالياً.",
+  "sharedTripFarePerSeat": "الأجرة للمقعد",
+  "sharedTripAvailableSeats": "المقاعد المتاحة",
+  "sharedTripSeatsCount": "{available} من أصل {total} مقاعد",
+  "@sharedTripSeatsCount": {
+    "placeholders": {
+      "available": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "sharedTripDriver": "السائق",
+  "sharedTripVehicle": "المركبة",
+  "sharedTripDepartureTime": "وقت الانطلاق",
+  "sharedTripOriginDistance": "يبعد {distance} كم عن موقع انطلاقك",
+  "@sharedTripOriginDistance": {
+    "placeholders": {
+      "distance": {"type": "String"}
+    }
+  },
+  "sharedTripDestDistance": "يبعد {distance} كم عن وجهتك",
+  "@sharedTripDestDistance": {
+    "placeholders": {
+      "distance": {"type": "String"}
+    }
+  },
+  "currencySyp": "ل.س",
+  "sharedTripStatusOpen": "متاح",
+  "sharedTripRoomDetailsTitle": "تفاصيل الرحلة",
+  "sharedTripRouteOverview": "مسار الرحلة",
+  "sharedTripTotalDistance": "المسافة الكلية",
+  "sharedTripEstDuration": "المدة المتوقعة",
+  "sharedTripDriverNotes": "ملاحظات وتعليمات السائق",
+  "sharedTripOccupancy": "إشغال المقاعد",
+  "sharedTripOccupiedSeats": "{count} محجوز",
+  "@sharedTripOccupiedSeats": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "sharedTripFreeSeats": "{count} متاح",
+  "@sharedTripFreeSeats": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "sharedTripFullFare": "أجرة المسار الكامل",
+  "sharedTripMinFare": "الحد الأدنى للأجرة",
+  "sharedTripBaseCost": "تكلفة الرحلة الأساسية",
+  "sharedTripJoinRoom": "الانضمام إلى الرحلة",
+  "sharedTripRoomFull": "الرحلة ممتلئة بالكامل",
+  "sharedTripPassengers": "الركاب المنضمين",
+  "sharedTripNoNotes": "لا توجد ملاحظات إضافية من السائق.",
+  "sharedTripSelectSeatsTitle": "اختر عدد المقاعد",
+  "sharedTripSeatsNeeded": "المقاعد المطلوبة",
+  "sharedTripJoinSuccess": "تم الانضمام إلى الرحلة بنجاح!",
+  "sharedTripArrivedTitle": "لقد وصلت إلى وجهتك!",
+  "sharedTripArrivedSubtitle": "نتمنى أن تكون رحلتك ممتعة.",
+  "sharedTripBackToHome": "العودة للرئيسية",
+  "sharedTripFinalFare": "الأجرة النهائية",
+  "sharedTripConfirmJoin": "تأكيد الانضمام",
   "rideFindingDriver": "جارٍ البحث عن سائق...",
   "rideDriverOnWay": "السائق في الطريق",
   "rideDriverArrived": "وصل السائق",
@@ -263,6 +331,27 @@
   "commonAll": "الكل",
   "ratingPleaseSelectScore": "يرجى اختيار تقييم بالنجوم",
   "ratingPleaseSelectTag": "يرجى اختيار وسم واحد على الأقل",
-  "ratingDontRate": "عدم التقييم"
+  "ratingDontRate": "عدم التقييم",
+  "notificationsTitle": "الإشعارات",
+  "noNotifications": "لا توجد إشعارات بعد",
+  "notificationsEmptySubtitle": "سنرسل إليك إشعاراً عند وجود أي تحديثات جديدة",
+  "unreadNotificationsBadge": "{count} غير مقروء",
+  "@unreadNotificationsBadge": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "notificationTripId": "رحلة #{id}",
+  "@notificationTripId": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "notificationRideRequestId": "طلب #{id}",
+  "@notificationRideRequestId": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  }
 }
 

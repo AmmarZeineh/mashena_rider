@@ -54,7 +54,9 @@ final class DioApiClient implements ApiClient {
     dynamic body,
     Map<String, dynamic>? query,
   }) {
-    return _execute(() => _dio.delete(path, data: body, queryParameters: query));
+    return _execute(
+      () => _dio.delete(path, data: body, queryParameters: query),
+    );
   }
 
   @override

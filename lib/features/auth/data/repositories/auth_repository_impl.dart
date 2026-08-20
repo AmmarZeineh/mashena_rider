@@ -129,7 +129,8 @@ class AuthRepositoryImpl implements AuthRepository {
       await _local.clearSession();
       return const Right(unit);
     } catch (e) {
-      await _local.clearSession(); // Ensure local is cleared even if remote fails
+      await _local
+          .clearSession(); // Ensure local is cleared even if remote fails
       return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
   }
@@ -141,7 +142,8 @@ class AuthRepositoryImpl implements AuthRepository {
       await _local.clearSession();
       return const Right(unit);
     } catch (e) {
-      await _local.clearSession(); // Ensure local is cleared even if remote fails
+      await _local
+          .clearSession(); // Ensure local is cleared even if remote fails
       return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
   }

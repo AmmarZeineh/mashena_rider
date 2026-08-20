@@ -96,11 +96,7 @@ class TripCancelledBottomSheet extends StatelessWidget {
                       color: emblemColor,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
-                      iconData,
-                      color: AppColors.white,
-                      size: 30.r,
-                    ),
+                    child: Icon(iconData, color: AppColors.white, size: 30.r),
                   ),
                 ),
               ),
@@ -133,7 +129,9 @@ class TripCancelledBottomSheet extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                color: colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
+                ),
                 borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(
                   color: colorScheme.outlineVariant.withValues(alpha: 0.5),
@@ -181,9 +179,7 @@ class TripCancelledBottomSheet extends StatelessWidget {
               ),
               child: Text(
                 s.rideBookRide,
-                style: AppTextStyles.w600_16.copyWith(
-                  color: AppColors.white,
-                ),
+                style: AppTextStyles.w600_16.copyWith(color: AppColors.white),
               ),
             ),
             SizedBox(height: 16.h),

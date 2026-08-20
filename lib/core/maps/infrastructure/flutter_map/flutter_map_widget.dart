@@ -177,8 +177,11 @@ class _FlutterMapWidgetState extends State<FlutterMapWidget>
                     final target = _targetMarkerPositions[m.id]!;
                     final t = _markerAnimationController.value;
                     currentPos = MapLatLng(
-                      latitude: prev.latitude + (target.latitude - prev.latitude) * t,
-                      longitude: prev.longitude + (target.longitude - prev.longitude) * t,
+                      latitude:
+                          prev.latitude + (target.latitude - prev.latitude) * t,
+                      longitude:
+                          prev.longitude +
+                          (target.longitude - prev.longitude) * t,
                     );
                   }
 

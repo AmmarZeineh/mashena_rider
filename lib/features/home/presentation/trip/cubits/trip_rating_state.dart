@@ -70,14 +70,14 @@ class TripRatingState extends Equatable {
 
   @override
   List<Object?> get props => [
-        isLoadingTags,
-        isSubmitting,
-        errorMessage,
-        validationError,
-        isSuccess,
-        positiveTags,
-        negativeTags,
-        currentScore,
-        selectedTagIds,
-      ];
+    isLoadingTags,
+    isSubmitting,
+    errorMessage,
+    validationError,
+    isSuccess,
+    positiveTags,
+    negativeTags,
+    currentScore,
+    selectedTagIds,
+  ];
 }

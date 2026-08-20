@@ -24,8 +24,32 @@ abstract class RideFlowCoordinator {
     BuildContext context, {
     ConfirmedRideFlowResult? initialResult,
   }) async {
+    return _openAddressAndDrawRoute(
+      context,
+      routePath: AppRoutes.pickAdressPath,
+      initialResult: initialResult,
+    );
+  }
+
+  /// Opens the shared trip address picker and handles the confirmed ride result.
+  static Future<void> openSharedTripAddressAndDrawRoute(
+    BuildContext context, {
+    ConfirmedRideFlowResult? initialResult,
+  }) async {
+    return _openAddressAndDrawRoute(
+      context,
+      routePath: AppRoutes.sharedTripPickAddressPath,
+      initialResult: initialResult,
+    );
+  }
+
+  static Future<void> _openAddressAndDrawRoute(
+    BuildContext context, {
+    required String routePath,
+    ConfirmedRideFlowResult? initialResult,
+  }) async {
     final result = await context.push<ConfirmedRideFlowResult?>(
-      AppRoutes.pickAdressPath,
+      routePath,
       extra: initialResult,
     );
 
@@ -162,8 +186,6 @@ abstract class RideFlowCoordinator {
       }
     }
   }
-
-
 }
 
 /// A premium styled map point marker with glow effect.

@@ -104,7 +104,9 @@ class CouponCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Text(
-                                coupon.formattedDiscount(S.of(context).appCurrency),
+                                coupon.formattedDiscount(
+                                  S.of(context).appCurrency,
+                                ),
                                 style: AppTextStyles.w700_16.copyWith(
                                   color: AppColors.primaryColor,
                                 ),

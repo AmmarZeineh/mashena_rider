@@ -12,9 +12,5 @@ class DriverArrived extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-        tripId,
-        arrivedAt,
-        freeWaitTimeSeconds,
-      ];
+  List<Object?> get props => [tripId, arrivedAt, freeWaitTimeSeconds];
 }

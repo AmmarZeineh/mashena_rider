@@ -164,6 +164,146 @@ class SEn extends S {
   String get rideRequestRide => 'Request Ride';
 
   @override
+  String get rideRequestSharedTrip => 'Shared Trip';
+
+  @override
+  String get rideSharedTripSubtitle => 'Share & save';
+
+  @override
+  String get sharedTripAvailableRooms => 'Available Shared Trips';
+
+  @override
+  String get sharedTripSearchRooms => 'Search';
+
+  @override
+  String get sharedTripChangeLocations => 'Change';
+
+  @override
+  String get sharedTripPickup => 'Pickup';
+
+  @override
+  String get sharedTripDestination => 'Destination';
+
+  @override
+  String get sharedTripSearchingRooms =>
+      'Searching for available shared trips...';
+
+  @override
+  String get sharedTripNoRoomsFound => 'No shared trips found for this route.';
+
+  @override
+  String get sharedTripFarePerSeat => 'Fare per seat';
+
+  @override
+  String get sharedTripAvailableSeats => 'Available seats';
+
+  @override
+  String sharedTripSeatsCount(int available, int total) {
+    return '$available of $total seats';
+  }
+
+  @override
+  String get sharedTripDriver => 'Driver';
+
+  @override
+  String get sharedTripVehicle => 'Vehicle';
+
+  @override
+  String get sharedTripDepartureTime => 'Departure Time';
+
+  @override
+  String sharedTripOriginDistance(String distance) {
+    return '$distance km from pickup';
+  }
+
+  @override
+  String sharedTripDestDistance(String distance) {
+    return '$distance km from destination';
+  }
+
+  @override
+  String get currencySyp => 'SYP';
+
+  @override
+  String get sharedTripStatusOpen => 'Available';
+
+  @override
+  String get sharedTripRoomDetailsTitle => 'Trip Details';
+
+  @override
+  String get sharedTripRouteOverview => 'Route Overview';
+
+  @override
+  String get sharedTripTotalDistance => 'Total Distance';
+
+  @override
+  String get sharedTripEstDuration => 'Est. Duration';
+
+  @override
+  String get sharedTripDriverNotes => 'Driver Notes & Instructions';
+
+  @override
+  String get sharedTripOccupancy => 'Seat Occupancy';
+
+  @override
+  String sharedTripOccupiedSeats(int count) {
+    return '$count occupied';
+  }
+
+  @override
+  String sharedTripFreeSeats(int count) {
+    return '$count available';
+  }
+
+  @override
+  String get sharedTripFullFare => 'Full Route Fare';
+
+  @override
+  String get sharedTripMinFare => 'Minimum Fare';
+
+  @override
+  String get sharedTripBaseCost => 'Total Base Fare';
+
+  @override
+  String get sharedTripJoinRoom => 'Join Shared Trip';
+
+  @override
+  String get sharedTripRoomFull => 'Trip is Full';
+
+  @override
+  String get sharedTripRoomClosed => 'Trip is Closed';
+
+  @override
+  String get sharedTripPassengers => 'Passengers';
+
+  @override
+  String get sharedTripNoNotes => 'No special instructions provided.';
+
+  @override
+  String get sharedTripSelectSeatsTitle => 'Select Seats';
+
+  @override
+  String get sharedTripSeatsNeeded => 'Seats Needed';
+
+  @override
+  String get sharedTripJoinSuccess => 'Joined shared trip successfully!';
+
+  @override
+  String get sharedTripArrivedTitle => 'You Have Arrived!';
+
+  @override
+  String get sharedTripArrivedSubtitle => 'Hope you enjoyed your shared trip.';
+
+  @override
+  String get sharedTripBackToHome => 'Back to Home';
+
+  @override
+  String get sharedTripFinalFare => 'Final Fare';
+
+  @override
+  String get sharedTripConfirmJoin => 'Confirm & Join';
+
+  @override
   String get rideFindingDriver => 'Finding a driver...';
 
   @override
@@ -689,4 +829,29 @@ class SEn extends S {
 
   @override
   String get ratingDontRate => 'Don\'t Rate';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get noNotifications => 'No notifications yet';
+
+  @override
+  String get notificationsEmptySubtitle =>
+      'We\'ll notify you when you receive new updates';
+
+  @override
+  String unreadNotificationsBadge(int count) {
+    return '$count unread';
+  }
+
+  @override
+  String notificationTripId(int id) {
+    return 'Trip #$id';
+  }
+
+  @override
+  String notificationRideRequestId(int id) {
+    return 'Request #$id';
+  }
 }

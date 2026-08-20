@@ -161,6 +161,146 @@ class SAr extends S {
   String get rideRequestRide => 'طلب رحلة';
 
   @override
+  String get rideRequestSharedTrip => 'رحلة مشتركة';
+
+  @override
+  String get rideSharedTripSubtitle => 'شارك ووفر';
+
+  @override
+  String get sharedTripAvailableRooms => 'الرحلات المشتركة المتاحة';
+
+  @override
+  String get sharedTripSearchRooms => 'بحث';
+
+  @override
+  String get sharedTripChangeLocations => 'تعديل';
+
+  @override
+  String get sharedTripPickup => 'نقطة الانطلاق';
+
+  @override
+  String get sharedTripDestination => 'الوجهة';
+
+  @override
+  String get sharedTripSearchingRooms => 'جارٍ البحث عن رحلات مشتركة متاحة...';
+
+  @override
+  String get sharedTripNoRoomsFound =>
+      'لا توجد رحلات مشتركة متاحة لهذا المسار حالياً.';
+
+  @override
+  String get sharedTripFarePerSeat => 'الأجرة للمقعد';
+
+  @override
+  String get sharedTripAvailableSeats => 'المقاعد المتاحة';
+
+  @override
+  String sharedTripSeatsCount(int available, int total) {
+    return '$available من أصل $total مقاعد';
+  }
+
+  @override
+  String get sharedTripDriver => 'السائق';
+
+  @override
+  String get sharedTripVehicle => 'المركبة';
+
+  @override
+  String get sharedTripDepartureTime => 'وقت الانطلاق';
+
+  @override
+  String sharedTripOriginDistance(String distance) {
+    return 'يبعد $distance كم عن موقع انطلاقك';
+  }
+
+  @override
+  String sharedTripDestDistance(String distance) {
+    return 'يبعد $distance كم عن وجهتك';
+  }
+
+  @override
+  String get currencySyp => 'ل.س';
+
+  @override
+  String get sharedTripStatusOpen => 'متاح';
+
+  @override
+  String get sharedTripRoomDetailsTitle => 'تفاصيل الرحلة';
+
+  @override
+  String get sharedTripRouteOverview => 'مسار الرحلة';
+
+  @override
+  String get sharedTripTotalDistance => 'المسافة الكلية';
+
+  @override
+  String get sharedTripEstDuration => 'المدة المتوقعة';
+
+  @override
+  String get sharedTripDriverNotes => 'ملاحظات وتعليمات السائق';
+
+  @override
+  String get sharedTripOccupancy => 'إشغال المقاعد';
+
+  @override
+  String sharedTripOccupiedSeats(int count) {
+    return '$count محجوز';
+  }
+
+  @override
+  String sharedTripFreeSeats(int count) {
+    return '$count متاح';
+  }
+
+  @override
+  String get sharedTripFullFare => 'أجرة المسار الكامل';
+
+  @override
+  String get sharedTripMinFare => 'الحد الأدنى للأجرة';
+
+  @override
+  String get sharedTripBaseCost => 'تكلفة الرحلة الأساسية';
+
+  @override
+  String get sharedTripJoinRoom => 'الانضمام إلى الرحلة';
+
+  @override
+  String get sharedTripRoomFull => 'الرحلة ممتلئة بالكامل';
+
+  @override
+  String get sharedTripRoomClosed => 'Trip is Closed';
+
+  @override
+  String get sharedTripPassengers => 'الركاب المنضمين';
+
+  @override
+  String get sharedTripNoNotes => 'لا توجد ملاحظات إضافية من السائق.';
+
+  @override
+  String get sharedTripSelectSeatsTitle => 'اختر عدد المقاعد';
+
+  @override
+  String get sharedTripSeatsNeeded => 'المقاعد المطلوبة';
+
+  @override
+  String get sharedTripJoinSuccess => 'تم الانضمام إلى الرحلة بنجاح!';
+
+  @override
+  String get sharedTripArrivedTitle => 'لقد وصلت إلى وجهتك!';
+
+  @override
+  String get sharedTripArrivedSubtitle => 'نتمنى أن تكون رحلتك ممتعة.';
+
+  @override
+  String get sharedTripBackToHome => 'العودة للرئيسية';
+
+  @override
+  String get sharedTripFinalFare => 'الأجرة النهائية';
+
+  @override
+  String get sharedTripConfirmJoin => 'تأكيد الانضمام';
+
+  @override
   String get rideFindingDriver => 'جارٍ البحث عن سائق...';
 
   @override
@@ -681,4 +821,29 @@ class SAr extends S {
 
   @override
   String get ratingDontRate => 'عدم التقييم';
+
+  @override
+  String get notificationsTitle => 'الإشعارات';
+
+  @override
+  String get noNotifications => 'لا توجد إشعارات بعد';
+
+  @override
+  String get notificationsEmptySubtitle =>
+      'سنرسل إليك إشعاراً عند وجود أي تحديثات جديدة';
+
+  @override
+  String unreadNotificationsBadge(int count) {
+    return '$count غير مقروء';
+  }
+
+  @override
+  String notificationTripId(int id) {
+    return 'رحلة #$id';
+  }
+
+  @override
+  String notificationRideRequestId(int id) {
+    return 'طلب #$id';
+  }
 }

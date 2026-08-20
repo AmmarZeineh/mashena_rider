@@ -17,17 +17,36 @@ class FlutterMapControllerAdapter implements AppMapController {
   @override
   Future<void> fitBounds(List<MapLatLng> points, {double padding = 50}) async {
     if (points.isEmpty) return;
+
     if (points.length == 1) {
-      _mapController.move(LatLng(points.first.latitude, points.first.longitude), 15);
+      _mapController.move(
+        LatLng(points.first.latitude, points.first.longitude),
+        15,
+      );
       return;
     }
+
     final latLngs = points.map((p) => LatLng(p.latitude, p.longitude)).toList();
     final bounds = LatLngBounds.fromPoints(latLngs);
-    _mapController.fitCamera(
-      CameraFit.bounds(
-        bounds: bounds,
-        padding: EdgeInsets.all(padding),
-      ),
-    );
+
+    final latDelta = (bounds.north - bounds.south).abs();
+    final lngDelta = (bounds.east - bounds.west).abs();
+
+    if (latDelta < 0.0001 && lngDelta < 0.0001) {
+      _mapController.move(bounds.center, 15);
+      return;
+    }
+
+    try {
+      _mapController.fitCamera(
+        CameraFit.bounds(
+          bounds: bounds,
+          padding: EdgeInsets.all(padding),
+          maxZoom: 17.0,
+        ),
+      );
+    } catch (_) {
+      _mapController.move(bounds.center, 15);
+    }
   }
 }

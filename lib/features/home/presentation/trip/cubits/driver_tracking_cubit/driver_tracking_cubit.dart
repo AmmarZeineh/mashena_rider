@@ -67,8 +67,7 @@ class DriverTrackingCubit extends Cubit<DriverTrackingState> {
     }
 
     // Determine current route target (destination after trip starts)
-    final targetLocation =
-        state.isTripStarted ? destination : pickup;
+    final targetLocation = state.isTripStarted ? destination : pickup;
 
     // 1. Bearing
     double bearing = state.driverBearing;
@@ -113,7 +112,9 @@ class DriverTrackingCubit extends Cubit<DriverTrackingState> {
     // 4. Write polyline to MapStateCubit
     final isArrived = state.isDriverArrived;
     _mapStateCubit.updateDriverPolylines(
-      borderId: isArrived ? 'driver_to_destination_border' : 'driver_to_pickup_border',
+      borderId: isArrived
+          ? 'driver_to_destination_border'
+          : 'driver_to_pickup_border',
       lineId: isArrived ? 'driver_to_destination' : 'driver_to_pickup',
       points: routePoints,
     );

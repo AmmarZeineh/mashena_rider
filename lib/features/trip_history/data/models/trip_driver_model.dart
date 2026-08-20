@@ -19,9 +19,9 @@ abstract class TripDriverModel with _$TripDriverModel {
 
 extension TripDriverModelMapper on TripDriverModel {
   TripDriverEntity toEntity() => TripDriverEntity(
-        id: id,
-        fullName: fullName,
-        phoneNumber: phoneNumber,
-        ratingAvg: ratingAvg,
-      );
+    id: id,
+    fullName: fullName,
+    phoneNumber: phoneNumber,
+    ratingAvg: ratingAvg,
+  );
 }

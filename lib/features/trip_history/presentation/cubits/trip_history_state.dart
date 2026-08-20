@@ -56,14 +56,13 @@ class TripHistoryState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
-        items,
-        isLoadingMore,
-        hasMore,
-        page,
-        selectedStatusFilter,
-        failure,
-        loadMoreFailure,
-      ];
+    status,
+    items,
+    isLoadingMore,
+    hasMore,
+    page,
+    selectedStatusFilter,
+    failure,
+    loadMoreFailure,
+  ];
 }
-

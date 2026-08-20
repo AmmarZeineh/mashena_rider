@@ -10,18 +10,15 @@ class TripShareCubit extends Cubit<TripShareState> {
   final ShareTripUsecase _shareTripUsecase;
   final RevokeShareTripUsecase _revokeShareTripUsecase;
 
-  TripShareCubit(
-    this._shareTripUsecase,
-    this._revokeShareTripUsecase,
-  ) : super(const TripShareInitial());
+  TripShareCubit(this._shareTripUsecase, this._revokeShareTripUsecase)
+    : super(const TripShareInitial());
 
   Future<void> shareTrip(int rideRequestId) async {
     emit(const TripShareLoading());
     final result = await _shareTripUsecase(rideRequestId);
     result.fold(
-      (failure) => emit(
-        TripShareError(failure.rawMessage ?? failure.code.name),
-      ),
+      (failure) =>
+          emit(TripShareError(failure.rawMessage ?? failure.code.name)),
       (tripShare) => emit(TripShareLoaded(tripShare)),
     );
   }
@@ -36,9 +33,8 @@ class TripShareCubit extends Cubit<TripShareState> {
 
     final result = await _revokeShareTripUsecase(rideRequestId);
     result.fold(
-      (failure) => emit(
-        TripShareError(failure.rawMessage ?? failure.code.name),
-      ),
+      (failure) =>
+          emit(TripShareError(failure.rawMessage ?? failure.code.name)),
       (_) => emit(const TripShareInitial()),
     );
   }

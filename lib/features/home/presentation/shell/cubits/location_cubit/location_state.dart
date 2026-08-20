@@ -10,10 +10,10 @@ class LocationState extends Equatable {
   });
 
   const LocationState.initial()
-      : isGranted = false,
-        isServiceEnabled = true,
-        isDeniedForever = false,
-        position = null;
+    : isGranted = false,
+      isServiceEnabled = true,
+      isDeniedForever = false,
+      position = null;
 
   final bool isGranted;
   final bool isServiceEnabled;
@@ -22,11 +22,11 @@ class LocationState extends Equatable {
 
   @override
   List<Object?> get props => [
-        isGranted,
-        isServiceEnabled,
-        isDeniedForever,
-        position,
-      ];
+    isGranted,
+    isServiceEnabled,
+    isDeniedForever,
+    position,
+  ];
 
   @override
   bool get stringify => true;

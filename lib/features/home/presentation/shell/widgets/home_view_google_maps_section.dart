@@ -27,9 +27,6 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HomeCubit>().init();
-    });
   }
 
   @override
@@ -38,11 +35,12 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
     super.dispose();
   }
 
-  /// Re-check permission when the app comes back from settings.
+  /// Re-check permission and socket connection when the app comes back from background.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       context.read<LocationCubit>().recheckStatus();
+      context.read<HomeCubit>().init();
     }
   }
 
@@ -60,7 +58,7 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
               prev.tripError != curr.tripError,
           listener: (context, state) {
             final trackingCubit = context.read<DriverTrackingCubit>();
-            
+
             // Restore driver tracking if trip is restored (e.g. app restart)
             if (state.matchedTrip != null && !trackingCubit.state.isTracking) {
               trackingCubit.startTracking(
@@ -74,11 +72,11 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
                 ),
               );
             }
-            
+
             if (state.isDriverArrived) {
               trackingCubit.onDriverArrived();
             }
-            
+
             if (state.isTripStarted && state.matchedTrip != null) {
               trackingCubit.onTripStarted(
                 destination: MapLatLng(
@@ -87,7 +85,7 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
                 ),
               );
             }
-            
+
             if (state.isTripEnded || state.tripError != null) {
               trackingCubit.stopTracking();
             }
@@ -101,20 +99,30 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
               prev.isTripStarted != curr.isTripStarted,
           listener: (context, state) {
             if (_mapController == null) return;
-            
-            if (state.driverLocation != null && state.pickup != null && state.destination != null) {
-              final target = state.isTripStarted ? state.destination! : state.pickup!;
-              _mapController!.fitBounds([state.driverLocation!, target], padding: 80);
+
+            if (state.driverLocation != null &&
+                state.pickup != null &&
+                state.destination != null) {
+              final target = state.isTripStarted
+                  ? state.destination!
+                  : state.pickup!;
+              _mapController!.fitBounds([
+                state.driverLocation!,
+                target,
+              ], padding: 80);
             }
           },
         ),
         // My Location Camera Move
         BlocListener<LocationCubit, LocationState>(
-          listenWhen: (prev, curr) => prev.position == null && curr.position != null,
+          listenWhen: (prev, curr) =>
+              prev.position == null && curr.position != null,
           listener: (context, state) {
             if (_mapController == null) return;
-            
-            final isTrackingDriver = context.read<DriverTrackingCubit>().state.driverLocation != null;
+
+            final isTrackingDriver =
+                context.read<DriverTrackingCubit>().state.driverLocation !=
+                null;
             if (state.position != null && !isTrackingDriver) {
               _mapController!.moveCamera(
                 MapLatLng(
@@ -155,8 +163,9 @@ class _HomeViewGoogleMapsSectionState extends State<HomeViewGoogleMapsSection>
                       child: PermissionOverlay(
                         title: S.of(context).locationServiceOffTitle,
                         buttonText: S.of(context).openSettingsButton,
-                        onPressed: () =>
-                            context.read<LocationCubit>().openLocationSettings(),
+                        onPressed: () => context
+                            .read<LocationCubit>()
+                            .openLocationSettings(),
                       ),
                     ),
                 ],

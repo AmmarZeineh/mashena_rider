@@ -9,6 +9,7 @@ import 'package:mashena_rider/features/home/presentation/booking/cubits/ride_boo
 import 'package:mashena_rider/features/home/presentation/booking/widgets/ride_booking_overlay.dart';
 import 'package:mashena_rider/features/home/presentation/shell/cubits/map_state_cubit/map_state_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/shell/widgets/home_menu_button.dart';
+import 'package:mashena_rider/features/home/presentation/shell/widgets/home_notification_button.dart';
 import 'package:mashena_rider/features/home/presentation/shell/widgets/home_view_google_maps_section.dart';
 import 'package:mashena_rider/features/home/presentation/shell/widgets/set_destination_cta.dart';
 import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_lifecycle_cubit/trip_lifecycle_cubit.dart';
@@ -202,6 +203,7 @@ class HomeViewBody extends StatelessWidget {
                       children: [
                         const HomeViewGoogleMapsSection(),
                         const HomeMenuButton(),
+                        const HomeNotificationButton(),
                         AnimatedSwitcher(
                           duration: const Duration(milliseconds: 400),
                           transitionBuilder: (child, animation) {

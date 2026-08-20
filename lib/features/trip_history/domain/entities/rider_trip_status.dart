@@ -13,7 +13,8 @@ enum RiderTripStatus {
     if (value == null || value.isEmpty) return null;
     final lower = value.toLowerCase();
     for (final status in RiderTripStatus.values) {
-      if (status.value == lower || (status == RiderTripStatus.canceled && lower == 'cancelled')) {
+      if (status.value == lower ||
+          (status == RiderTripStatus.canceled && lower == 'cancelled')) {
         return status;
       }
     }

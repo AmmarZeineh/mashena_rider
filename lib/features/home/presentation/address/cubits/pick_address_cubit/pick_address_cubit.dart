@@ -282,11 +282,7 @@ class PickAddressCubit extends Cubit<PickAddressState> {
       );
 
       if (meters < 50) {
-        emit(
-          state.copyWith(
-            warningMessage: 'error_stops_too_close',
-          ),
-        );
+        emit(state.copyWith(warningMessage: 'error_stops_too_close'));
         return;
       }
     }

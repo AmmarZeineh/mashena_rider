@@ -41,13 +41,19 @@ class CouponModel {
       description: json['description'] as String?,
       discountType: json['discountType'] as String? ?? 'PERCENTAGE',
       discountValue: _toDouble(json['discountValue']),
-      maxDiscount: json['maxDiscount'] != null ? _toDouble(json['maxDiscount']) : null,
+      maxDiscount: json['maxDiscount'] != null
+          ? _toDouble(json['maxDiscount'])
+          : null,
       activationDurationDays: _toInt(json['activationDurationDays']),
       allowedUsages: _toInt(json['allowedUsages']),
       globalUsageLimit: _toInt(json['globalUsageLimit']),
       usedCount: _toInt(json['usedCount']),
-      startsAt: json['startsAt'] != null ? DateTime.tryParse(json['startsAt'].toString()) : null,
-      expiresAt: json['expiresAt'] != null ? DateTime.tryParse(json['expiresAt'].toString()) : null,
+      startsAt: json['startsAt'] != null
+          ? DateTime.tryParse(json['startsAt'].toString())
+          : null,
+      expiresAt: json['expiresAt'] != null
+          ? DateTime.tryParse(json['expiresAt'].toString())
+          : null,
       isActive: json['isActive'] as bool? ?? true,
     );
   }

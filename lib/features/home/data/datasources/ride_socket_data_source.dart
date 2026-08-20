@@ -101,7 +101,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
             'Parsed lat: $lat, lng: $lng',
             name: 'features.home.socket',
           );
-          
+
           if (lat != null && lng != null) {
             final position = MapLatLng(
               latitude: double.parse(lat.toString()),
@@ -141,7 +141,9 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
       );
       try {
         if (data is Map) {
-          final payload = DriverArrivedPayload.fromJson(Map<String, dynamic>.from(data));
+          final payload = DriverArrivedPayload.fromJson(
+            Map<String, dynamic>.from(data),
+          );
           _driverArrivedController.add(payload);
         }
       } catch (e, stackTrace) {
@@ -183,7 +185,9 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
       );
       try {
         if (data is Map) {
-          final payload = TripCompletedPayload.fromJson(Map<String, dynamic>.from(data));
+          final payload = TripCompletedPayload.fromJson(
+            Map<String, dynamic>.from(data),
+          );
           _tripCompletedController.add(payload);
         }
       } catch (e, stackTrace) {
@@ -203,7 +207,9 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
       );
       try {
         if (data is Map) {
-          final payload = TripCancelledPayload.fromJson(Map<String, dynamic>.from(data));
+          final payload = TripCancelledPayload.fromJson(
+            Map<String, dynamic>.from(data),
+          );
           _tripCancelledController.add(payload);
         }
       } catch (e, stackTrace) {
@@ -243,19 +249,23 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
   Stream<int> get rideMatchedStream => _rideMatchedController.stream;
 
   @override
-  Stream<MapLatLng> get driverLocationStream => _driverLocationController.stream;
+  Stream<MapLatLng> get driverLocationStream =>
+      _driverLocationController.stream;
 
   @override
-  Stream<DriverArrivedPayload> get driverArrivedStream => _driverArrivedController.stream;
+  Stream<DriverArrivedPayload> get driverArrivedStream =>
+      _driverArrivedController.stream;
 
   @override
   Stream<int> get driverStartedStream => _driverStartedController.stream;
 
   @override
-  Stream<TripCompletedPayload> get tripCompletedStream => _tripCompletedController.stream;
+  Stream<TripCompletedPayload> get tripCompletedStream =>
+      _tripCompletedController.stream;
 
   @override
-  Stream<TripCancelledPayload> get tripCancelledStream => _tripCancelledController.stream;
+  Stream<TripCancelledPayload> get tripCancelledStream =>
+      _tripCancelledController.stream;
 
   @override
   Stream<int> get rideExpiredStream => _rideExpiredController.stream;

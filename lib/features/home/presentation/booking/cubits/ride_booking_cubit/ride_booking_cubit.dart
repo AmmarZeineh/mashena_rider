@@ -49,6 +49,10 @@ class RideBookingCubit extends Cubit<RideBookingState> {
 
     emit(state.copyWith(isSubmitting: true, clearError: true));
 
+    // Ensure the socket is connected before/during ride submission
+    // to avoid missing initial real-time events.
+    await _rideRepository.connectSocket();
+
     final response = await _submitRideRequest(
       request: result.request,
       vehicleTypeId: vehicleTypeId,

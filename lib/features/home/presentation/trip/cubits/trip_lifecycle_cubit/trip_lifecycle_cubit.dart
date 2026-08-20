@@ -24,7 +24,7 @@ part 'trip_lifecycle_state.dart';
 /// Downstream cubits ([DriverTrackingCubit]) react to state changes from here.
 class TripLifecycleCubit extends Cubit<TripLifecycleState> {
   TripLifecycleCubit(this._rideRepository, this._authEventBus)
-      : super(const TripLifecycleState()) {
+    : super(const TripLifecycleState()) {
     _subscribeToSocketStreams();
     _subscribeToAuthEvents();
   }
@@ -77,12 +77,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
       if (activeRideId != null) {
         _rideRepository.stopListeningToRide(activeRideId);
       }
-      emit(
-        state.copyWith(
-          isTripEnded: true,
-          tripCompletedData: payload,
-        ),
-      );
+      emit(state.copyWith(isTripEnded: true, tripCompletedData: payload));
     });
 
     _tripCancelledSubscription = _rideRepository.tripCancelledStream.listen((
@@ -106,12 +101,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
     });
 
     _rideExpiredSubscription = _rideRepository.rideExpiredStream.listen((_) {
-      emit(
-        state.copyWith(
-          isRideExpired: true,
-          clearMatchedTrip: true,
-        ),
-      );
+      emit(state.copyWith(isRideExpired: true, clearMatchedTrip: true));
     });
   }
 
@@ -148,7 +138,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
           'Matched trip loaded: ${trip.driverFullName} (${trip.model}) - status: ${trip.tripStatus}',
           name: 'features.home.trip_lifecycle',
         );
-        
+
         bool arrived = false;
         bool started = false;
         if (trip.tripStatus == 'driver_arrived') {
@@ -158,12 +148,14 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
           started = true;
         }
 
-        emit(state.copyWith(
-          matchedTrip: trip, 
-          isLoadingMatchedTrip: false,
-          isDriverArrived: arrived,
-          isTripStarted: started,
-        ));
+        emit(
+          state.copyWith(
+            matchedTrip: trip,
+            isLoadingMatchedTrip: false,
+            isDriverArrived: arrived,
+            isTripStarted: started,
+          ),
+        );
         return;
       }
 

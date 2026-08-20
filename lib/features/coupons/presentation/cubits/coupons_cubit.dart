@@ -14,12 +14,8 @@ class CouponsCubit extends Cubit<CouponsState> {
     final historyResult = await repository.getMyHistory();
 
     couponsResult.fold(
-      (failure) => emit(
-        state.copyWith(
-          status: CouponsStatus.error,
-          failure: failure,
-        ),
-      ),
+      (failure) =>
+          emit(state.copyWith(status: CouponsStatus.error, failure: failure)),
       (activeCoupons) {
         historyResult.fold(
           (failure) => emit(

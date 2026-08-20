@@ -29,15 +29,15 @@ class DriverTrackingState extends Equatable {
 
   @override
   List<Object?> get props => [
-        driverLocation,
-        driverBearing,
-        driverDistance,
-        driverEta,
-        pickup,
-        destination,
-        isDriverArrived,
-        isTripStarted,
-      ];
+    driverLocation,
+    driverBearing,
+    driverDistance,
+    driverEta,
+    pickup,
+    destination,
+    isDriverArrived,
+    isTripStarted,
+  ];
 
   @override
   bool get stringify => true;
@@ -57,8 +57,9 @@ class DriverTrackingState extends Equatable {
     return DriverTrackingState(
       driverLocation: driverLocation ?? this.driverLocation,
       driverBearing: driverBearing ?? this.driverBearing,
-      driverDistance:
-          clearDriverDistance ? null : (driverDistance ?? this.driverDistance),
+      driverDistance: clearDriverDistance
+          ? null
+          : (driverDistance ?? this.driverDistance),
       driverEta: clearDriverEta ? null : (driverEta ?? this.driverEta),
       pickup: pickup ?? this.pickup,
       destination: destination ?? this.destination,

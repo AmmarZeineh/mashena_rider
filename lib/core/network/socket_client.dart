@@ -6,6 +6,11 @@ abstract interface class SocketClient {
   /// Connects to the socket server.
   Future<void> connect();
 
+  /// Ensures the socket is connected before proceeding.
+  /// If already connected, returns `true` immediately.
+  /// Otherwise attempts connection and waits up to [timeout].
+  Future<bool> ensureConnected({Duration timeout = const Duration(seconds: 5)});
+
   /// Disconnects from the socket server.
   void disconnect();
 
