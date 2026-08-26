@@ -15,6 +15,7 @@ class TripLifecycleState extends Equatable {
     this.tripCancelledData,
     this.tripError,
     this.isRideExpired = false,
+    this.isConnected = false,
   });
 
   final bool isDriverFound;
@@ -35,6 +36,9 @@ class TripLifecycleState extends Equatable {
   /// Set when the ride request expires without finding a driver.
   final bool isRideExpired;
 
+  /// Socket connection status
+  final bool isConnected;
+
   @override
   List<Object?> get props => [
     isDriverFound,
@@ -49,6 +53,7 @@ class TripLifecycleState extends Equatable {
     tripCancelledData,
     tripError,
     isRideExpired,
+    isConnected,
   ];
 
   @override
@@ -69,6 +74,7 @@ class TripLifecycleState extends Equatable {
     Failure? tripError,
     bool clearTripError = false,
     bool? isRideExpired,
+    bool? isConnected,
   }) {
     return TripLifecycleState(
       isDriverFound: isDriverFound ?? this.isDriverFound,
@@ -83,6 +89,7 @@ class TripLifecycleState extends Equatable {
       tripCancelledData: tripCancelledData ?? this.tripCancelledData,
       tripError: clearTripError ? null : (tripError ?? this.tripError),
       isRideExpired: isRideExpired ?? this.isRideExpired,
+      isConnected: isConnected ?? this.isConnected,
     );
   }
 }

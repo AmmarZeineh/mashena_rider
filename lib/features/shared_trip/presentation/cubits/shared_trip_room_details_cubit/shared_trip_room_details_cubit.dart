@@ -41,7 +41,13 @@ class SharedTripRoomDetailsCubit extends Cubit<SharedTripRoomDetailsState> {
 
   Future<void> _initCurrentUser() async {
     final result = await _getCachedSessionUsecase();
-    result.fold((_) {}, (session) => _currentUserId = session.user.id);
+    result.fold((_) {}, (session) {
+      _currentUserId = session.user.id;
+      final currentState = state;
+      if (currentState is SharedTripRoomDetailsSuccess) {
+        emit(currentState.copyWith(currentUserId: _currentUserId));
+      }
+    });
   }
 
   void _initSocketSubscriptions() {
@@ -339,6 +345,11 @@ class SharedTripRoomDetailsCubit extends Cubit<SharedTripRoomDetailsState> {
           final isCurrentUser =
               _currentUserId != null && payload.userId == _currentUserId;
 
+          final isAccountHolderDropped = !payload.accountHolderOnBoard ||
+              payload.passengerStatus == 'DROPPED_OFF' ||
+              payload.accountHolderDroppedOffAt != null ||
+              (payload.activeSeats != null && payload.activeSeats == 0);
+
           final updatedPassengers = currentState.details.passengers.map((p) {
             if (p.id == payload.passengerId ||
                 p.riderProfileId == payload.riderProfileId) {
@@ -347,22 +358,30 @@ class SharedTripRoomDetailsCubit extends Cubit<SharedTripRoomDetailsState> {
                 sharedRideId: p.sharedRideId,
                 riderProfileId: p.riderProfileId,
                 riderName: p.riderName,
-                status: 'DROPPED_OFF',
-                paymentStatus: p.paymentStatus,
-                seatsNeeded: p.seatsNeeded,
-                activeSeats: p.activeSeats,
-                totalPaidFare: p.totalPaidFare,
+                status: payload.passengerStatus ??
+                    (isAccountHolderDropped ? 'DROPPED_OFF' : p.status),
+                paymentStatus:
+                    payload.passenger?.paymentStatus ?? p.paymentStatus,
+                seatsNeeded: payload.seatsNeeded ?? p.seatsNeeded,
+                activeSeats: payload.activeSeats ??
+                    (isAccountHolderDropped
+                        ? 0
+                        : (p.activeSeats > 1 ? p.activeSeats - 1 : 1)),
+                totalPaidFare: payload.totalPaidFare ?? p.totalPaidFare,
                 finalDistanceKm: payload.finalDistanceKm ?? p.finalDistanceKm,
                 finalDurationSec:
                     payload.finalDurationSec ?? p.finalDurationSec,
                 finalFare: payload.finalFare ?? p.finalFare,
                 joinedAt: p.joinedAt,
                 onBoardAt: p.onBoardAt,
-                droppedOffAt:
-                    payload.droppedOffAt ?? p.droppedOffAt ?? DateTime.now(),
-                accountHolderOnBoard: false,
-                accountHolderDroppedOffAt:
-                    payload.droppedOffAt ?? p.accountHolderDroppedOffAt,
+                droppedOffAt: isAccountHolderDropped
+                    ? (payload.droppedOffAt ?? p.droppedOffAt ?? DateTime.now())
+                    : p.droppedOffAt,
+                accountHolderOnBoard: payload.accountHolderOnBoard,
+                accountHolderDroppedOffAt: payload.accountHolderDroppedOffAt ??
+                    (isAccountHolderDropped
+                        ? (payload.droppedOffAt ?? DateTime.now())
+                        : p.accountHolderDroppedOffAt),
                 leftAt: p.leftAt,
                 canceledAt: p.canceledAt,
                 removedAt: p.removedAt,
@@ -410,16 +429,33 @@ class SharedTripRoomDetailsCubit extends Cubit<SharedTripRoomDetailsState> {
             passengers: updatedPassengers,
           );
 
-          emit(
-            currentState.copyWith(
-              details: updatedDetails,
-              currentUserDroppedOffPayload: () =>
-                  isCurrentUser ? payload : null,
-              liveNotice: () => isCurrentUser
-                  ? 'You have arrived at your destination!'
-                  : null,
-            ),
-          );
+          if (isCurrentUser) {
+            if (isAccountHolderDropped) {
+              emit(
+                currentState.copyWith(
+                  details: updatedDetails,
+                  currentUserDroppedOffPayload: () => payload,
+                  companionDroppedPayload: () => null,
+                  liveNotice: () => 'You have arrived at your destination!',
+                ),
+              );
+            } else {
+              emit(
+                currentState.copyWith(
+                  details: updatedDetails,
+                  companionDroppedPayload: () => payload,
+                  currentUserDroppedOffPayload: () => null,
+                  liveNotice: () => null,
+                ),
+              );
+            }
+          } else {
+            emit(
+              currentState.copyWith(
+                details: updatedDetails,
+              ),
+            );
+          }
         }
       }),
     );
@@ -494,7 +530,9 @@ class SharedTripRoomDetailsCubit extends Cubit<SharedTripRoomDetailsState> {
     result.fold(
       (failure) =>
           emit(SharedTripRoomDetailsError(failure.rawMessage ?? 'Unknown')),
-      (details) => emit(SharedTripRoomDetailsSuccess(details)),
+      (details) => emit(
+        SharedTripRoomDetailsSuccess(details, currentUserId: _currentUserId),
+      ),
     );
   }
 
@@ -535,6 +573,7 @@ class SharedTripRoomDetailsCubit extends Cubit<SharedTripRoomDetailsState> {
             emit(
               SharedTripRoomDetailsSuccess(
                 updatedDetails,
+                currentUserId: _currentUserId,
                 joinedPassenger: passenger,
               ),
             );
@@ -562,7 +601,14 @@ class SharedTripRoomDetailsCubit extends Cubit<SharedTripRoomDetailsState> {
         );
       },
       (updatedDetails) {
-        emit(SharedTripRoomDetailsSuccess(updatedDetails));
+        emit(
+          currentState.copyWith(
+            details: updatedDetails,
+            isLeaving: false,
+            joinedPassenger: () => null,
+            hasLeft: true,
+          ),
+        );
       },
     );
   }

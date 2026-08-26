@@ -35,56 +35,71 @@ void main() {
   });
 
   group('TripRatingCubit', () {
-    test('fetches tags on instantiation and populates positive/negative lists', () async {
-      await pumpEventQueue();
-      expect(cubit.state.positiveTags, [testPosTag]);
-      expect(cubit.state.negativeTags, [testNegTag]);
-    });
+    test(
+      'fetches tags on instantiation and populates positive/negative lists',
+      () async {
+        await pumpEventQueue();
+        expect(cubit.state.positiveTags, [testPosTag]);
+        expect(cubit.state.negativeTags, [testNegTag]);
+      },
+    );
 
-    test('setScore clears tags when sentiment flips between positive and negative', () async {
-      await pumpEventQueue();
+    test(
+      'setScore clears tags when sentiment flips between positive and negative',
+      () async {
+        await pumpEventQueue();
 
-      cubit.setScore(5.0); // positive
-      cubit.toggleTag(1);
-      expect(cubit.state.selectedTagIds, {1});
+        cubit.setScore(5.0); // positive
+        cubit.toggleTag(1);
+        expect(cubit.state.selectedTagIds, {1});
 
-      cubit.setScore(2.0); // negative - sentiment changed!
-      expect(cubit.state.selectedTagIds, isEmpty);
-    });
+        cubit.setScore(2.0); // negative - sentiment changed!
+        expect(cubit.state.selectedTagIds, isEmpty);
+      },
+    );
 
-    test('submitRating sets validation error if score is 0 or no tags selected', () async {
-      await pumpEventQueue();
+    test(
+      'submitRating sets validation error if score is 0 or no tags selected',
+      () async {
+        await pumpEventQueue();
 
-      // No score
-      await cubit.submitRating(tripId: 100, comment: null);
-      expect(cubit.state.validationError, AppConstants.errorSelectRatingScore);
+        // No score
+        await cubit.submitRating(tripId: 100, comment: null);
+        expect(
+          cubit.state.validationError,
+          AppConstants.errorSelectRatingScore,
+        );
 
-      // Score set but no tag
-      cubit.setScore(5.0);
-      await cubit.submitRating(tripId: 100, comment: null);
-      expect(cubit.state.validationError, AppConstants.errorSelectRatingTag);
-    });
+        // Score set but no tag
+        cubit.setScore(5.0);
+        await cubit.submitRating(tripId: 100, comment: null);
+        expect(cubit.state.validationError, AppConstants.errorSelectRatingTag);
+      },
+    );
 
-    test('submitRating submits to repository and sets isSuccess on success', () async {
-      await pumpEventQueue();
+    test(
+      'submitRating submits to repository and sets isSuccess on success',
+      () async {
+        await pumpEventQueue();
 
-      cubit.setScore(5.0);
-      cubit.toggleTag(1);
+        cubit.setScore(5.0);
+        cubit.toggleTag(1);
 
-      when(
-        () => mockRepo.submitRating(
-          tripId: 100,
-          score: 5.0,
-          comment: 'Great trip',
-          tagIds: [1],
-        ),
-      ).thenAnswer((_) async => const Right(null));
+        when(
+          () => mockRepo.submitRating(
+            tripId: 100,
+            score: 5.0,
+            comment: 'Great trip',
+            tagIds: [1],
+          ),
+        ).thenAnswer((_) async => const Right(null));
 
-      await cubit.submitRating(tripId: 100, comment: 'Great trip');
+        await cubit.submitRating(tripId: 100, comment: 'Great trip');
 
-      expect(cubit.state.isSuccess, isTrue);
-      expect(cubit.state.isSubmitting, isFalse);
-    });
+        expect(cubit.state.isSuccess, isTrue);
+        expect(cubit.state.isSubmitting, isFalse);
+      },
+    );
 
     test('submitRating sets errorMessage on API failure', () async {
       await pumpEventQueue();
@@ -100,7 +115,9 @@ void main() {
           tagIds: [1],
         ),
       ).thenAnswer(
-        (_) async => const Left(Failure(FailureCode.server, rawMessage: 'Rating failed')),
+        (_) async => const Left(
+          Failure(FailureCode.server, rawMessage: 'Rating failed'),
+        ),
       );
 
       await cubit.submitRating(tripId: 100, comment: 'Great trip');

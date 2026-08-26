@@ -25,6 +25,7 @@ void main() {
   late StreamController<TripCompleted> tripCompletedController;
   late StreamController<TripCancelled> tripCancelledController;
   late StreamController<int> rideExpiredController;
+  late StreamController<bool> connectionStatusController;
 
   const testMatchedTrip = MatchedTrip(
     tripId: 100,
@@ -50,15 +51,33 @@ void main() {
     tripCompletedController = StreamController<TripCompleted>.broadcast();
     tripCancelledController = StreamController<TripCancelled>.broadcast();
     rideExpiredController = StreamController<int>.broadcast();
+    connectionStatusController = StreamController<bool>.broadcast();
 
-    when(() => mockRideRepo.rideMatchedStream).thenAnswer((_) => rideMatchedController.stream);
-    when(() => mockRideRepo.driverArrivedStream).thenAnswer((_) => driverArrivedController.stream);
-    when(() => mockRideRepo.driverStartedStream).thenAnswer((_) => driverStartedController.stream);
-    when(() => mockRideRepo.tripCompletedStream).thenAnswer((_) => tripCompletedController.stream);
-    when(() => mockRideRepo.tripCancelledStream).thenAnswer((_) => tripCancelledController.stream);
-    when(() => mockRideRepo.rideExpiredStream).thenAnswer((_) => rideExpiredController.stream);
+    when(
+      () => mockRideRepo.rideMatchedStream,
+    ).thenAnswer((_) => rideMatchedController.stream);
+    when(
+      () => mockRideRepo.driverArrivedStream,
+    ).thenAnswer((_) => driverArrivedController.stream);
+    when(
+      () => mockRideRepo.driverStartedStream,
+    ).thenAnswer((_) => driverStartedController.stream);
+    when(
+      () => mockRideRepo.tripCompletedStream,
+    ).thenAnswer((_) => tripCompletedController.stream);
+    when(
+      () => mockRideRepo.tripCancelledStream,
+    ).thenAnswer((_) => tripCancelledController.stream);
+    when(
+      () => mockRideRepo.rideExpiredStream,
+    ).thenAnswer((_) => rideExpiredController.stream);
+    when(
+      () => mockRideRepo.connectionStatusStream,
+    ).thenAnswer((_) => connectionStatusController.stream);
     when(() => mockRideRepo.connectSocket()).thenAnswer((_) async {});
-    when(() => mockRideRepo.stopListeningToRide(any())).thenAnswer((_) async {});
+    when(
+      () => mockRideRepo.stopListeningToRide(any()),
+    ).thenAnswer((_) async {});
 
     tripLifecycleCubit = TripLifecycleCubit(mockRideRepo, authEventBus);
   });
@@ -72,6 +91,7 @@ void main() {
     tripCompletedController.close();
     tripCancelledController.close();
     rideExpiredController.close();
+    connectionStatusController.close();
   });
 
   group('TripLifecycleCubit', () {
@@ -84,9 +104,9 @@ void main() {
     });
 
     test('handles rideMatched stream event and fetches trip details', () async {
-      when(() => mockRideRepo.getMatchedTripDetails(25)).thenAnswer(
-        (_) async => const Right(testMatchedTrip),
-      );
+      when(
+        () => mockRideRepo.getMatchedTripDetails(25),
+      ).thenAnswer((_) async => const Right(testMatchedTrip));
 
       rideMatchedController.add(25);
 
@@ -103,27 +123,30 @@ void main() {
       );
     });
 
-    test('handles driverArrived stream event and sets isDriverArrived', () async {
-      const arrivedEvent = DriverArrived(
-        tripId: 100,
-        arrivedAt: '2026-08-18T12:00:00Z',
-        freeWaitTimeSeconds: 300,
-      );
+    test(
+      'handles driverArrived stream event and sets isDriverArrived',
+      () async {
+        const arrivedEvent = DriverArrived(
+          tripId: 100,
+          arrivedAt: '2026-08-18T12:00:00Z',
+          freeWaitTimeSeconds: 300,
+        );
 
-      driverArrivedController.add(arrivedEvent);
+        driverArrivedController.add(arrivedEvent);
 
-      await expectLater(
-        tripLifecycleCubit.stream,
-        emitsThrough(
-          predicate<TripLifecycleState>(
-            (state) =>
-                state.isDriverArrived == true &&
-                state.freeWaitTimeSeconds == 300 &&
-                state.arrivedAt == '2026-08-18T12:00:00Z',
+        await expectLater(
+          tripLifecycleCubit.stream,
+          emitsThrough(
+            predicate<TripLifecycleState>(
+              (state) =>
+                  state.isDriverArrived == true &&
+                  state.freeWaitTimeSeconds == 300 &&
+                  state.arrivedAt == '2026-08-18T12:00:00Z',
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     test('handles driverStarted stream event and sets isTripStarted', () async {
       driverStartedController.add(100);
@@ -158,26 +181,29 @@ void main() {
       );
     });
 
-    test('handles tripCancelled stream event and sets cancel failure', () async {
-      const cancelledEvent = TripCancelled(
-        tripId: 100,
-        canceledAt: '2026-08-18T12:15:00Z',
-        cancelledBy: 'driver',
-      );
+    test(
+      'handles tripCancelled stream event and sets cancel failure',
+      () async {
+        const cancelledEvent = TripCancelled(
+          tripId: 100,
+          canceledAt: '2026-08-18T12:15:00Z',
+          cancelledBy: 'driver',
+        );
 
-      tripCancelledController.add(cancelledEvent);
+        tripCancelledController.add(cancelledEvent);
 
-      await expectLater(
-        tripLifecycleCubit.stream,
-        emitsThrough(
-          predicate<TripLifecycleState>(
-            (state) =>
-                state.tripCancelledData == cancelledEvent &&
-                state.tripError?.code == FailureCode.tripCancelledByDriver,
+        await expectLater(
+          tripLifecycleCubit.stream,
+          emitsThrough(
+            predicate<TripLifecycleState>(
+              (state) =>
+                  state.tripCancelledData == cancelledEvent &&
+                  state.tripError?.code == FailureCode.tripCancelledByDriver,
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     test('reconnects socket on AuthEvent.tokenRefreshed', () async {
       authEventBus.emit(AuthEvent.tokenRefreshed);

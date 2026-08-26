@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyDr32RBAkGuVVZmXce7UB7JwyLKnBiXMA0</string>
+	<string>AIzaSyAq-JzblK-j5wXE1VWn29XZOFw-IM_fzz0</string>
 	<key>GCM_SENDER_ID</key>
-	<string>773307258733</string>
+	<string>1054047692408</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.mashenaRider</string>
 	<key>PROJECT_ID</key>
-	<string>mashena-g2026</string>
+	<string>mashena-e39bd</string>
 	<key>STORAGE_BUCKET</key>
-	<string>mashena-g2026.firebasestorage.app</string>
+	<string>mashena-e39bd.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:773307258733:ios:0c2f4184966d67185cac64</string>
+	<string>1:1054047692408:ios:e6fd198f6ee06fbe576f8d</string>
 </dict>
 </plist>

@@ -47,49 +47,61 @@ void main() {
       expect(cubit.state.activeCoupons, isEmpty);
     });
 
-    test('fetchAllData emits loading then loaded with active coupons and history', () async {
-      when(() => mockRepo.getMyCoupons()).thenAnswer((_) async => Right([testUserCoupon]));
-      when(() => mockRepo.getMyHistory()).thenAnswer((_) async => const Right([]));
+    test(
+      'fetchAllData emits loading then loaded with active coupons and history',
+      () async {
+        when(
+          () => mockRepo.getMyCoupons(),
+        ).thenAnswer((_) async => Right([testUserCoupon]));
+        when(
+          () => mockRepo.getMyHistory(),
+        ).thenAnswer((_) async => const Right([]));
 
-      final expectedStates = [
-        predicate<CouponsState>((s) => s.status == CouponsStatus.loading),
-        predicate<CouponsState>(
-          (s) =>
-              s.status == CouponsStatus.loaded &&
-              s.activeCoupons.length == 1 &&
-              s.activeCoupons.first.coupon.code == 'MASHENA50',
-        ),
-      ];
+        final expectedStates = [
+          predicate<CouponsState>((s) => s.status == CouponsStatus.loading),
+          predicate<CouponsState>(
+            (s) =>
+                s.status == CouponsStatus.loaded &&
+                s.activeCoupons.length == 1 &&
+                s.activeCoupons.first.coupon.code == 'MASHENA50',
+          ),
+        ];
 
-      expectLater(cubit.stream, emitsInOrder(expectedStates));
+        expectLater(cubit.stream, emitsInOrder(expectedStates));
 
-      await cubit.fetchAllData();
-    });
+        await cubit.fetchAllData();
+      },
+    );
 
-    test('activateCoupon emits loading then success with added coupon', () async {
-      when(() => mockRepo.activateCoupon('MASHENA50')).thenAnswer(
-        (_) async => Right(testUserCoupon),
-      );
+    test(
+      'activateCoupon emits loading then success with added coupon',
+      () async {
+        when(
+          () => mockRepo.activateCoupon('MASHENA50'),
+        ).thenAnswer((_) async => Right(testUserCoupon));
 
-      final expectedStates = [
-        predicate<CouponsState>(
-          (s) => s.activationStatus == ActivationStatus.loading,
-        ),
-        predicate<CouponsState>(
-          (s) =>
-              s.activationStatus == ActivationStatus.success &&
-              s.activeCoupons.contains(testUserCoupon),
-        ),
-      ];
+        final expectedStates = [
+          predicate<CouponsState>(
+            (s) => s.activationStatus == ActivationStatus.loading,
+          ),
+          predicate<CouponsState>(
+            (s) =>
+                s.activationStatus == ActivationStatus.success &&
+                s.activeCoupons.contains(testUserCoupon),
+          ),
+        ];
 
-      expectLater(cubit.stream, emitsInOrder(expectedStates));
+        expectLater(cubit.stream, emitsInOrder(expectedStates));
 
-      await cubit.activateCoupon('MASHENA50');
-    });
+        await cubit.activateCoupon('MASHENA50');
+      },
+    );
 
     test('activateCoupon emits error on invalid code', () async {
       when(() => mockRepo.activateCoupon('INVALID')).thenAnswer(
-        (_) async => const Left(Failure(FailureCode.validation, rawMessage: 'Invalid code')),
+        (_) async => const Left(
+          Failure(FailureCode.validation, rawMessage: 'Invalid code'),
+        ),
       );
 
       final expectedStates = [
@@ -109,9 +121,9 @@ void main() {
     });
 
     test('resetActivationState resets activationStatus to initial', () async {
-      when(() => mockRepo.activateCoupon('MASHENA50')).thenAnswer(
-        (_) async => Right(testUserCoupon),
-      );
+      when(
+        () => mockRepo.activateCoupon('MASHENA50'),
+      ).thenAnswer((_) async => Right(testUserCoupon));
       await cubit.activateCoupon('MASHENA50');
 
       cubit.resetActivationState();

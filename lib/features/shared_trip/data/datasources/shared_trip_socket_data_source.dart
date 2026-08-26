@@ -26,6 +26,9 @@ abstract interface class SharedTripSocketDataSource {
 class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
   final SocketClient _socketClient;
 
+  final Set<int> _activeRooms = {};
+  StreamSubscription<bool>? _connectionSubscription;
+
   final _driverLocationController =
       StreamController<SharedRideDriverLocationPayload>.broadcast();
   final _passengerJoinedController =
@@ -51,17 +54,52 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
   final _presenceController =
       StreamController<SharedRidePresencePayload>.broadcast();
 
+  // Callbacks references for clean unregistration
+  late final void Function(dynamic) _onDriverLocation;
+  late final void Function(dynamic) _onPassengerJoined;
+  late final void Function(dynamic) _onPassengerLeft;
+  late final void Function(dynamic) _onPassengerRemoved;
+  late final void Function(dynamic) _onRiderRemoved;
+  late final void Function(dynamic) _onRoomReady;
+  late final void Function(dynamic) _onTripStarted;
+  late final void Function(dynamic) _onPassengerOnBoard;
+  late final void Function(dynamic) _onPassengerDropped;
+  late final void Function(dynamic) _onTripCompleted;
+  late final void Function(dynamic) _onTripCancelled;
+  late final void Function(dynamic) _onDriverOnline;
+  late final void Function(dynamic) _onDriverOffline;
+  late final void Function(dynamic) _onPassengerOnline;
+  late final void Function(dynamic) _onPassengerOffline;
+
   SharedTripSocketDataSourceImpl(this._socketClient) {
     _initSocketListeners();
+    _initReconnectionHandler();
+  }
+
+  void _initReconnectionHandler() {
+    _connectionSubscription = _socketClient.connectionStatusStream.listen((
+      connected,
+    ) {
+      if (connected && _activeRooms.isNotEmpty) {
+        for (final sharedRideId in _activeRooms) {
+          LoggerService.debug(
+            'Re-joining shared ride room after socket reconnect: shared-ride:$sharedRideId',
+            name: 'features.shared_trip.socket',
+          );
+          _socketClient.emit('join_shared_ride_room', sharedRideId);
+        }
+      }
+    });
   }
 
   void _initSocketListeners() {
-    _socketClient.on('shared_ride:driver_location', (data) {
+    _onDriverLocation = (data) {
       LoggerService.debug(
         'Received shared_ride:driver_location event: $data',
         name: 'features.shared_trip.socket',
       );
       try {
+        if (_driverLocationController.isClosed) return;
         if (data is Map<String, dynamic>) {
           _driverLocationController.add(
             SharedRideDriverLocationPayload.fromJson(data),
@@ -81,15 +119,16 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('shared_ride:driver_location', _onDriverLocation);
 
-    _socketClient.on('shared_ride:passenger_joined', (data) {
+    _onPassengerJoined = (data) {
       LoggerService.debug(
         'Received shared_ride:passenger_joined event: $data',
         name: 'features.shared_trip.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_passengerJoinedController.isClosed) {
           _passengerJoinedController.add(
             SharedRidePassengerJoinedPayload.fromJson(
               Map<String, dynamic>.from(data),
@@ -104,15 +143,16 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('shared_ride:passenger_joined', _onPassengerJoined);
 
-    _socketClient.on('shared_ride:passenger_left', (data) {
+    _onPassengerLeft = (data) {
       LoggerService.debug(
         'Received shared_ride:passenger_left event: $data',
         name: 'features.shared_trip.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_passengerLeftController.isClosed) {
           _passengerLeftController.add(
             SharedRidePassengerLeftPayload.fromJson(
               Map<String, dynamic>.from(data),
@@ -127,15 +167,16 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('shared_ride:passenger_left', _onPassengerLeft);
 
-    _socketClient.on('shared_ride:passenger_removed', (data) {
+    _onPassengerRemoved = (data) {
       LoggerService.debug(
         'Received shared_ride:passenger_removed event: $data',
         name: 'features.shared_trip.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_passengerRemovedController.isClosed) {
           _passengerRemovedController.add(
             SharedRidePassengerRemovedPayload.fromJson(
               Map<String, dynamic>.from(data),
@@ -150,15 +191,16 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('shared_ride:passenger_removed', _onPassengerRemoved);
 
-    _socketClient.on('shared_ride:removed', (data) {
+    _onRiderRemoved = (data) {
       LoggerService.debug(
         'Received shared_ride:removed event: $data',
         name: 'features.shared_trip.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_riderRemovedController.isClosed) {
           _riderRemovedController.add(
             SharedRideRemovedPayload.fromJson(Map<String, dynamic>.from(data)),
           );
@@ -171,15 +213,16 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('shared_ride:removed', _onRiderRemoved);
 
-    _socketClient.on('shared_ride:room_ready', (data) {
+    _onRoomReady = (data) {
       LoggerService.debug(
         'Received shared_ride:room_ready event: $data',
         name: 'features.shared_trip.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_roomReadyController.isClosed) {
           _roomReadyController.add(
             SharedRideRoomReadyPayload.fromJson(
               Map<String, dynamic>.from(data),
@@ -194,15 +237,16 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('shared_ride:room_ready', _onRoomReady);
 
-    _socketClient.on('shared_ride:trip_started', (data) {
+    _onTripStarted = (data) {
       LoggerService.debug(
         'Received shared_ride:trip_started event: $data',
         name: 'features.shared_trip.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_tripStartedController.isClosed) {
           _tripStartedController.add(
             SharedRideTripStartedPayload.fromJson(
               Map<String, dynamic>.from(data),
@@ -217,15 +261,16 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('shared_ride:trip_started', _onTripStarted);
 
-    _socketClient.on('shared_ride:passenger_on_board', (data) {
+    _onPassengerOnBoard = (data) {
       LoggerService.debug(
         'Received shared_ride:passenger_on_board event: $data',
         name: 'features.shared_trip.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_passengerOnBoardController.isClosed) {
           _passengerOnBoardController.add(
             SharedRidePassengerOnBoardPayload.fromJson(
               Map<String, dynamic>.from(data),
@@ -240,15 +285,16 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('shared_ride:passenger_on_board', _onPassengerOnBoard);
 
-    _socketClient.on('shared_ride:passenger_dropped', (data) {
+    _onPassengerDropped = (data) {
       LoggerService.debug(
         'Received shared_ride:passenger_dropped event: $data',
         name: 'features.shared_trip.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_passengerDroppedController.isClosed) {
           _passengerDroppedController.add(
             SharedRidePassengerDroppedPayload.fromJson(
               Map<String, dynamic>.from(data),
@@ -263,15 +309,16 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('shared_ride:passenger_dropped', _onPassengerDropped);
 
-    _socketClient.on('shared_ride:completed', (data) {
+    _onTripCompleted = (data) {
       LoggerService.debug(
         'Received shared_ride:completed event: $data',
         name: 'features.shared_trip.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_tripCompletedController.isClosed) {
           _tripCompletedController.add(
             SharedRideCompletedPayload.fromJson(
               Map<String, dynamic>.from(data),
@@ -286,15 +333,16 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('shared_ride:completed', _onTripCompleted);
 
-    _socketClient.on('shared_ride:cancelled', (data) {
+    _onTripCancelled = (data) {
       LoggerService.debug(
         'Received shared_ride:cancelled event: $data',
         name: 'features.shared_trip.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_tripCancelledController.isClosed) {
           _tripCancelledController.add(
             SharedRideCancelledPayload.fromJson(
               Map<String, dynamic>.from(data),
@@ -309,21 +357,23 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('shared_ride:cancelled', _onTripCancelled);
 
     // Presence listeners
-    _socketClient.on('shared_ride:driver_online', (data) {
-      _handlePresence(data, isOnline: true, isDriver: true);
-    });
-    _socketClient.on('shared_ride:driver_offline', (data) {
-      _handlePresence(data, isOnline: false, isDriver: true);
-    });
-    _socketClient.on('shared_ride:passenger_online', (data) {
-      _handlePresence(data, isOnline: true, isDriver: false);
-    });
-    _socketClient.on('shared_ride:passenger_offline', (data) {
-      _handlePresence(data, isOnline: false, isDriver: false);
-    });
+    _onDriverOnline = (data) =>
+        _handlePresence(data, isOnline: true, isDriver: true);
+    _onDriverOffline = (data) =>
+        _handlePresence(data, isOnline: false, isDriver: true);
+    _onPassengerOnline = (data) =>
+        _handlePresence(data, isOnline: true, isDriver: false);
+    _onPassengerOffline = (data) =>
+        _handlePresence(data, isOnline: false, isDriver: false);
+
+    _socketClient.on('shared_ride:driver_online', _onDriverOnline);
+    _socketClient.on('shared_ride:driver_offline', _onDriverOffline);
+    _socketClient.on('shared_ride:passenger_online', _onPassengerOnline);
+    _socketClient.on('shared_ride:passenger_offline', _onPassengerOffline);
   }
 
   void _handlePresence(
@@ -336,7 +386,7 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
       name: 'features.shared_trip.socket',
     );
     try {
-      if (data is Map) {
+      if (data is Map && !_presenceController.isClosed) {
         _presenceController.add(
           SharedRidePresencePayload.fromJson(
             Map<String, dynamic>.from(data),
@@ -408,33 +458,76 @@ class SharedTripSocketDataSourceImpl implements SharedTripSocketDataSource {
 
   @override
   void listenToRoom(int sharedRideId) {
+    _activeRooms.add(sharedRideId);
     LoggerService.debug(
       'Tracking shared ride room $sharedRideId',
       name: 'features.shared_trip.socket',
     );
+    _socketClient.emit('join_shared_ride_room', sharedRideId);
   }
 
   @override
   void stopListeningToRoom(int sharedRideId) {
+    _activeRooms.remove(sharedRideId);
     LoggerService.debug(
       'Stopped tracking shared ride room $sharedRideId',
       name: 'features.shared_trip.socket',
     );
+    _socketClient.emit('leave_shared_ride_room', sharedRideId);
   }
 
   @override
   Future<void> dispose() async {
-    await _driverLocationController.close();
-    await _passengerJoinedController.close();
-    await _passengerLeftController.close();
-    await _passengerRemovedController.close();
-    await _riderRemovedController.close();
-    await _roomReadyController.close();
-    await _tripStartedController.close();
-    await _passengerOnBoardController.close();
-    await _passengerDroppedController.close();
-    await _tripCompletedController.close();
-    await _tripCancelledController.close();
-    await _presenceController.close();
+    await _connectionSubscription?.cancel();
+    _connectionSubscription = null;
+    _activeRooms.clear();
+
+    // Cleanly unregister callbacks from socket client
+    _socketClient.off('shared_ride:driver_location', _onDriverLocation);
+    _socketClient.off('shared_ride:passenger_joined', _onPassengerJoined);
+    _socketClient.off('shared_ride:passenger_left', _onPassengerLeft);
+    _socketClient.off('shared_ride:passenger_removed', _onPassengerRemoved);
+    _socketClient.off('shared_ride:removed', _onRiderRemoved);
+    _socketClient.off('shared_ride:room_ready', _onRoomReady);
+    _socketClient.off('shared_ride:trip_started', _onTripStarted);
+    _socketClient.off('shared_ride:passenger_on_board', _onPassengerOnBoard);
+    _socketClient.off('shared_ride:passenger_dropped', _onPassengerDropped);
+    _socketClient.off('shared_ride:completed', _onTripCompleted);
+    _socketClient.off('shared_ride:cancelled', _onTripCancelled);
+    _socketClient.off('shared_ride:driver_online', _onDriverOnline);
+    _socketClient.off('shared_ride:driver_offline', _onDriverOffline);
+    _socketClient.off('shared_ride:passenger_online', _onPassengerOnline);
+    _socketClient.off('shared_ride:passenger_offline', _onPassengerOffline);
+
+    if (!_driverLocationController.isClosed) {
+      await _driverLocationController.close();
+    }
+    if (!_passengerJoinedController.isClosed) {
+      await _passengerJoinedController.close();
+    }
+    if (!_passengerLeftController.isClosed) {
+      await _passengerLeftController.close();
+    }
+    if (!_passengerRemovedController.isClosed) {
+      await _passengerRemovedController.close();
+    }
+    if (!_riderRemovedController.isClosed) {
+      await _riderRemovedController.close();
+    }
+    if (!_roomReadyController.isClosed) await _roomReadyController.close();
+    if (!_tripStartedController.isClosed) await _tripStartedController.close();
+    if (!_passengerOnBoardController.isClosed) {
+      await _passengerOnBoardController.close();
+    }
+    if (!_passengerDroppedController.isClosed) {
+      await _passengerDroppedController.close();
+    }
+    if (!_tripCompletedController.isClosed) {
+      await _tripCompletedController.close();
+    }
+    if (!_tripCancelledController.isClosed) {
+      await _tripCancelledController.close();
+    }
+    if (!_presenceController.isClosed) await _presenceController.close();
   }
 }

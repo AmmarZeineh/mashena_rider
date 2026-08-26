@@ -162,6 +162,9 @@ class RideRepositoryImpl implements RideRepository {
   Stream<int> get rideExpiredStream => _rideSocketDataSource.rideExpiredStream;
 
   @override
+  Stream<bool> get connectionStatusStream => _rideSocketDataSource.connectionStatusStream;
+
+  @override
   Future<void> connectSocket() => _rideSocketDataSource.connectSocket();
 
   @override

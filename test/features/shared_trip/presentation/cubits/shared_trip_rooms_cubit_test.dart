@@ -11,8 +11,11 @@ import 'package:mashena_rider/features/shared_trip/presentation/cubits/shared_tr
 import 'package:mashena_rider/features/shared_trip/presentation/cubits/shared_trip_rooms_cubit/shared_trip_rooms_state.dart';
 import 'package:mashena_rider/features/shared_trip/presentation/models/shared_trip_rooms_args.dart';
 
-class MockSearchSharedRidesUsecase extends Mock implements SearchSharedRidesUsecase {}
-class FakeSearchSharedRideParams extends Fake implements SearchSharedRideParams {}
+class MockSearchSharedRidesUsecase extends Mock
+    implements SearchSharedRidesUsecase {}
+
+class FakeSearchSharedRideParams extends Fake
+    implements SearchSharedRideParams {}
 
 void main() {
   late MockSearchSharedRidesUsecase mockSearchUsecase;
@@ -90,12 +93,17 @@ void main() {
     });
 
     test('searchRooms emits loading then success with found rooms', () async {
-      when(() => mockSearchUsecase(any())).thenAnswer((_) async => Right([testRoom]));
+      when(
+        () => mockSearchUsecase(any()),
+      ).thenAnswer((_) async => Right([testRoom]));
 
       final expectedStates = [
         predicate<SharedTripRoomsState>((s) => s.isLoading == true),
         predicate<SharedTripRoomsState>(
-          (s) => s.isLoading == false && s.rooms.length == 1 && s.rooms.first.id == 1,
+          (s) =>
+              s.isLoading == false &&
+              s.rooms.length == 1 &&
+              s.rooms.first.id == 1,
         ),
       ];
 
@@ -106,7 +114,9 @@ void main() {
 
     test('searchRooms emits failure on error', () async {
       when(() => mockSearchUsecase(any())).thenAnswer(
-        (_) async => const Left(Failure(FailureCode.server, rawMessage: 'Search failed')),
+        (_) async => const Left(
+          Failure(FailureCode.server, rawMessage: 'Search failed'),
+        ),
       );
 
       final expectedStates = [

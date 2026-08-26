@@ -29,6 +29,8 @@ class DriverTrackingCubit extends Cubit<DriverTrackingState> {
   final MapStateCubit _mapStateCubit;
 
   StreamSubscription<MapLatLng>? _locationSubscription;
+  Timer? _osrmDebounceTimer;
+  int _osrmRequestId = 0;
 
   /// Starts listening to the driver location stream.
   /// [pickup] and [destination] are needed to compute route target.
@@ -84,54 +86,68 @@ class DriverTrackingCubit extends Cubit<DriverTrackingState> {
       ),
     );
 
-    // 3. OSRM street route (this can take time or rate limit, so do it after marker)
-    String? distanceText;
-    String? etaText;
-    var routePoints = [driverLocation, targetLocation];
-
-    try {
-      final routeDetails = await _osrmRouteService.getRouteDetails([
-        driverLocation,
-        targetLocation,
-      ]);
-
-      if (routeDetails != null) {
-        routePoints = routeDetails.points;
-        final distMeters = routeDetails.distance;
-        distanceText = distMeters < 1000
-            ? '${distMeters.toStringAsFixed(0)} m'
-            : '${(distMeters / 1000).toStringAsFixed(1)} km';
-
-        final durationMinutes = (routeDetails.duration / 60).round();
-        etaText = durationMinutes <= 0 ? '1 min' : '$durationMinutes min';
-      }
-    } catch (e) {
-      // Ignored for UI
+    // 3. OSRM street route (debounced to prevent excessive requests)
+    if (_osrmDebounceTimer?.isActive ?? false) {
+      _osrmDebounceTimer!.cancel();
     }
+    final int requestId = ++_osrmRequestId;
+    _osrmDebounceTimer = Timer(const Duration(milliseconds: 300), () async {
+      // Check if this is still the latest request
+      if (requestId != _osrmRequestId) {
+        return; // Stale request, ignore
+      }
 
-    // 4. Write polyline to MapStateCubit
-    final isArrived = state.isDriverArrived;
-    _mapStateCubit.updateDriverPolylines(
-      borderId: isArrived
-          ? 'driver_to_destination_border'
-          : 'driver_to_pickup_border',
-      lineId: isArrived ? 'driver_to_destination' : 'driver_to_pickup',
-      points: routePoints,
-    );
+      String? distanceText;
+      String? etaText;
+      var routePoints = [driverLocation, targetLocation];
 
-    emit(
-      state.copyWith(
-        driverLocation: driverLocation,
-        driverBearing: bearing,
-        driverDistance: distanceText,
-        driverEta: etaText,
-      ),
-    );
+      try {
+        final routeDetails = await _osrmRouteService.getRouteDetails([
+          driverLocation,
+          targetLocation,
+        ]);
 
-    LoggerService.debug(
-      'Driver at $driverLocation → bearing $bearing°, ETA $etaText',
-      name: 'features.home.driver_tracking',
-    );
+        if (routeDetails != null) {
+          routePoints = routeDetails.points;
+          final distMeters = routeDetails.distance;
+          distanceText = distMeters < 1000
+              ? '${distMeters.toStringAsFixed(0)} m'
+              : '${(distMeters / 1000).toStringAsFixed(1)} km';
+
+          final durationMinutes = (routeDetails.duration / 60).round();
+          etaText = durationMinutes <= 0 ? '1 min' : '$durationMinutes min';
+        }
+      } catch (e) {
+        // Ignored for UI - keep last valid values
+      }
+
+      // 4. Write polyline to MapStateCubit
+      final isArrived = state.isDriverArrived;
+      _mapStateCubit.updateDriverPolylines(
+        borderId: isArrived
+            ? 'driver_to_destination_border'
+            : 'driver_to_pickup_border',
+        lineId: isArrived ? 'driver_to_destination' : 'driver_to_pickup',
+        points: routePoints,
+      );
+
+      // Emit state update with polyline/ETA info
+      if (!isClosed) {
+        emit(
+          state.copyWith(
+            driverLocation: driverLocation,
+            driverBearing: bearing,
+            driverDistance: distanceText,
+            driverEta: etaText,
+          ),
+        );
+
+        LoggerService.debug(
+          'Driver at $driverLocation → bearing $bearing°, ETA $etaText',
+          name: 'features.home.driver_tracking',
+        );
+      }
+    });
   }
 
   /// Called when the driver has arrived so the amber line refreshes.
@@ -156,6 +172,7 @@ class DriverTrackingCubit extends Cubit<DriverTrackingState> {
   @override
   Future<void> close() {
     _locationSubscription?.cancel();
+    _osrmDebounceTimer?.cancel();
     return super.close();
   }
 }

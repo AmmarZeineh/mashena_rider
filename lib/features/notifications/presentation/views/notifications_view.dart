@@ -73,26 +73,37 @@ class _NotificationsViewContentState extends State<_NotificationsViewContent> {
             buildWhen: (p, c) => p.unreadCount != c.unreadCount,
             builder: (context, state) {
               if (state.unreadCount <= 0) return const SizedBox.shrink();
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.w,
-                    vertical: 4.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      s.unreadNotificationsBadge(state.unreadCount),
-                      style: AppTextStyles.w600_12.copyWith(
-                        color: AppColors.primaryColor,
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 4.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(16.r),
+                    ),
+                    child: Center(
+                      child: Text(
+                        s.unreadNotificationsBadge(state.unreadCount),
+                        style: AppTextStyles.w600_12.copyWith(
+                          color: AppColors.primaryColor,
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.done_all_rounded,
+                      color: AppColors.primaryColor,
+                    ),
+                    tooltip: s.markAllAsRead,
+                    onPressed: () =>
+                        context.read<NotificationsCubit>().markAllAsRead(),
+                  ),
+                ],
               );
             },
           ),

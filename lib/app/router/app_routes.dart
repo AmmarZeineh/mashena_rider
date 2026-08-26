@@ -12,6 +12,13 @@ class AppRoutes {
   static const sharedTripRooms = 'sharedTripRooms';
   static const sharedTripRoomDetails = 'sharedTripRoomDetails';
   static const notifications = 'notifications';
+  static const poolDiscovery = 'poolDiscovery';
+  static const poolCreate = 'poolCreate';
+  static const poolLobby = 'poolLobby';
+  static const moderation = 'moderation';
+  static const profile = 'profile';
+  static const tripHistory = 'tripHistory';
+  static const coupons = 'coupons';
 
   // route paths (للـ URL)
   static const onboardingPath = '/onboarding';
@@ -26,4 +33,11 @@ class AppRoutes {
   static const sharedTripRoomsPath = '/sharedTrip/rooms';
   static const sharedTripRoomDetailsPath = '/sharedTrip/roomDetails';
   static const notificationsPath = '/notifications';
+  static const poolDiscoveryPath = '/pool/discovery';
+  static const poolCreatePath = '/pool/create';
+  static const poolLobbyPath = '/pool/lobby';
+  static const moderationPath = '/moderation';
+  static const profilePath = '/profile';
+  static const tripHistoryPath = '/tripHistory';
+  static const couponsPath = '/coupons';
 }

@@ -6,6 +6,9 @@ import 'package:mashena_rider/core/theme/app_colors.dart';
 final class AppTheme {
   const AppTheme._();
 
+  static String? _cairoFontFamily;
+  static String? _poppinsFontFamily;
+
   static ThemeData light(Locale locale) {
     final fontFamily = _fontFamily(locale);
 
@@ -75,9 +78,13 @@ final class AppTheme {
 
   static String? _fontFamily(Locale locale) {
     final isArabic = locale.languageCode == 'ar';
-    return isArabic
-        ? GoogleFonts.cairo().fontFamily
-        : GoogleFonts.poppins().fontFamily;
+    if (isArabic) {
+      _cairoFontFamily ??= GoogleFonts.cairo().fontFamily;
+      return _cairoFontFamily;
+    } else {
+      _poppinsFontFamily ??= GoogleFonts.poppins().fontFamily;
+      return _poppinsFontFamily;
+    }
   }
 
   static PinputTheme _pinputTheme(

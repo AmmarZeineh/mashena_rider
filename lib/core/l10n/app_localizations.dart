@@ -655,6 +655,36 @@ abstract class S {
   /// **'Confirm & Join'**
   String get sharedTripConfirmJoin;
 
+  /// No description provided for @sharedTripLeaveRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Shared Trip'**
+  String get sharedTripLeaveRoom;
+
+  /// No description provided for @sharedTripLeaveConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Shared Trip?'**
+  String get sharedTripLeaveConfirmTitle;
+
+  /// No description provided for @sharedTripLeaveConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to leave this shared trip? Your seat will become available for others.'**
+  String get sharedTripLeaveConfirmBody;
+
+  /// No description provided for @sharedTripLeaveSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'You have left the shared trip.'**
+  String get sharedTripLeaveSuccess;
+
+  /// No description provided for @sharedTripCompanionDropped.
+  ///
+  /// In en, this message translates to:
+  /// **'A companion has been dropped off. Fare: {fare} {currency}'**
+  String sharedTripCompanionDropped(String fare, String currency);
+
   /// No description provided for @rideFindingDriver.
   ///
   /// In en, this message translates to:
@@ -1651,6 +1681,12 @@ abstract class S {
   /// **'{count} unread'**
   String unreadNotificationsBadge(int count);
 
+  /// No description provided for @markAllAsRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read'**
+  String get markAllAsRead;
+
   /// No description provided for @notificationTripId.
   ///
   /// In en, this message translates to:
@@ -1662,6 +1698,714 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Request #{id}'**
   String notificationRideRequestId(int id);
+
+  /// No description provided for @poolTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'Pool Transport'**
+  String get poolTransport;
+
+  /// No description provided for @poolFindLobby.
+  ///
+  /// In en, this message translates to:
+  /// **'Find Pool Lobby'**
+  String get poolFindLobby;
+
+  /// No description provided for @poolCreateLobby.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Pool Lobby'**
+  String get poolCreateLobby;
+
+  /// No description provided for @poolPublishLobby.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish Pool Lobby'**
+  String get poolPublishLobby;
+
+  /// No description provided for @poolMatchingNearby.
+  ///
+  /// In en, this message translates to:
+  /// **'Matching Pools Nearby'**
+  String get poolMatchingNearby;
+
+  /// No description provided for @poolSearchingLobbies.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching for matching pool lobbies...'**
+  String get poolSearchingLobbies;
+
+  /// No description provided for @poolNoLobbiesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No Pool Lobbies Found'**
+  String get poolNoLobbiesFound;
+
+  /// No description provided for @poolNoLobbiesFoundSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to create a pool lobby and other passengers traveling your direction will join you!'**
+  String get poolNoLobbiesFoundSubtitle;
+
+  /// No description provided for @poolMeetingPoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared Meeting Point'**
+  String get poolMeetingPoint;
+
+  /// No description provided for @poolMeetingPointDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk here to meet the driver & riders'**
+  String get poolMeetingPointDesc;
+
+  /// No description provided for @poolPassengersRoster.
+  ///
+  /// In en, this message translates to:
+  /// **'Passengers Roster'**
+  String get poolPassengersRoster;
+
+  /// No description provided for @poolTargetDepartureTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Departure Time'**
+  String get poolTargetDepartureTime;
+
+  /// No description provided for @poolTotalCapacity.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Passenger Capacity'**
+  String get poolTotalCapacity;
+
+  /// No description provided for @poolCapacityDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Room will be sent to drivers once full.'**
+  String get poolCapacityDesc;
+
+  /// No description provided for @poolSeatsYouNeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Seats You Need'**
+  String get poolSeatsYouNeed;
+
+  /// No description provided for @poolSeatsYouNeedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of seats for you & companions'**
+  String get poolSeatsYouNeedDesc;
+
+  /// No description provided for @poolJoinSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined pool room successfully!'**
+  String get poolJoinSuccess;
+
+  /// No description provided for @poolCreateSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Pool room created! Waiting in lobby.'**
+  String get poolCreateSuccess;
+
+  /// No description provided for @poolCancelRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Pool Room'**
+  String get poolCancelRoom;
+
+  /// No description provided for @poolLeaveRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Pool Room'**
+  String get poolLeaveRoom;
+
+  /// No description provided for @poolCancelConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Pool Room?'**
+  String get poolCancelConfirmTitle;
+
+  /// No description provided for @poolCancelConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelling this room will disband the lobby and notify all joined passengers.'**
+  String get poolCancelConfirmBody;
+
+  /// No description provided for @poolLeaveConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Pool Room?'**
+  String get poolLeaveConfirmTitle;
+
+  /// No description provided for @poolLeaveConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to leave this pool room? Your seat will become available for others.'**
+  String get poolLeaveConfirmBody;
+
+  /// No description provided for @poolDriverFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Found! Starting your ride.'**
+  String get poolDriverFound;
+
+  /// No description provided for @poolExpiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pool Room Expired'**
+  String get poolExpiredTitle;
+
+  /// No description provided for @poolExpiredBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No driver was matched before the departure time. The room has expired.'**
+  String get poolExpiredBody;
+
+  /// No description provided for @poolCancelledTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pool Room Cancelled'**
+  String get poolCancelledTitle;
+
+  /// No description provided for @poolCancelledBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The host has cancelled this pool room.'**
+  String get poolCancelledBody;
+
+  /// No description provided for @poolRemovedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from Room'**
+  String get poolRemovedTitle;
+
+  /// No description provided for @poolRemovedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You were removed from this pool room.'**
+  String get poolRemovedBody;
+
+  /// No description provided for @poolStatusLooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for Passengers'**
+  String get poolStatusLooking;
+
+  /// No description provided for @poolStatusReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding Driver...'**
+  String get poolStatusReady;
+
+  /// No description provided for @poolStatusMatched.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Assigned!'**
+  String get poolStatusMatched;
+
+  /// No description provided for @drawerModeration.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderation & Restrictions'**
+  String get drawerModeration;
+
+  /// No description provided for @moderationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Status & Moderation'**
+  String get moderationTitle;
+
+  /// No description provided for @moderationOverviewTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get moderationOverviewTab;
+
+  /// No description provided for @moderationPenaltiesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalties'**
+  String get moderationPenaltiesTab;
+
+  /// No description provided for @moderationViolationsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Violations'**
+  String get moderationViolationsTab;
+
+  /// No description provided for @moderationAppealsTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Appeals'**
+  String get moderationAppealsTab;
+
+  /// No description provided for @moderationAccountStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Status'**
+  String get moderationAccountStatus;
+
+  /// No description provided for @moderationStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Standing'**
+  String get moderationStatusActive;
+
+  /// No description provided for @moderationStatusWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning Issued'**
+  String get moderationStatusWarning;
+
+  /// No description provided for @moderationStatusRestricted.
+  ///
+  /// In en, this message translates to:
+  /// **'Restricted'**
+  String get moderationStatusRestricted;
+
+  /// No description provided for @moderationStatusSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended'**
+  String get moderationStatusSuspended;
+
+  /// No description provided for @moderationStatusBanned.
+  ///
+  /// In en, this message translates to:
+  /// **'Banned'**
+  String get moderationStatusBanned;
+
+  /// No description provided for @moderationActiveRestrictions.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Restrictions'**
+  String get moderationActiveRestrictions;
+
+  /// No description provided for @moderationActivePenalties.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Penalties'**
+  String get moderationActivePenalties;
+
+  /// No description provided for @moderationRecentViolations.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Violations'**
+  String get moderationRecentViolations;
+
+  /// No description provided for @moderationActiveAppeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Appeals'**
+  String get moderationActiveAppeals;
+
+  /// No description provided for @moderationWarningsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Warnings'**
+  String get moderationWarningsCount;
+
+  /// No description provided for @moderationViolationsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Violations'**
+  String get moderationViolationsCount;
+
+  /// No description provided for @moderationPenaltiesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Penalties'**
+  String get moderationPenaltiesCount;
+
+  /// No description provided for @moderationRestrictionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Restrictions'**
+  String get moderationRestrictionsCount;
+
+  /// No description provided for @moderationSubmitAppeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Appeal'**
+  String get moderationSubmitAppeal;
+
+  /// No description provided for @moderationAppealReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Appeal Reason'**
+  String get moderationAppealReason;
+
+  /// No description provided for @moderationAppealReasonHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain in detail why this penalty should be reviewed...'**
+  String get moderationAppealReasonHint;
+
+  /// No description provided for @moderationAppealEvidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Evidence URL (Optional)'**
+  String get moderationAppealEvidence;
+
+  /// No description provided for @moderationAppealEvidenceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'https://example.com/proof.jpg'**
+  String get moderationAppealEvidenceHint;
+
+  /// No description provided for @moderationAppealSubmitBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Appeal'**
+  String get moderationAppealSubmitBtn;
+
+  /// No description provided for @moderationAppealSubmitting.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitting Appeal...'**
+  String get moderationAppealSubmitting;
+
+  /// No description provided for @moderationAppealSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Appeal submitted successfully'**
+  String get moderationAppealSuccess;
+
+  /// No description provided for @moderationAppealAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'An appeal is already pending review for this penalty'**
+  String get moderationAppealAlreadyExists;
+
+  /// No description provided for @moderationPenaltyNotAppealable.
+  ///
+  /// In en, this message translates to:
+  /// **'Only active penalties can be appealed'**
+  String get moderationPenaltyNotAppealable;
+
+  /// No description provided for @moderationAppealDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appeal Details'**
+  String get moderationAppealDetailsTitle;
+
+  /// No description provided for @moderationAdminDecision.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Decision'**
+  String get moderationAdminDecision;
+
+  /// No description provided for @moderationAdminNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Notes'**
+  String get moderationAdminNotes;
+
+  /// No description provided for @moderationExpiresAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires: {date}'**
+  String moderationExpiresAt(String date);
+
+  /// No description provided for @moderationStartsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts: {date}'**
+  String moderationStartsAt(String date);
+
+  /// No description provided for @moderationIssuedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Issued: {date}'**
+  String moderationIssuedAt(String date);
+
+  /// No description provided for @moderationSubmittedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted: {date}'**
+  String moderationSubmittedAt(String date);
+
+  /// No description provided for @moderationReviewedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed: {date}'**
+  String moderationReviewedAt(String date);
+
+  /// No description provided for @moderationNoPenalties.
+  ///
+  /// In en, this message translates to:
+  /// **'No penalties recorded'**
+  String get moderationNoPenalties;
+
+  /// No description provided for @moderationNoViolations.
+  ///
+  /// In en, this message translates to:
+  /// **'No violations recorded'**
+  String get moderationNoViolations;
+
+  /// No description provided for @moderationNoAppeals.
+  ///
+  /// In en, this message translates to:
+  /// **'No appeals submitted'**
+  String get moderationNoAppeals;
+
+  /// No description provided for @moderationNoRestrictions.
+  ///
+  /// In en, this message translates to:
+  /// **'No active restrictions on your account'**
+  String get moderationNoRestrictions;
+
+  /// No description provided for @moderationPermanentBanNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanent Ban (No Expiry)'**
+  String get moderationPermanentBanNotice;
+
+  /// No description provided for @moderationPenaltyTypeWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get moderationPenaltyTypeWarning;
+
+  /// No description provided for @moderationPenaltyTypeSuspension.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary Suspension'**
+  String get moderationPenaltyTypeSuspension;
+
+  /// No description provided for @moderationPenaltyTypeBan.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanent Ban'**
+  String get moderationPenaltyTypeBan;
+
+  /// No description provided for @moderationPenaltyTypeFeatureRestriction.
+  ///
+  /// In en, this message translates to:
+  /// **'Feature Restriction'**
+  String get moderationPenaltyTypeFeatureRestriction;
+
+  /// No description provided for @moderationPenaltyTypeAccountRestriction.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Restriction'**
+  String get moderationPenaltyTypeAccountRestriction;
+
+  /// No description provided for @moderationPenaltyStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get moderationPenaltyStatusActive;
+
+  /// No description provided for @moderationPenaltyStatusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get moderationPenaltyStatusExpired;
+
+  /// No description provided for @moderationPenaltyStatusRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoked'**
+  String get moderationPenaltyStatusRevoked;
+
+  /// No description provided for @moderationPenaltyStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get moderationPenaltyStatusCancelled;
+
+  /// No description provided for @moderationRestrictionRequestRide.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride Requests'**
+  String get moderationRestrictionRequestRide;
+
+  /// No description provided for @moderationRestrictionJoinSharedRide.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Shared Rides'**
+  String get moderationRestrictionJoinSharedRide;
+
+  /// No description provided for @moderationRestrictionJoinPassengerPool.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Passenger Pools'**
+  String get moderationRestrictionJoinPassengerPool;
+
+  /// No description provided for @moderationRestrictionWalletTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet Transfer'**
+  String get moderationRestrictionWalletTransfer;
+
+  /// No description provided for @moderationRestrictionPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Processing'**
+  String get moderationRestrictionPayment;
+
+  /// No description provided for @moderationRestrictionFullAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Account Access'**
+  String get moderationRestrictionFullAccount;
+
+  /// No description provided for @moderationViolationRiderTripCancellation.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride Cancellation'**
+  String get moderationViolationRiderTripCancellation;
+
+  /// No description provided for @moderationViolationNoShow.
+  ///
+  /// In en, this message translates to:
+  /// **'No Show at Pickup'**
+  String get moderationViolationNoShow;
+
+  /// No description provided for @moderationViolationLateCancellation.
+  ///
+  /// In en, this message translates to:
+  /// **'Late Cancellation'**
+  String get moderationViolationLateCancellation;
+
+  /// No description provided for @moderationViolationSharedRideMisuse.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared Ride Misuse'**
+  String get moderationViolationSharedRideMisuse;
+
+  /// No description provided for @moderationViolationPassengerPoolMisuse.
+  ///
+  /// In en, this message translates to:
+  /// **'Passenger Pool Misuse'**
+  String get moderationViolationPassengerPoolMisuse;
+
+  /// No description provided for @moderationViolationPaymentAbuse.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Abuse'**
+  String get moderationViolationPaymentAbuse;
+
+  /// No description provided for @moderationViolationWalletAbuse.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet Abuse'**
+  String get moderationViolationWalletAbuse;
+
+  /// No description provided for @moderationViolationAbusiveBehavior.
+  ///
+  /// In en, this message translates to:
+  /// **'Abusive Behavior'**
+  String get moderationViolationAbusiveBehavior;
+
+  /// No description provided for @moderationViolationFraud.
+  ///
+  /// In en, this message translates to:
+  /// **'Fraud Activity'**
+  String get moderationViolationFraud;
+
+  /// No description provided for @moderationViolationManualAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Administrative Violation'**
+  String get moderationViolationManualAdmin;
+
+  /// No description provided for @moderationSeverityLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get moderationSeverityLow;
+
+  /// No description provided for @moderationSeverityMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get moderationSeverityMedium;
+
+  /// No description provided for @moderationSeverityHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get moderationSeverityHigh;
+
+  /// No description provided for @moderationSeverityCritical.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get moderationSeverityCritical;
+
+  /// No description provided for @moderationAppealStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Review'**
+  String get moderationAppealStatusPending;
+
+  /// No description provided for @moderationAppealStatusUnderReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Under Review'**
+  String get moderationAppealStatusUnderReview;
+
+  /// No description provided for @moderationAppealStatusApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get moderationAppealStatusApproved;
+
+  /// No description provided for @moderationAppealStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get moderationAppealStatusRejected;
+
+  /// No description provided for @moderationAppealStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get moderationAppealStatusCancelled;
+
+  /// No description provided for @moderationReasonRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the appeal reason'**
+  String get moderationReasonRequired;
+
+  /// No description provided for @moderationReasonTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason cannot exceed 2000 characters'**
+  String get moderationReasonTooLong;
+
+  /// No description provided for @moderationInvalidEvidenceUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid URL'**
+  String get moderationInvalidEvidenceUrl;
+
+  /// No description provided for @moderationPenaltyRef.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty #{id}'**
+  String moderationPenaltyRef(int id);
+
+  /// No description provided for @moderationAppealRef.
+  ///
+  /// In en, this message translates to:
+  /// **'Appeal #{id}'**
+  String moderationAppealRef(int id);
+
+  /// No description provided for @moderationRealtimePenaltyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Penalty Notice'**
+  String get moderationRealtimePenaltyTitle;
+
+  /// No description provided for @moderationRealtimeLiftedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restriction Lifted'**
+  String get moderationRealtimeLiftedTitle;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

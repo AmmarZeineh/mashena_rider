@@ -108,6 +108,10 @@ void main() {
           'finalFare': 6250.0,
           'finalDistanceKm': 8.2,
           'finalDurationSec': 850,
+          'accountHolderOnBoard': false,
+          'activeSeats': 0,
+          'seatsNeeded': 2,
+          'totalPaidFare': 6250.0,
         },
       };
 
@@ -117,7 +121,55 @@ void main() {
       expect(payload.finalFare, 6250.0);
       expect(payload.finalDistanceKm, 8.2);
       expect(payload.finalDurationSec, 850);
+      expect(payload.accountHolderOnBoard, false);
+      expect(payload.activeSeats, 0);
+      expect(payload.seatsNeeded, 2);
+      expect(payload.totalPaidFare, 6250.0);
     });
+
+    test(
+      'SharedRidePassengerDroppedPayload parses companion drop (accountHolderOnBoard true)',
+      () {
+        final json = {
+          'sharedRideId': 59,
+          'event': 'shared_ride:passenger_dropped',
+          'timestamp': '2026-08-25T23:58:03.085Z',
+          'userId': 2,
+          'status': 'DROPPED_OFF',
+          'passenger': {
+            'id': 81,
+            'sharedRideId': 59,
+            'riderProfileId': 1,
+            'riderName': 'Ammar Zeineh',
+            'status': 'ON_BOARD',
+            'paymentStatus': 'PENDING',
+            'seatsNeeded': 2,
+            'activeSeats': 1,
+            'totalPaidFare': 2062.2,
+            'finalDistanceKm': null,
+            'finalDurationSec': null,
+            'finalFare': null,
+            'joinedAt': '2026-08-25T23:57:14.723Z',
+            'onBoardAt': '2026-08-25T23:57:31.874Z',
+            'droppedOffAt': null,
+            'accountHolderOnBoard': true,
+            'accountHolderDroppedOffAt': null,
+          },
+        };
+
+        final payload = SharedRidePassengerDroppedPayload.fromJson(json);
+        expect(payload.sharedRideId, 59);
+        expect(payload.passengerId, 81);
+        expect(payload.userId, 2);
+        expect(payload.accountHolderOnBoard, true);
+        expect(payload.passengerStatus, 'ON_BOARD');
+        expect(payload.activeSeats, 1);
+        expect(payload.seatsNeeded, 2);
+        expect(payload.totalPaidFare, 2062.2);
+        expect(payload.finalFare, null);
+        expect(payload.droppedOffAt, null);
+      },
+    );
 
     test('SharedRideCancelledPayload fromJson parses correctly', () {
       final json = {
@@ -161,6 +213,12 @@ void main() {
       mockSocketClient = MockSocketClient();
       registeredCallbacks.clear();
 
+      when(
+        () => mockSocketClient.connectionStatusStream,
+      ).thenAnswer((_) => const Stream.empty());
+      when(() => mockSocketClient.off(any(), any())).thenReturn(null);
+      when(() => mockSocketClient.off(any())).thenReturn(null);
+
       when(() => mockSocketClient.on(any(), any())).thenAnswer((invocation) {
         final event = invocation.positionalArguments[0] as String;
         final cb = invocation.positionalArguments[1] as void Function(dynamic);
@@ -171,7 +229,10 @@ void main() {
     test('registers listeners and emits driver location on stream', () async {
       final dataSource = SharedTripSocketDataSourceImpl(mockSocketClient);
 
-      expect(registeredCallbacks.containsKey('shared_ride:driver_location'), true);
+      expect(
+        registeredCallbacks.containsKey('shared_ride:driver_location'),
+        true,
+      );
 
       expectLater(
         dataSource.driverLocationStream,

@@ -9,11 +9,17 @@ import 'package:mashena_rider/features/shared_trip/domain/entities/shared_ride_r
 class RoomDetailsBottomBar extends StatelessWidget {
   final SharedRideRoomDetailsEntity details;
   final VoidCallback? onJoinPressed;
+  final VoidCallback? onLeavePressed;
+  final bool isUserJoined;
+  final bool isLeaving;
 
   const RoomDetailsBottomBar({
     super.key,
     required this.details,
     this.onJoinPressed,
+    this.onLeavePressed,
+    this.isUserJoined = false,
+    this.isLeaving = false,
   });
 
   String _formatFare(num fare) {
@@ -33,6 +39,13 @@ class RoomDetailsBottomBar extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final canJoin = details.isOpen && !details.isFull;
+    final canLeave = isUserJoined && (details.isOpen || details.isReady);
+
+    // If user is joined and ride is in progress/completed/canceled, no bottom bar action is available
+    if (isUserJoined && !canLeave) {
+      return const SizedBox.shrink();
+    }
+
     final barBg = isDark ? colorScheme.surfaceContainerLow : Colors.white;
     final borderColor = isDark
         ? colorScheme.outlineVariant.withValues(alpha: 0.3)
@@ -91,35 +104,67 @@ class RoomDetailsBottomBar extends StatelessWidget {
               ),
             ),
 
-            // CTA Button
+            // CTA Button (Leave when joined, Join when not joined)
             SizedBox(width: 16.w),
-            FilledButton(
-              onPressed: canJoin ? onJoinPressed : null,
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                disabledBackgroundColor: isDark
-                    ? colorScheme.surfaceContainerHighest
-                    : Colors.grey.shade300,
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14.r),
+            if (isUserJoined)
+              OutlinedButton.icon(
+                onPressed: isLeaving ? null : onLeavePressed,
+                icon: isLeaving
+                    ? SizedBox(
+                        width: 16.r,
+                        height: 16.r,
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.errorColor,
+                          ),
+                        ),
+                      )
+                    : const Icon(Icons.exit_to_app_rounded),
+                label: Text(s.sharedTripLeaveRoom),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.errorColor,
+                  side: const BorderSide(color: AppColors.errorColor),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 18.w,
+                    vertical: 14.h,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
+                ),
+              )
+            else
+              FilledButton(
+                onPressed: canJoin ? onJoinPressed : null,
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  disabledBackgroundColor: isDark
+                      ? colorScheme.surfaceContainerHighest
+                      : Colors.grey.shade300,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.w,
+                    vertical: 14.h,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
+                ),
+                child: Text(
+                  canJoin
+                      ? s.sharedTripJoinRoom
+                      : (details.isFull
+                            ? s.sharedTripRoomFull
+                            : s.sharedTripRoomClosed),
+                  style: AppTextStyles.w600_14.copyWith(
+                    color: canJoin
+                        ? Colors.white
+                        : (isDark
+                              ? colorScheme.onSurfaceVariant
+                              : AppColors.textGrey),
+                  ),
                 ),
               ),
-              child: Text(
-                canJoin
-                    ? s.sharedTripJoinRoom
-                    : (details.isFull
-                          ? s.sharedTripRoomFull
-                          : s.sharedTripRoomClosed),
-                style: AppTextStyles.w600_14.copyWith(
-                  color: canJoin
-                      ? Colors.white
-                      : (isDark
-                            ? colorScheme.onSurfaceVariant
-                            : AppColors.textGrey),
-                ),
-              ),
-            ),
           ],
         ),
       ),

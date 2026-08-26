@@ -56,7 +56,9 @@ void main() {
       ).thenAnswer((_) async => const Right([testTrip1, testTrip2]));
 
       final expectedStates = [
-        predicate<TripHistoryState>((s) => s.status == TripHistoryStatus.loading),
+        predicate<TripHistoryState>(
+          (s) => s.status == TripHistoryStatus.loading,
+        ),
         predicate<TripHistoryState>(
           (s) =>
               s.status == TripHistoryStatus.success &&
@@ -78,11 +80,14 @@ void main() {
           status: any(named: 'status'),
         ),
       ).thenAnswer(
-        (_) async => const Left(Failure(FailureCode.server, rawMessage: 'Fetch failed')),
+        (_) async =>
+            const Left(Failure(FailureCode.server, rawMessage: 'Fetch failed')),
       );
 
       final expectedStates = [
-        predicate<TripHistoryState>((s) => s.status == TripHistoryStatus.loading),
+        predicate<TripHistoryState>(
+          (s) => s.status == TripHistoryStatus.loading,
+        ),
         predicate<TripHistoryState>(
           (s) =>
               s.status == TripHistoryStatus.failure &&
@@ -95,20 +100,23 @@ void main() {
       await cubit.fetchInitialTrips();
     });
 
-    test('selectStatusFilter resets items and fetches with new filter', () async {
-      when(
-        () => mockRepo.getRiderTripHistory(
-          skip: 0,
-          limit: any(named: 'limit'),
-          status: RiderTripStatus.completed,
-        ),
-      ).thenAnswer((_) async => const Right([testTrip1]));
+    test(
+      'selectStatusFilter resets items and fetches with new filter',
+      () async {
+        when(
+          () => mockRepo.getRiderTripHistory(
+            skip: 0,
+            limit: any(named: 'limit'),
+            status: RiderTripStatus.completed,
+          ),
+        ).thenAnswer((_) async => const Right([testTrip1]));
 
-      await cubit.selectStatusFilter(RiderTripStatus.completed);
+        await cubit.selectStatusFilter(RiderTripStatus.completed);
 
-      expect(cubit.state.selectedStatusFilter, RiderTripStatus.completed);
-      expect(cubit.state.items, [testTrip1]);
-    });
+        expect(cubit.state.selectedStatusFilter, RiderTripStatus.completed);
+        expect(cubit.state.items, [testTrip1]);
+      },
+    );
 
     test('loadNextPage appends items and increments page', () async {
       final initialTen = List.generate(

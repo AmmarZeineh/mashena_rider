@@ -26,9 +26,12 @@ abstract interface class SocketClient {
   /// Emits an event with optional data payload to the server.
   void emit(String event, [dynamic data]);
 
+  /// Reconnects the socket, refreshing authentication if needed.
+  Future<void> reconnect();
+
   /// Registers a callback for incoming events from the server.
   void on(String event, void Function(dynamic data) callback);
 
-  /// Unregisters/removes the callback registered for the given event.
-  void off(String event);
+  /// Unregisters/removes either a specific [callback] or all callbacks registered for [event].
+  void off(String event, [void Function(dynamic data)? callback]);
 }

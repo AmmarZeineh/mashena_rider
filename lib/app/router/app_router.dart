@@ -20,6 +20,14 @@ import 'package:mashena_rider/features/onboarding/presentation/views/onboarding_
 import 'package:mashena_rider/features/splash/presentation/views/splash_view.dart';
 import 'package:mashena_rider/features/notifications/presentation/views/notifications_view.dart';
 import 'package:mashena_rider/features/home/presentation/common/models/confirmed_ride_flow_result.dart';
+import 'package:mashena_rider/features/pool/presentation/models/pool_discovery_args.dart';
+import 'package:mashena_rider/features/pool/presentation/views/pool_create_view.dart';
+import 'package:mashena_rider/features/pool/presentation/views/pool_discovery_view.dart';
+import 'package:mashena_rider/features/pool/presentation/views/pool_lobby_view.dart';
+import 'package:mashena_rider/features/moderation/presentation/views/moderation_view.dart';
+import 'package:mashena_rider/features/profile/presentation/views/profile_view.dart';
+import 'package:mashena_rider/features/trip_history/presentation/views/trip_history_view.dart';
+import 'package:mashena_rider/features/coupons/presentation/views/coupons_view.dart';
 
 final class AppRouter {
   const AppRouter._();
@@ -137,9 +145,42 @@ final class AppRouter {
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.poolDiscoveryPath,
+        name: AppRoutes.poolDiscovery,
+        builder: (context, state) {
+          final args = state.extra as PoolDiscoveryArgs;
+          return PoolDiscoveryView(args: args);
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.poolCreatePath,
+        name: AppRoutes.poolCreate,
+        builder: (context, state) {
+          final args = state.extra as PoolDiscoveryArgs;
+          return PoolCreateView(args: args);
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.poolLobbyPath,
+        name: AppRoutes.poolLobby,
+        builder: (context, state) {
+          final roomId = state.extra as int;
+          return PoolLobbyView(roomId: roomId);
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.notificationsPath,
         name: AppRoutes.notifications,
         builder: (context, state) => const NotificationsView(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.moderationPath,
+        name: AppRoutes.moderation,
+        builder: (context, state) => const ModerationView(),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
@@ -153,6 +194,24 @@ final class AppRouter {
                 const MapLatLng(latitude: 33.5153, longitude: 36.2772),
           );
         },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.profilePath,
+        name: AppRoutes.profile,
+        builder: (context, state) => const ProfileView(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.tripHistoryPath,
+        name: AppRoutes.tripHistory,
+        builder: (context, state) => const TripHistoryView(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.couponsPath,
+        name: AppRoutes.coupons,
+        builder: (context, state) => const CouponsView(),
       ),
     ],
     errorBuilder: (context, state) => _ErrorPage(error: state.error),

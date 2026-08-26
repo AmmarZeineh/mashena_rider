@@ -41,48 +41,46 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAbCP8AUgStxKv0-vTgCvjpp4Jlqsc_ElQ',
-    appId: '1:773307258733:web:df43a507067f1e535cac64',
-    messagingSenderId: '773307258733',
-    projectId: 'mashena-g2026',
-    authDomain: 'mashena-g2026.firebaseapp.com',
-    storageBucket: 'mashena-g2026.firebasestorage.app',
-    measurementId: 'G-G53H73S3BC',
+    apiKey: 'AIzaSyC3JPU679Zzi-12uiBsBt6VorUv5Fn-9Og',
+    appId: '1:1054047692408:web:18f8d3434caaab60576f8d',
+    messagingSenderId: '1054047692408',
+    projectId: 'mashena-e39bd',
+    authDomain: 'mashena-e39bd.firebaseapp.com',
+    storageBucket: 'mashena-e39bd.firebasestorage.app',
+    measurementId: 'G-BMX07FY07K',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDDtedEoqMqsFJwzTR7eVumKN2tGKxEE-A',
-    appId: '1:773307258733:android:9ae572a336b989ac5cac64',
-    messagingSenderId: '773307258733',
-    projectId: 'mashena-g2026',
-    storageBucket: 'mashena-g2026.firebasestorage.app',
+    apiKey: 'AIzaSyCTPAC4d458mFIHxWbPngjuTHcSnOklFvI',
+    appId: '1:1054047692408:android:d1793b0b0014ee6e576f8d',
+    messagingSenderId: '1054047692408',
+    projectId: 'mashena-e39bd',
+    storageBucket: 'mashena-e39bd.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDr32RBAkGuVVZmXce7UB7JwyLKnBiXMA0',
-    appId: '1:773307258733:ios:0c2f4184966d67185cac64',
-    messagingSenderId: '773307258733',
-    projectId: 'mashena-g2026',
-    storageBucket: 'mashena-g2026.firebasestorage.app',
+    apiKey: 'AIzaSyAq-JzblK-j5wXE1VWn29XZOFw-IM_fzz0',
+    appId: '1:1054047692408:ios:e6fd198f6ee06fbe576f8d',
+    messagingSenderId: '1054047692408',
+    projectId: 'mashena-e39bd',
+    storageBucket: 'mashena-e39bd.firebasestorage.app',
     iosBundleId: 'com.example.mashenaRider',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDr32RBAkGuVVZmXce7UB7JwyLKnBiXMA0',
-    appId: '1:773307258733:ios:0c2f4184966d67185cac64',
-    messagingSenderId: '773307258733',
-    projectId: 'mashena-g2026',
-    storageBucket: 'mashena-g2026.firebasestorage.app',
+    apiKey: 'AIzaSyAq-JzblK-j5wXE1VWn29XZOFw-IM_fzz0',
+    appId: '1:1054047692408:ios:e6fd198f6ee06fbe576f8d',
+    messagingSenderId: '1054047692408',
+    projectId: 'mashena-e39bd',
+    storageBucket: 'mashena-e39bd.firebasestorage.app',
     iosBundleId: 'com.example.mashenaRider',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAbCP8AUgStxKv0-vTgCvjpp4Jlqsc_ElQ',
-    appId: '1:773307258733:web:9d2589f35aa41a105cac64',
-    messagingSenderId: '773307258733',
-    projectId: 'mashena-g2026',
-    authDomain: 'mashena-g2026.firebaseapp.com',
-    storageBucket: 'mashena-g2026.firebasestorage.app',
-    measurementId: 'G-MXMZXCTG6H',
+    apiKey: 'AIzaSyC3JPU679Zzi-12uiBsBt6VorUv5Fn-9Og',
+    appId: '1:1054047692408:web:c48ea15eb4185025576f8d',
+    messagingSenderId: '1054047692408',
+    projectId: 'mashena-e39bd',
+    authDomain: 'mashena-e39bd.firebaseapp.com',
+    storageBucket: 'mashena-e39bd.firebasestorage.app',
+    measurementId: 'G-2QYVFL8HYH',
   );
 }

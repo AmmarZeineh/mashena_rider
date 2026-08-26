@@ -23,6 +23,14 @@ class BackendEndpoints {
   static String joinSharedRide(int id) => '/shared-rides/$id/join';
   static String leaveSharedRide(int id) => '/shared-rides/$id/leave';
 
+  // Passenger Pools
+  static const String poolSuggestions = '/passenger-pools/suggestions';
+  static const String createPoolRoom = '/passenger-pools';
+  static String getPoolRoomDetails(int id) => '/passenger-pools/$id';
+  static String joinPoolRoom(int id) => '/passenger-pools/$id/join';
+  static String leavePoolRoom(int id) => '/passenger-pools/$id/leave';
+  static String cancelPoolRoom(int id) => '/passenger-pools/$id';
+
   // Coupons
   static const String activateCoupon = '/coupons/activate';
   static const String myCoupons = '/coupons/my-coupons';
@@ -30,6 +38,18 @@ class BackendEndpoints {
 
   // Notifications
   static const String notifications = '/notifications';
+  static const String notificationToken = '/notifications/token';
+  static String markNotificationRead(int id) => '/notifications/$id/read';
+  static const String markAllNotificationsRead = '/notifications/read-all';
+
+  // Moderation
+  static const String moderationOverview = '/me/moderation';
+  static const String myPenalties = '/me/penalties';
+  static const String myViolations = '/me/violations';
+  static const String myRestrictions = '/me/restrictions';
+  static String appealPenalty(int id) => '/me/penalties/$id/appeal';
+  static const String myAppeals = '/me/appeals';
+  static String appealDetails(int id) => '/me/appeals/$id';
 
   // External APIs
   static const String nominatimSearch =

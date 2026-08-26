@@ -43,6 +43,9 @@ abstract interface class RideRepository {
   /// Stream emitting when the ride request expires
   Stream<int> get rideExpiredStream;
 
+  /// Stream of the socket connection state updates.
+  Stream<bool> get connectionStatusStream;
+
   /// Connects the underlying socket to the server.
   /// Should be called early (on screen init) so the rider is registered
   /// in the gateway before submitting a ride request.

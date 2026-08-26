@@ -14,7 +14,6 @@ class MockSharedTripSocketDataSource extends Mock
     implements SharedTripSocketDataSource {}
 
 void main() {
-
   group('SearchSharedRideParams', () {
     test('toQueryMap formats parameters correctly', () {
       const params = SearchSharedRideParams(
@@ -83,10 +82,7 @@ void main() {
         'city': 'Damascus',
         'ratingAvg': 4.9,
         'isOnline': true,
-        'user': {
-          'id': 10,
-          'fullName': 'Samer Homsi',
-        },
+        'user': {'id': 10, 'fullName': 'Samer Homsi'},
       },
       'vehicle': {
         'id': 5,
@@ -273,31 +269,30 @@ void main() {
 
     test('searchSharedRides fetches and maps results', () async {
       when(
-        () => mockApiClient.get(
-          any(),
-          query: any(named: 'query'),
-        ),
-      ).thenAnswer((_) async => [
-            {
-              'id': 1,
-              'driverProfileId': 2,
-              'vehicleId': 3,
-              'status': 'OPEN',
-              'originLat': 33.5,
-              'originLng': 36.2,
-              'originAddress': 'Origin',
-              'destLat': 33.6,
-              'destLng': 36.3,
-              'destAddress': 'Dest',
-              'departureTime': '2026-08-17T09:00:00.000Z',
-              'maxPassengers': 4,
-              'occupiedSeats': 0,
-              'baseTripFare': 10000.0,
-              'remainingTripCost': 10000.0,
-              'createdAt': '2026-08-17T07:00:00.000Z',
-              'updatedAt': '2026-08-17T07:00:00.000Z',
-            },
-          ]);
+        () => mockApiClient.get(any(), query: any(named: 'query')),
+      ).thenAnswer(
+        (_) async => [
+          {
+            'id': 1,
+            'driverProfileId': 2,
+            'vehicleId': 3,
+            'status': 'OPEN',
+            'originLat': 33.5,
+            'originLng': 36.2,
+            'originAddress': 'Origin',
+            'destLat': 33.6,
+            'destLng': 36.3,
+            'destAddress': 'Dest',
+            'departureTime': '2026-08-17T09:00:00.000Z',
+            'maxPassengers': 4,
+            'occupiedSeats': 0,
+            'baseTripFare': 10000.0,
+            'remainingTripCost': 10000.0,
+            'createdAt': '2026-08-17T07:00:00.000Z',
+            'updatedAt': '2026-08-17T07:00:00.000Z',
+          },
+        ],
+      );
 
       final result = await repository.searchSharedRides(
         const SearchSharedRideParams(
@@ -309,49 +304,43 @@ void main() {
       );
 
       expect(result.isRight(), true);
-      result.fold(
-        (_) => fail('Should succeed'),
-        (rooms) {
-          expect(rooms.length, 1);
-          expect(rooms.first.id, 1);
-          expect(rooms.first.isOpen, true);
-        },
-      );
+      result.fold((_) => fail('Should succeed'), (rooms) {
+        expect(rooms.length, 1);
+        expect(rooms.first.id, 1);
+        expect(rooms.first.isOpen, true);
+      });
     });
 
     test('getSharedRideDetails fetches and maps room details', () async {
-      when(
-        () => mockApiClient.get(any()),
-      ).thenAnswer((_) async => {
-            'id': 12,
-            'driverProfileId': 3,
-            'vehicleId': 5,
-            'status': 'OPEN',
-            'originLat': 33.5,
-            'originLng': 36.2,
-            'originAddress': 'Origin',
-            'destLat': 33.6,
-            'destLng': 36.3,
-            'destAddress': 'Dest',
-            'departureTime': '2026-08-17T09:00:00.000Z',
-            'maxPassengers': 4,
-            'occupiedSeats': 1,
-            'baseTripFare': 20000.0,
-            'remainingTripCost': 15000.0,
-            'createdAt': '2026-08-17T07:00:00.000Z',
-            'passengers': [],
-          });
+      when(() => mockApiClient.get(any())).thenAnswer(
+        (_) async => {
+          'id': 12,
+          'driverProfileId': 3,
+          'vehicleId': 5,
+          'status': 'OPEN',
+          'originLat': 33.5,
+          'originLng': 36.2,
+          'originAddress': 'Origin',
+          'destLat': 33.6,
+          'destLng': 36.3,
+          'destAddress': 'Dest',
+          'departureTime': '2026-08-17T09:00:00.000Z',
+          'maxPassengers': 4,
+          'occupiedSeats': 1,
+          'baseTripFare': 20000.0,
+          'remainingTripCost': 15000.0,
+          'createdAt': '2026-08-17T07:00:00.000Z',
+          'passengers': [],
+        },
+      );
 
       final result = await repository.getSharedRideDetails(12);
 
       expect(result.isRight(), true);
-      result.fold(
-        (_) => fail('Should succeed'),
-        (details) {
-          expect(details.id, 12);
-          expect(details.availableSeats, 3);
-        },
-      );
+      result.fold((_) => fail('Should succeed'), (details) {
+        expect(details.id, 12);
+        expect(details.availableSeats, 3);
+      });
     });
   });
 }

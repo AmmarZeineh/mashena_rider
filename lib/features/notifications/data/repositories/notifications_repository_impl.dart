@@ -32,4 +32,70 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
       return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, int>> markAsRead(int id) async {
+    try {
+      final response = await _api.patch(
+        BackendEndpoints.markNotificationRead(id),
+      );
+      final map = response as Map<String, dynamic>?;
+      final count = (map?['count'] as num?)?.toInt() ?? 1;
+      return Right(count);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e));
+    } catch (e) {
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, int>> markAllAsRead() async {
+    try {
+      final response = await _api.patch(
+        BackendEndpoints.markAllNotificationsRead,
+      );
+      final map = response as Map<String, dynamic>?;
+      final count = (map?['count'] as num?)?.toInt() ?? 0;
+      return Right(count);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e));
+    } catch (e) {
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> registerToken({
+    required String token,
+    String? platform,
+    String? deviceId,
+  }) async {
+    try {
+      await _api.post(
+        BackendEndpoints.notificationToken,
+        body: {'token': token, 'platform': ?platform, 'deviceId': ?deviceId},
+      );
+      return const Right(null);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e));
+    } catch (e) {
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> unregisterToken(String token) async {
+    try {
+      await _api.delete(
+        BackendEndpoints.notificationToken,
+        body: {'token': token},
+      );
+      return const Right(null);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e));
+    } catch (e) {
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
+    }
+  }
 }

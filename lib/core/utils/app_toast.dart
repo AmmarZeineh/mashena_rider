@@ -9,9 +9,6 @@ class AppToast {
   AppToast._();
 
   static OverlayEntry? _currentEntry;
-  static Timer? _dismissTimer;
-  static bool _isShowing = false;
-  static VoidCallback? _dismissCallback;
 
   /// Show a toast notification
   static void show(
@@ -20,65 +17,48 @@ class AppToast {
     AppToastType type = AppToastType.info,
     Duration duration = const Duration(seconds: 3),
   }) {
-    // Dismiss any existing toast before showing new one
-    if (_isShowing && _dismissCallback != null) {
-      _dismissCallback!();
-      // Small delay to let previous animation finish
-      Future.delayed(const Duration(milliseconds: 250), () {
-        if (context.mounted) {
-          _showToast(context, message, type, duration);
-        }
-      });
-    } else {
-      _showToast(context, message, type, duration);
+    // Remove any currently active toast entry immediately
+    if (_currentEntry != null) {
+      if (_currentEntry!.mounted) {
+        _currentEntry!.remove();
+      }
+      _currentEntry = null;
     }
-  }
 
-  static void _showToast(
-    BuildContext context,
-    String message,
-    AppToastType type,
-    Duration duration,
-  ) {
-    final overlay = Overlay.of(context);
+    final overlay = Overlay.maybeOf(context);
+    if (overlay == null) return;
 
     final theme = Theme.of(context);
     final config = _ToastConfig.fromType(type, theme);
 
-    _isShowing = true;
-    _currentEntry = OverlayEntry(
+    late OverlayEntry entry;
+    entry = OverlayEntry(
       builder: (context) => _ToastWidget(
         message: message,
         config: config,
-        onDismiss: _handleDismiss,
-        onDismissCallbackReady: (callback) {
-          _dismissCallback = callback;
+        duration: duration,
+        onDismiss: () {
+          if (entry.mounted) {
+            entry.remove();
+          }
+          if (_currentEntry == entry) {
+            _currentEntry = null;
+          }
         },
       ),
     );
 
-    overlay.insert(_currentEntry!);
-
-    _dismissTimer = Timer(duration, () {
-      if (_dismissCallback != null) {
-        _dismissCallback!();
-      }
-    });
-  }
-
-  static void _handleDismiss() {
-    _dismissTimer?.cancel();
-    _dismissTimer = null;
-    _currentEntry?.remove();
-    _currentEntry = null;
-    _dismissCallback = null;
-    _isShowing = false;
+    _currentEntry = entry;
+    overlay.insert(entry);
   }
 
   /// Manually hide the current toast
   static void hide() {
-    if (_dismissCallback != null) {
-      _dismissCallback!();
+    if (_currentEntry != null) {
+      if (_currentEntry!.mounted) {
+        _currentEntry!.remove();
+      }
+      _currentEntry = null;
     }
   }
 }
@@ -156,14 +136,14 @@ class _ToastWidget extends StatefulWidget {
   const _ToastWidget({
     required this.message,
     required this.config,
+    required this.duration,
     required this.onDismiss,
-    required this.onDismissCallbackReady,
   });
 
   final String message;
   final _ToastConfig config;
+  final Duration duration;
   final VoidCallback onDismiss;
-  final void Function(VoidCallback) onDismissCallbackReady;
 
   @override
   State<_ToastWidget> createState() => _ToastWidgetState();
@@ -174,6 +154,8 @@ class _ToastWidgetState extends State<_ToastWidget>
   late final AnimationController _animationController;
   late final Animation<Offset> _slideAnimation;
   late final Animation<double> _fadeAnimation;
+  Timer? _autoDismissTimer;
+  bool _isDismissing = false;
 
   @override
   void initState() {
@@ -181,8 +163,8 @@ class _ToastWidgetState extends State<_ToastWidget>
     _initializeAnimations();
     _animationController.forward();
 
-    // Provide dismiss callback to parent
-    widget.onDismissCallbackReady(_handleDismissWithAnimation);
+    // Auto-dismiss after duration
+    _autoDismissTimer = Timer(widget.duration, _handleDismiss);
   }
 
   void _initializeAnimations() {
@@ -210,12 +192,16 @@ class _ToastWidgetState extends State<_ToastWidget>
 
   @override
   void dispose() {
+    _autoDismissTimer?.cancel();
     _animationController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleDismissWithAnimation() async {
-    if (!mounted) return;
+  Future<void> _handleDismiss() async {
+    if (!mounted || _isDismissing) return;
+    _isDismissing = true;
+    _autoDismissTimer?.cancel();
+    _autoDismissTimer = null;
 
     // Reverse animation
     await _animationController.reverse();
@@ -242,7 +228,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                 child: _ToastContent(
                   message: widget.message,
                   config: widget.config,
-                  onDismiss: _handleDismissWithAnimation,
+                  onDismiss: _handleDismiss,
                 ),
               ),
             ),

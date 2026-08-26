@@ -100,6 +100,40 @@ import 'package:mashena_rider/features/shared_trip/domain/usecases/leave_shared_
 import 'package:mashena_rider/features/shared_trip/presentation/cubits/shared_trip_rooms_cubit/shared_trip_rooms_cubit.dart';
 import 'package:mashena_rider/features/shared_trip/presentation/cubits/shared_trip_room_details_cubit/shared_trip_room_details_cubit.dart';
 import 'package:mashena_rider/features/shared_trip/presentation/models/shared_trip_rooms_args.dart';
+import 'package:mashena_rider/features/pool/data/datasources/pool_remote_data_source.dart';
+import 'package:mashena_rider/features/pool/data/datasources/pool_socket_data_source.dart';
+import 'package:mashena_rider/features/pool/data/repositories/pool_repository_impl.dart';
+import 'package:mashena_rider/features/pool/domain/repositories/pool_repository.dart';
+import 'package:mashena_rider/features/pool/domain/usecases/get_pool_suggestions_usecase.dart';
+import 'package:mashena_rider/features/pool/domain/usecases/create_pool_room_usecase.dart';
+import 'package:mashena_rider/features/pool/domain/usecases/get_pool_room_details_usecase.dart';
+import 'package:mashena_rider/features/pool/domain/usecases/join_pool_room_usecase.dart';
+import 'package:mashena_rider/features/pool/domain/usecases/leave_pool_room_usecase.dart';
+import 'package:mashena_rider/features/pool/domain/usecases/cancel_pool_room_usecase.dart';
+import 'package:mashena_rider/features/pool/presentation/cubits/pool_discovery_cubit/pool_discovery_cubit.dart';
+import 'package:mashena_rider/features/pool/presentation/cubits/pool_create_cubit/pool_create_cubit.dart';
+import 'package:mashena_rider/features/pool/presentation/cubits/pool_lobby_cubit/pool_lobby_cubit.dart';
+import 'package:mashena_rider/features/pool/presentation/models/pool_discovery_args.dart';
+
+// ======================
+// Features - Moderation
+// ======================
+import 'package:mashena_rider/features/moderation/data/datasources/moderation_remote_data_source.dart';
+import 'package:mashena_rider/features/moderation/data/datasources/moderation_socket_data_source.dart';
+import 'package:mashena_rider/features/moderation/data/repositories/moderation_repository_impl.dart';
+import 'package:mashena_rider/features/moderation/domain/repositories/moderation_repository.dart';
+import 'package:mashena_rider/features/moderation/domain/usecases/get_moderation_overview_usecase.dart';
+import 'package:mashena_rider/features/moderation/domain/usecases/get_penalties_history_usecase.dart';
+import 'package:mashena_rider/features/moderation/domain/usecases/get_violations_history_usecase.dart';
+import 'package:mashena_rider/features/moderation/domain/usecases/get_active_restrictions_usecase.dart';
+import 'package:mashena_rider/features/moderation/domain/usecases/submit_appeal_usecase.dart';
+import 'package:mashena_rider/features/moderation/domain/usecases/get_appeals_history_usecase.dart';
+import 'package:mashena_rider/features/moderation/domain/usecases/get_appeal_details_usecase.dart';
+import 'package:mashena_rider/features/moderation/presentation/cubits/moderation_overview_cubit/moderation_overview_cubit.dart';
+import 'package:mashena_rider/features/moderation/presentation/cubits/penalties_history_cubit/penalties_history_cubit.dart';
+import 'package:mashena_rider/features/moderation/presentation/cubits/violations_history_cubit/violations_history_cubit.dart';
+import 'package:mashena_rider/features/moderation/presentation/cubits/appeals_history_cubit/appeals_history_cubit.dart';
+import 'package:mashena_rider/features/moderation/presentation/cubits/submit_appeal_cubit/submit_appeal_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -176,9 +210,37 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<Dio>(() {
     final config = getIt<AppConfig>();
 
+    // Validate that baseUrl is not empty to prevent invalid Dio configuration
+    final baseUrl = config.baseUrl;
+    if (baseUrl.isEmpty) {
+      // In development, provide a fallback URL to prevent silent failures
+      // In production, throw an error to alert about missing configuration
+      if (kDebugMode) {
+        print('WARNING: BASE_URL is empty. Using fallback URL for development.');
+        // Use a placeholder - in real scenarios, this should be configured properly
+        // This prevents Dio from crashing but will cause API calls to fail obviously
+        // which is better than silent failures
+        final fallbackUrl = 'https://placeholder-api.mashena-rider.com';
+        return Dio(BaseOptions(
+          baseUrl: fallbackUrl,
+          connectTimeout: config.connectTimeout,
+          receiveTimeout: config.receiveTimeout,
+          sendTimeout: config.sendTimeout,
+          headers: const {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ));
+      } else {
+        throw StateError(
+          'BASE_URL is not configured. Please check your .env file and ensure BASE_URL is set.',
+        );
+      }
+    }
+
     final dio = Dio(
       BaseOptions(
-        baseUrl: config.baseUrl,
+        baseUrl: baseUrl,
         connectTimeout: config.connectTimeout,
         receiveTimeout: config.receiveTimeout,
         sendTimeout: config.sendTimeout,
@@ -216,7 +278,11 @@ Future<void> configureDependencies() async {
   });
 
   getIt.registerLazySingleton<SocketClient>(
-    () => SocketIOClientImpl(getIt<AppConfig>(), getIt<TokenRefreshService>()),
+    () => SocketIOClientImpl(
+      getIt<AppConfig>(),
+      getIt<TokenRefreshService>(),
+      getIt<AuthEventBus>(),
+    ),
   );
 
   // =====================================================
@@ -455,5 +521,145 @@ Future<void> configureDependencies() async {
 
   getIt.registerFactory<NotificationsCubit>(
     () => NotificationsCubit(getIt<NotificationsRepository>()),
+  );
+
+  // =====================================================
+  // 🔹 15. Features - Passenger Pool
+  // =====================================================
+
+  getIt.registerLazySingleton<PoolRemoteDataSource>(
+    () => PoolRemoteDataSourceImpl(getIt<ApiClient>()),
+  );
+
+  getIt.registerLazySingleton<PoolSocketDataSource>(
+    () => PoolSocketDataSourceImpl(getIt<SocketClient>()),
+  );
+
+  getIt.registerLazySingleton<PoolRepository>(
+    () => PoolRepositoryImpl(
+      remoteDataSource: getIt<PoolRemoteDataSource>(),
+      socketDataSource: getIt<PoolSocketDataSource>(),
+    ),
+  );
+
+  getIt.registerFactory<GetPoolSuggestionsUsecase>(
+    () => GetPoolSuggestionsUsecase(getIt<PoolRepository>()),
+  );
+
+  getIt.registerFactory<CreatePoolRoomUsecase>(
+    () => CreatePoolRoomUsecase(getIt<PoolRepository>()),
+  );
+
+  getIt.registerFactory<GetPoolRoomDetailsUsecase>(
+    () => GetPoolRoomDetailsUsecase(getIt<PoolRepository>()),
+  );
+
+  getIt.registerFactory<JoinPoolRoomUsecase>(
+    () => JoinPoolRoomUsecase(getIt<PoolRepository>()),
+  );
+
+  getIt.registerFactory<LeavePoolRoomUsecase>(
+    () => LeavePoolRoomUsecase(getIt<PoolRepository>()),
+  );
+
+  getIt.registerFactory<CancelPoolRoomUsecase>(
+    () => CancelPoolRoomUsecase(getIt<PoolRepository>()),
+  );
+
+  getIt.registerFactoryParam<PoolDiscoveryCubit, PoolDiscoveryArgs, void>(
+    (args, _) => PoolDiscoveryCubit(
+      getPoolSuggestionsUsecase: getIt<GetPoolSuggestionsUsecase>(),
+      joinPoolRoomUsecase: getIt<JoinPoolRoomUsecase>(),
+      args: args,
+    ),
+  );
+
+  getIt.registerFactoryParam<PoolCreateCubit, PoolDiscoveryArgs, void>(
+    (args, _) => PoolCreateCubit(
+      createPoolRoomUsecase: getIt<CreatePoolRoomUsecase>(),
+      args: args,
+    ),
+  );
+
+  getIt.registerFactoryParam<PoolLobbyCubit, int, void>(
+    (roomId, _) => PoolLobbyCubit(
+      getPoolRoomDetailsUsecase: getIt<GetPoolRoomDetailsUsecase>(),
+      leavePoolRoomUsecase: getIt<LeavePoolRoomUsecase>(),
+      cancelPoolRoomUsecase: getIt<CancelPoolRoomUsecase>(),
+      repository: getIt<PoolRepository>(),
+      getCachedSessionUsecase: getIt<GetCachedSessionUsecase>(),
+      osrmRouteService: getIt<OSRMRouteService>(),
+      roomId: roomId,
+    ),
+  );
+
+  // =====================================================
+  // 🔹 16. Features - Moderation
+  // =====================================================
+
+  getIt.registerLazySingleton<ModerationRemoteDataSource>(
+    () => ModerationRemoteDataSourceImpl(getIt<ApiClient>()),
+  );
+
+  getIt.registerLazySingleton<ModerationSocketDataSource>(
+    () => ModerationSocketDataSourceImpl(getIt<SocketClient>()),
+  );
+
+  getIt.registerLazySingleton<ModerationRepository>(
+    () => ModerationRepositoryImpl(
+      remoteDataSource: getIt<ModerationRemoteDataSource>(),
+      socketDataSource: getIt<ModerationSocketDataSource>(),
+    ),
+  );
+
+  getIt.registerFactory<GetModerationOverviewUsecase>(
+    () => GetModerationOverviewUsecase(getIt<ModerationRepository>()),
+  );
+
+  getIt.registerFactory<GetPenaltiesHistoryUsecase>(
+    () => GetPenaltiesHistoryUsecase(getIt<ModerationRepository>()),
+  );
+
+  getIt.registerFactory<GetViolationsHistoryUsecase>(
+    () => GetViolationsHistoryUsecase(getIt<ModerationRepository>()),
+  );
+
+  getIt.registerFactory<GetActiveRestrictionsUsecase>(
+    () => GetActiveRestrictionsUsecase(getIt<ModerationRepository>()),
+  );
+
+  getIt.registerFactory<SubmitAppealUsecase>(
+    () => SubmitAppealUsecase(getIt<ModerationRepository>()),
+  );
+
+  getIt.registerFactory<GetAppealsHistoryUsecase>(
+    () => GetAppealsHistoryUsecase(getIt<ModerationRepository>()),
+  );
+
+  getIt.registerFactory<GetAppealDetailsUsecase>(
+    () => GetAppealDetailsUsecase(getIt<ModerationRepository>()),
+  );
+
+  getIt.registerFactory<ModerationOverviewCubit>(
+    () => ModerationOverviewCubit(
+      getOverviewUsecase: getIt<GetModerationOverviewUsecase>(),
+      repository: getIt<ModerationRepository>(),
+    ),
+  );
+
+  getIt.registerFactory<PenaltiesHistoryCubit>(
+    () => PenaltiesHistoryCubit(getIt<GetPenaltiesHistoryUsecase>()),
+  );
+
+  getIt.registerFactory<ViolationsHistoryCubit>(
+    () => ViolationsHistoryCubit(getIt<GetViolationsHistoryUsecase>()),
+  );
+
+  getIt.registerFactory<AppealsHistoryCubit>(
+    () => AppealsHistoryCubit(getIt<GetAppealsHistoryUsecase>()),
+  );
+
+  getIt.registerFactory<SubmitAppealCubit>(
+    () => SubmitAppealCubit(getIt<SubmitAppealUsecase>()),
   );
 }

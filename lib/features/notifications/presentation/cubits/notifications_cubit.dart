@@ -71,6 +71,48 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     );
   }
 
+  /// Mark single notification as read optimistically and sync with backend
+  Future<void> markAsRead(int notificationId) async {
+    final index = state.items.indexWhere((item) => item.id == notificationId);
+    if (index == -1) return;
+
+    final targetItem = state.items[index];
+    if (targetItem.isRead) return;
+
+    // Optimistic local update
+    final updatedList = [...state.items];
+    updatedList[index] = targetItem.copyWith(isRead: true);
+    final newUnreadCount = (state.unreadCount - 1).clamp(0, double.infinity).toInt();
+
+    emit(state.copyWith(items: updatedList, unreadCount: newUnreadCount));
+
+    // Call backend API
+    final result = await _repository.markAsRead(notificationId);
+    result.fold(
+      (failure) {
+        // Rollback if needed or keep optimistic
+      },
+      (_) {},
+    );
+  }
+
+  /// Mark all notifications as read optimistically and sync with backend
+  Future<void> markAllAsRead() async {
+    if (state.unreadCount == 0 && state.items.every((item) => item.isRead)) {
+      return;
+    }
+
+    // Optimistic local update
+    final updatedList = state.items
+        .map((item) => item.copyWith(isRead: true))
+        .toList();
+
+    emit(state.copyWith(items: updatedList, unreadCount: 0));
+
+    // Call backend API
+    await _repository.markAllAsRead();
+  }
+
   /// Refresh notifications list back to page 1
   Future<void> refresh() async {
     await fetchInitialNotifications();

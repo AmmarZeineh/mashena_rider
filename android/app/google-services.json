@@ -1,13 +1,32 @@
 {
   "project_info": {
-    "project_number": "773307258733",
-    "project_id": "mashena-g2026",
-    "storage_bucket": "mashena-g2026.firebasestorage.app"
+    "project_number": "1054047692408",
+    "project_id": "mashena-e39bd",
+    "storage_bucket": "mashena-e39bd.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:773307258733:android:9ae572a336b989ac5cac64",
+        "mobilesdk_app_id": "1:1054047692408:android:94a6f8535ec63088576f8d",
+        "android_client_info": {
+          "package_name": "com.example.mashena_driver_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTPAC4d458mFIHxWbPngjuTHcSnOklFvI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054047692408:android:d1793b0b0014ee6e576f8d",
         "android_client_info": {
           "package_name": "com.example.mashena_rider"
         }
@@ -15,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDDtedEoqMqsFJwzTR7eVumKN2tGKxEE-A"
+          "current_key": "AIzaSyCTPAC4d458mFIHxWbPngjuTHcSnOklFvI"
         }
       ],
       "services": {

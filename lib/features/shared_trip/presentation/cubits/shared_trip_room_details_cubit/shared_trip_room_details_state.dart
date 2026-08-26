@@ -17,8 +17,10 @@ final class SharedTripRoomDetailsLoading extends SharedTripRoomDetailsState {
 
 final class SharedTripRoomDetailsSuccess extends SharedTripRoomDetailsState {
   final SharedRideRoomDetailsEntity details;
+  final int? currentUserId;
   final bool isJoining;
   final bool isLeaving;
+  final bool hasLeft;
   final String? actionError;
   final SharedRidePassengerEntity? joinedPassenger;
   final MapLatLng? driverLocation;
@@ -27,12 +29,15 @@ final class SharedTripRoomDetailsSuccess extends SharedTripRoomDetailsState {
   final bool isCurrentRiderRemoved;
   final String? removalReason;
   final SharedRidePassengerDroppedPayload? currentUserDroppedOffPayload;
+  final SharedRidePassengerDroppedPayload? companionDroppedPayload;
   final String? liveNotice;
 
   const SharedTripRoomDetailsSuccess(
     this.details, {
+    this.currentUserId,
     this.isJoining = false,
     this.isLeaving = false,
+    this.hasLeft = false,
     this.actionError,
     this.joinedPassenger,
     this.driverLocation,
@@ -41,16 +46,30 @@ final class SharedTripRoomDetailsSuccess extends SharedTripRoomDetailsState {
     this.isCurrentRiderRemoved = false,
     this.removalReason,
     this.currentUserDroppedOffPayload,
+    this.companionDroppedPayload,
     this.liveNotice,
   });
 
   bool get isDriverCurrentlyOnline =>
       isDriverOnline ?? (details.driver?.isOnline ?? false);
 
+  bool get isUserJoined {
+    if (joinedPassenger != null) return true;
+    if (currentUserId == null) return false;
+    return details.passengers.any(
+      (p) =>
+          p.riderProfileId == currentUserId &&
+          (p.status.toUpperCase() == 'JOINED' ||
+              p.status.toUpperCase() == 'ON_BOARD'),
+    );
+  }
+
   SharedTripRoomDetailsSuccess copyWith({
     SharedRideRoomDetailsEntity? details,
+    int? currentUserId,
     bool? isJoining,
     bool? isLeaving,
+    bool? hasLeft,
     String? Function()? actionError,
     SharedRidePassengerEntity? Function()? joinedPassenger,
     MapLatLng? Function()? driverLocation,
@@ -59,12 +78,15 @@ final class SharedTripRoomDetailsSuccess extends SharedTripRoomDetailsState {
     bool? isCurrentRiderRemoved,
     String? Function()? removalReason,
     SharedRidePassengerDroppedPayload? Function()? currentUserDroppedOffPayload,
+    SharedRidePassengerDroppedPayload? Function()? companionDroppedPayload,
     String? Function()? liveNotice,
   }) {
     return SharedTripRoomDetailsSuccess(
       details ?? this.details,
+      currentUserId: currentUserId ?? this.currentUserId,
       isJoining: isJoining ?? this.isJoining,
       isLeaving: isLeaving ?? this.isLeaving,
+      hasLeft: hasLeft ?? this.hasLeft,
       actionError: actionError != null ? actionError() : this.actionError,
       joinedPassenger: joinedPassenger != null
           ? joinedPassenger()
@@ -84,6 +106,9 @@ final class SharedTripRoomDetailsSuccess extends SharedTripRoomDetailsState {
       currentUserDroppedOffPayload: currentUserDroppedOffPayload != null
           ? currentUserDroppedOffPayload()
           : this.currentUserDroppedOffPayload,
+      companionDroppedPayload: companionDroppedPayload != null
+          ? companionDroppedPayload()
+          : this.companionDroppedPayload,
       liveNotice: liveNotice != null ? liveNotice() : this.liveNotice,
     );
   }

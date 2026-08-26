@@ -27,6 +27,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
     : super(const TripLifecycleState()) {
     _subscribeToSocketStreams();
     _subscribeToAuthEvents();
+    _subscribeToConnectionStatus();
   }
 
   final RideRepository _rideRepository;
@@ -39,11 +40,13 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
   StreamSubscription<TripCancelled>? _tripCancelledSubscription;
   StreamSubscription<int>? _rideExpiredSubscription;
   StreamSubscription<AuthEvent>? _authEventSubscription;
+  StreamSubscription<bool>? _connectionStatusSubscription;
 
   void _subscribeToSocketStreams() {
     _rideMatchedSubscription = _rideRepository.rideMatchedStream.listen((
       rideRequestId,
     ) async {
+      if (isClosed) return;
       emit(
         state.copyWith(
           isDriverFound: true,
@@ -57,6 +60,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
     _driverArrivedSubscription = _rideRepository.driverArrivedStream.listen((
       payload,
     ) {
+      if (isClosed) return;
       emit(
         state.copyWith(
           isDriverArrived: true,
@@ -67,12 +71,16 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
     });
 
     _driverStartedSubscription = _rideRepository.driverStartedStream.listen(
-      (_) => emit(state.copyWith(isTripStarted: true)),
+      (_) {
+        if (isClosed) return;
+        emit(state.copyWith(isTripStarted: true));
+      },
     );
 
     _tripCompletedSubscription = _rideRepository.tripCompletedStream.listen((
       payload,
     ) {
+      if (isClosed) return;
       final activeRideId = state.matchedTrip?.rideRequestId;
       if (activeRideId != null) {
         _rideRepository.stopListeningToRide(activeRideId);
@@ -83,6 +91,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
     _tripCancelledSubscription = _rideRepository.tripCancelledStream.listen((
       payload,
     ) {
+      if (isClosed) return;
       final Failure cancelFailure;
       if (payload.cancelledBy == 'driver') {
         cancelFailure = const Failure(FailureCode.tripCancelledByDriver);
@@ -101,12 +110,14 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
     });
 
     _rideExpiredSubscription = _rideRepository.rideExpiredStream.listen((_) {
+      if (isClosed) return;
       emit(state.copyWith(isRideExpired: true, clearMatchedTrip: true));
     });
   }
 
   void _subscribeToAuthEvents() {
     _authEventSubscription = _authEventBus.stream.listen((event) {
+      if (isClosed) return;
       if (event == AuthEvent.tokenRefreshed) {
         LoggerService.debug(
           'Token refreshed, reconnecting socket...',
@@ -115,6 +126,30 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
         _rideRepository.connectSocket();
       }
     });
+  }
+
+  void _subscribeToConnectionStatus() {
+    _connectionStatusSubscription = _rideRepository.connectionStatusStream.listen(
+      (isConnected) {
+        LoggerService.debug(
+          'Socket connection status changed: $isConnected',
+          name: 'features.home.trip_lifecycle',
+        );
+        emit(state.copyWith(isConnected: isConnected));
+
+        // If we were disconnected and now reconnected, try to restore socket if needed
+        if (isConnected &&
+            (state.isDriverFound || state.isDriverArrived || state.isTripStarted)) {
+          // We were in the middle of a trip and socket reconnected
+          LoggerService.debug(
+            'Socket reconnected during active trip, ensuring connection...',
+            name: 'features.home.trip_lifecycle',
+          );
+          // The socket should already be connected via the SocketIOClientImpl's reconnect logic
+          // but we can ensure it's properly set up if needed
+        }
+      },
+    );
   }
 
   Future<void> _fetchMatchedTripWithRetry(int rideRequestId) async {
@@ -196,6 +231,7 @@ class TripLifecycleCubit extends Cubit<TripLifecycleState> {
     _tripCancelledSubscription?.cancel();
     _rideExpiredSubscription?.cancel();
     _authEventSubscription?.cancel();
+    _connectionStatusSubscription?.cancel();
     return super.close();
   }
 }

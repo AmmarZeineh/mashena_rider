@@ -301,6 +301,24 @@ class SAr extends S {
   String get sharedTripConfirmJoin => 'تأكيد الانضمام';
 
   @override
+  String get sharedTripLeaveRoom => 'مغادرة الرحلة المشتركة';
+
+  @override
+  String get sharedTripLeaveConfirmTitle => 'مغادرة الرحلة المشتركة؟';
+
+  @override
+  String get sharedTripLeaveConfirmBody =>
+      'هل أنت متأكد من رغبتك في مغادرة الرحلة المشتركة؟ سيصبح مقعدك متاحاً للآخرين.';
+
+  @override
+  String get sharedTripLeaveSuccess => 'لقد غادرت الرحلة المشتركة بنجاح.';
+
+  @override
+  String sharedTripCompanionDropped(String fare, String currency) {
+    return 'تم إنزال مرافق بنجاح. الأجرة: $fare $currency';
+  }
+
+  @override
   String get rideFindingDriver => 'جارٍ البحث عن سائق...';
 
   @override
@@ -838,6 +856,9 @@ class SAr extends S {
   }
 
   @override
+  String get markAllAsRead => 'تحديد الكل كمقروء';
+
+  @override
   String notificationTripId(int id) {
     return 'رحلة #$id';
   }
@@ -846,4 +867,386 @@ class SAr extends S {
   String notificationRideRequestId(int id) {
     return 'طلب #$id';
   }
+
+  @override
+  String get poolTransport => 'النقل التشاركي';
+
+  @override
+  String get poolFindLobby => 'البحث عن غرفة تجمع';
+
+  @override
+  String get poolCreateLobby => 'إنشاء غرفة تجمع';
+
+  @override
+  String get poolPublishLobby => 'نشر غرفة التجمع';
+
+  @override
+  String get poolMatchingNearby => 'غرف التجمع القريبة المتطابقة';
+
+  @override
+  String get poolSearchingLobbies => 'جاري البحث عن غرف تجمع متطابقة...';
+
+  @override
+  String get poolNoLobbiesFound => 'لم يتم العثور على غرف تجمع';
+
+  @override
+  String get poolNoLobbiesFoundSubtitle =>
+      'كن أول من ينشئ غرفة تجمع لينضم إليك ركاب آخرون بنفس وجهتك!';
+
+  @override
+  String get poolMeetingPoint => 'نقطة الالتقاء المشتركة';
+
+  @override
+  String get poolMeetingPointDesc =>
+      'توجه سيراً إلى هنا لمقابلة السائق والركاب';
+
+  @override
+  String get poolPassengersRoster => 'قائمة الركاب';
+
+  @override
+  String get poolTargetDepartureTime => 'وقت الانطلاق المستهدف';
+
+  @override
+  String get poolTotalCapacity => 'إجمالي سعة الركاب';
+
+  @override
+  String get poolCapacityDesc =>
+      'سيتم إرسال الغرفة للسائقين فور اكتمال الركاب.';
+
+  @override
+  String get poolSeatsYouNeed => 'المقاعد المطلوبة';
+
+  @override
+  String get poolSeatsYouNeedDesc => 'عدد المقاعد لك ولمرافقيك';
+
+  @override
+  String get poolJoinSuccess => 'تم الانضمام إلى غرفة التجمع بنجاح!';
+
+  @override
+  String get poolCreateSuccess =>
+      'تم إنشاء غرفة التجمع! بانتظار الركاب في اللوبي.';
+
+  @override
+  String get poolCancelRoom => 'إلغاء غرفة التجمع';
+
+  @override
+  String get poolLeaveRoom => 'مغادرة غرفة التجمع';
+
+  @override
+  String get poolCancelConfirmTitle => 'إلغاء غرفة التجمع؟';
+
+  @override
+  String get poolCancelConfirmBody =>
+      'سيؤدي إلغاء الغرفة إلى حل غرفة التجمع وإشعار جميع الركاب المنضمين.';
+
+  @override
+  String get poolLeaveConfirmTitle => 'مغادرة غرفة التجمع؟';
+
+  @override
+  String get poolLeaveConfirmBody =>
+      'هل أنت متأكد من رغبتك في مغادرة غرفة التجمع؟ سيصبح مقعدك متاحاً للآخرين.';
+
+  @override
+  String get poolDriverFound => 'تم العثور على سائق! تبدأ رحلتك الآن.';
+
+  @override
+  String get poolExpiredTitle => 'انتهت صلاحية غرفة التجمع';
+
+  @override
+  String get poolExpiredBody =>
+      'لم يتم قبول أي سائق للرحلة قبل وقت الانطلاق. انتهت صلاحية الغرفة.';
+
+  @override
+  String get poolCancelledTitle => 'تم إلغاء غرفة التجمع';
+
+  @override
+  String get poolCancelledBody => 'قام منشئ الغرفة بإلغائها.';
+
+  @override
+  String get poolRemovedTitle => 'تمت إزالتك من الغرفة';
+
+  @override
+  String get poolRemovedBody => 'تمت إزالتك من غرفة التجمع هذه.';
+
+  @override
+  String get poolStatusLooking => 'بانتظار انضمام الركاب';
+
+  @override
+  String get poolStatusReady => 'جاري البحث عن سائق...';
+
+  @override
+  String get poolStatusMatched => 'تم تعيين السائق!';
+
+  @override
+  String get drawerModeration => 'الرقابة والقيود';
+
+  @override
+  String get moderationTitle => 'حالة الحساب والرقابة';
+
+  @override
+  String get moderationOverviewTab => 'نظرة عامة';
+
+  @override
+  String get moderationPenaltiesTab => 'العقوبات';
+
+  @override
+  String get moderationViolationsTab => 'المخالفات';
+
+  @override
+  String get moderationAppealsTab => 'الاعتراضات';
+
+  @override
+  String get moderationAccountStatus => 'حالة الحساب';
+
+  @override
+  String get moderationStatusActive => 'حساب سليم ونشط';
+
+  @override
+  String get moderationStatusWarning => 'يوجد تنبيه مسجل';
+
+  @override
+  String get moderationStatusRestricted => 'مقيد جزئياً';
+
+  @override
+  String get moderationStatusSuspended => 'معلق مؤقتاً';
+
+  @override
+  String get moderationStatusBanned => 'محظور نهائياً';
+
+  @override
+  String get moderationActiveRestrictions => 'القيود السارية';
+
+  @override
+  String get moderationActivePenalties => 'العقوبات السارية';
+
+  @override
+  String get moderationRecentViolations => 'أحدث المخالفات';
+
+  @override
+  String get moderationActiveAppeals => 'الاعتراضات النشطة';
+
+  @override
+  String get moderationWarningsCount => 'الإنذارات';
+
+  @override
+  String get moderationViolationsCount => 'إجمالي المخالفات';
+
+  @override
+  String get moderationPenaltiesCount => 'عقوبات سارية';
+
+  @override
+  String get moderationRestrictionsCount => 'القيود الفعالة';
+
+  @override
+  String get moderationSubmitAppeal => 'تقديم اعتراض';
+
+  @override
+  String get moderationAppealReason => 'سبب الاعتراض';
+
+  @override
+  String get moderationAppealReasonHint =>
+      'اشرح بالتفصيل سبب الاعتراض ولماذا يجب إعادة النظر في العقوبة...';
+
+  @override
+  String get moderationAppealEvidence => 'رابط الإثبات أو الدليل (اختياري)';
+
+  @override
+  String get moderationAppealEvidenceHint => 'https://example.com/proof.jpg';
+
+  @override
+  String get moderationAppealSubmitBtn => 'إرسال الاعتراض';
+
+  @override
+  String get moderationAppealSubmitting => 'جاري إرسال الاعتراض...';
+
+  @override
+  String get moderationAppealSuccess => 'تم تقديم طلب الاعتراض بنجاح';
+
+  @override
+  String get moderationAppealAlreadyExists =>
+      'يوجد اعتراض قيد المراجعة بالفعل لهذه العقوبة';
+
+  @override
+  String get moderationPenaltyNotAppealable =>
+      'يمكن الاعتراض فقط على العقوبات السارية والفعالة';
+
+  @override
+  String get moderationAppealDetailsTitle => 'تفاصيل الاعتراض';
+
+  @override
+  String get moderationAdminDecision => 'قرار الإدارة';
+
+  @override
+  String get moderationAdminNotes => 'ملاحظات الإدارة';
+
+  @override
+  String moderationExpiresAt(String date) {
+    return 'ينتهي في: $date';
+  }
+
+  @override
+  String moderationStartsAt(String date) {
+    return 'بدأ في: $date';
+  }
+
+  @override
+  String moderationIssuedAt(String date) {
+    return 'صدر في: $date';
+  }
+
+  @override
+  String moderationSubmittedAt(String date) {
+    return 'تاريخ التقديم: $date';
+  }
+
+  @override
+  String moderationReviewedAt(String date) {
+    return 'تاريخ المراجعة: $date';
+  }
+
+  @override
+  String get moderationNoPenalties => 'لا توجد عقوبات مسجلة';
+
+  @override
+  String get moderationNoViolations => 'لا توجد مخالفات مسجلة';
+
+  @override
+  String get moderationNoAppeals => 'لا توجد طلبات اعتراض مقدمة';
+
+  @override
+  String get moderationNoRestrictions => 'لا توجد قيود مفعلة على حسابك';
+
+  @override
+  String get moderationPermanentBanNotice => 'حظر دائم (بدون تاريخ انتهاء)';
+
+  @override
+  String get moderationPenaltyTypeWarning => 'إنذار / تنبيه';
+
+  @override
+  String get moderationPenaltyTypeSuspension => 'تعليق مؤقت';
+
+  @override
+  String get moderationPenaltyTypeBan => 'حظر دائم';
+
+  @override
+  String get moderationPenaltyTypeFeatureRestriction => 'تقييد ميزة معينة';
+
+  @override
+  String get moderationPenaltyTypeAccountRestriction => 'تقييد شامل للحساب';
+
+  @override
+  String get moderationPenaltyStatusActive => 'سارية';
+
+  @override
+  String get moderationPenaltyStatusExpired => 'منتهية الصلاحية';
+
+  @override
+  String get moderationPenaltyStatusRevoked => 'تم رفعها وإلغاؤها';
+
+  @override
+  String get moderationPenaltyStatusCancelled => 'ملغاة';
+
+  @override
+  String get moderationRestrictionRequestRide => 'طلب المشاوير العادية';
+
+  @override
+  String get moderationRestrictionJoinSharedRide => 'المشاوير المشتركة';
+
+  @override
+  String get moderationRestrictionJoinPassengerPool => 'غرف تجمع الركاب';
+
+  @override
+  String get moderationRestrictionWalletTransfer => 'تحويل رصيد المحفظة';
+
+  @override
+  String get moderationRestrictionPayment => 'عمليات الدفع';
+
+  @override
+  String get moderationRestrictionFullAccount => 'تجميد الحساب بالكامل';
+
+  @override
+  String get moderationViolationRiderTripCancellation =>
+      'إلغاء المشوار بعد قبوله';
+
+  @override
+  String get moderationViolationNoShow => 'عدم الحضور لنقطة الانطلاق';
+
+  @override
+  String get moderationViolationLateCancellation => 'إلغاء متأخر للمشوار';
+
+  @override
+  String get moderationViolationSharedRideMisuse =>
+      'إساءة استخدام المشاوير المشتركة';
+
+  @override
+  String get moderationViolationPassengerPoolMisuse =>
+      'إساءة استخدام غرف الركاب';
+
+  @override
+  String get moderationViolationPaymentAbuse => 'احتيال أو مشاكل دفع';
+
+  @override
+  String get moderationViolationWalletAbuse => 'إساءة استخدام المحفظة';
+
+  @override
+  String get moderationViolationAbusiveBehavior => 'سلوك غير لائق ومسيء';
+
+  @override
+  String get moderationViolationFraud => 'نشاط احتيالي مشبوه';
+
+  @override
+  String get moderationViolationManualAdmin => 'مخالفة إدارية مسجلة';
+
+  @override
+  String get moderationSeverityLow => 'منخفض';
+
+  @override
+  String get moderationSeverityMedium => 'متوسط';
+
+  @override
+  String get moderationSeverityHigh => 'مرتفع';
+
+  @override
+  String get moderationSeverityCritical => 'حرج';
+
+  @override
+  String get moderationAppealStatusPending => 'قيد الانتظار';
+
+  @override
+  String get moderationAppealStatusUnderReview => 'قيد المراجعة والتدقيق';
+
+  @override
+  String get moderationAppealStatusApproved => 'تم قبول الاعتراض';
+
+  @override
+  String get moderationAppealStatusRejected => 'تم رفض الاعتراض';
+
+  @override
+  String get moderationAppealStatusCancelled => 'ملغى';
+
+  @override
+  String get moderationReasonRequired => 'يرجى كتابة سبب الاعتراض';
+
+  @override
+  String get moderationReasonTooLong =>
+      'لا يمكن أن يتجاوز سبب الاعتراض 2000 حرف';
+
+  @override
+  String get moderationInvalidEvidenceUrl => 'يرجى إدخال رابط صالح';
+
+  @override
+  String moderationPenaltyRef(int id) {
+    return 'عقوبة #$id';
+  }
+
+  @override
+  String moderationAppealRef(int id) {
+    return 'اعتراض #$id';
+  }
+
+  @override
+  String get moderationRealtimePenaltyTitle => 'تنبيه رقابي جديد';
+
+  @override
+  String get moderationRealtimeLiftedTitle => 'تم رفع القيد بنجاح';
 }

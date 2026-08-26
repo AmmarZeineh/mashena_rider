@@ -4,11 +4,9 @@ import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_cubit.dart';
-import 'package:mashena_rider/features/coupons/presentation/views/coupons_view.dart';
-import 'package:mashena_rider/features/notifications/presentation/views/notifications_view.dart';
-import 'package:mashena_rider/features/profile/presentation/views/profile_view.dart';
-import 'package:mashena_rider/features/trip_history/presentation/views/trip_history_view.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key});
@@ -111,11 +109,7 @@ class HomeDrawer extends StatelessWidget {
                         icon: Icons.person_outline,
                         onTap: () {
                           Navigator.of(context).pop();
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const ProfileView(),
-                            ),
-                          );
+                          context.push(AppRoutes.profilePath);
                         },
                       ),
                       _DrawerItem(
@@ -123,11 +117,7 @@ class HomeDrawer extends StatelessWidget {
                         icon: Icons.history,
                         onTap: () {
                           Navigator.of(context).pop();
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const TripHistoryView(),
-                            ),
-                          );
+                          context.push(AppRoutes.tripHistoryPath);
                         },
                       ),
                       _DrawerItem(
@@ -135,11 +125,7 @@ class HomeDrawer extends StatelessWidget {
                         icon: Icons.confirmation_number_outlined,
                         onTap: () {
                           Navigator.of(context).pop();
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const CouponsView(),
-                            ),
-                          );
+                          context.push(AppRoutes.couponsPath);
                         },
                       ),
                       _DrawerItem(
@@ -153,11 +139,15 @@ class HomeDrawer extends StatelessWidget {
                         icon: Icons.notifications_none,
                         onTap: () {
                           Navigator.of(context).pop();
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const NotificationsView(),
-                            ),
-                          );
+                          context.push(AppRoutes.notificationsPath);
+                        },
+                      ),
+                      _DrawerItem(
+                        title: S.of(context).drawerModeration,
+                        icon: Icons.gavel_rounded,
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          context.push(AppRoutes.moderationPath);
                         },
                       ),
                     ],

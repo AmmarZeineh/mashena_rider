@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mashena_rider/core/auth/auth_event.dart';
 import 'package:mashena_rider/core/auth/auth_event_bus.dart';
+import 'package:mashena_rider/core/services/notification_service.dart';
 import 'package:mashena_rider/features/auth/domain/entities/auth_session.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_usecase.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/logout_usecase.dart';
@@ -36,15 +37,20 @@ class AuthCubit extends Cubit<AuthState> {
     final res = await _getCached();
     res.fold(
       (_) => emit(const AuthState.unauthenticated()),
-      (session) => emit(AuthState.authenticated(session)),
+      (session) {
+        emit(AuthState.authenticated(session));
+        unawaited(NotificationService.syncTokenWithBackend());
+      },
     );
   }
 
   void setSession(AuthSession session) {
     emit(AuthState.authenticated(session));
+    unawaited(NotificationService.syncTokenWithBackend());
   }
 
   Future<void> signOut({bool allDevices = false}) async {
+    unawaited(NotificationService.unregisterTokenWithBackend());
     await _logout(allDevices: allDevices);
     emit(const AuthState.unauthenticated());
   }

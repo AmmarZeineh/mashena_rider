@@ -119,6 +119,17 @@
   "sharedTripBackToHome": "Back to Home",
   "sharedTripFinalFare": "Final Fare",
   "sharedTripConfirmJoin": "Confirm & Join",
+  "sharedTripLeaveRoom": "Leave Shared Trip",
+  "sharedTripLeaveConfirmTitle": "Leave Shared Trip?",
+  "sharedTripLeaveConfirmBody": "Are you sure you want to leave this shared trip? Your seat will become available for others.",
+  "sharedTripLeaveSuccess": "You have left the shared trip.",
+  "sharedTripCompanionDropped": "A companion has been dropped off. Fare: {fare} {currency}",
+  "@sharedTripCompanionDropped": {
+    "placeholders": {
+      "fare": { "type": "String" },
+      "currency": { "type": "String" }
+    }
+  },
   "rideFindingDriver": "Finding a driver...",
   "rideDriverOnWay": "Driver is on the way",
   "rideDriverArrived": "Driver arrived",
@@ -358,6 +369,7 @@
       "count": { "type": "int" }
     }
   },
+  "markAllAsRead": "Mark all as read",
   "notificationTripId": "Trip #{id}",
   "@notificationTripId": {
     "placeholders": {
@@ -369,6 +381,159 @@
     "placeholders": {
       "id": { "type": "int" }
     }
-  }
+  },
+  "poolTransport": "Pool Transport",
+  "poolFindLobby": "Find Pool Lobby",
+  "poolCreateLobby": "Create Pool Lobby",
+  "poolPublishLobby": "Publish Pool Lobby",
+  "poolMatchingNearby": "Matching Pools Nearby",
+  "poolSearchingLobbies": "Searching for matching pool lobbies...",
+  "poolNoLobbiesFound": "No Pool Lobbies Found",
+  "poolNoLobbiesFoundSubtitle": "Be the first to create a pool lobby and other passengers traveling your direction will join you!",
+  "poolMeetingPoint": "Shared Meeting Point",
+  "poolMeetingPointDesc": "Walk here to meet the driver & riders",
+  "poolPassengersRoster": "Passengers Roster",
+  "poolTargetDepartureTime": "Target Departure Time",
+  "poolTotalCapacity": "Total Passenger Capacity",
+  "poolCapacityDesc": "Room will be sent to drivers once full.",
+  "poolSeatsYouNeed": "Seats You Need",
+  "poolSeatsYouNeedDesc": "Number of seats for you & companions",
+  "poolJoinSuccess": "Joined pool room successfully!",
+  "poolCreateSuccess": "Pool room created! Waiting in lobby.",
+  "poolCancelRoom": "Cancel Pool Room",
+  "poolLeaveRoom": "Leave Pool Room",
+  "poolCancelConfirmTitle": "Cancel Pool Room?",
+  "poolCancelConfirmBody": "Cancelling this room will disband the lobby and notify all joined passengers.",
+  "poolLeaveConfirmTitle": "Leave Pool Room?",
+  "poolLeaveConfirmBody": "Are you sure you want to leave this pool room? Your seat will become available for others.",
+  "poolDriverFound": "Driver Found! Starting your ride.",
+  "poolExpiredTitle": "Pool Room Expired",
+  "poolExpiredBody": "No driver was matched before the departure time. The room has expired.",
+  "poolCancelledTitle": "Pool Room Cancelled",
+  "poolCancelledBody": "The host has cancelled this pool room.",
+  "poolRemovedTitle": "Removed from Room",
+  "poolRemovedBody": "You were removed from this pool room.",
+  "poolStatusLooking": "Looking for Passengers",
+  "poolStatusReady": "Finding Driver...",
+  "poolStatusMatched": "Driver Assigned!",
+  "drawerModeration": "Moderation & Restrictions",
+  "moderationTitle": "Account Status & Moderation",
+  "moderationOverviewTab": "Overview",
+  "moderationPenaltiesTab": "Penalties",
+  "moderationViolationsTab": "Violations",
+  "moderationAppealsTab": "Appeals",
+  "moderationAccountStatus": "Account Status",
+  "moderationStatusActive": "Good Standing",
+  "moderationStatusWarning": "Warning Issued",
+  "moderationStatusRestricted": "Restricted",
+  "moderationStatusSuspended": "Suspended",
+  "moderationStatusBanned": "Banned",
+  "moderationActiveRestrictions": "Active Restrictions",
+  "moderationActivePenalties": "Active Penalties",
+  "moderationRecentViolations": "Recent Violations",
+  "moderationActiveAppeals": "Active Appeals",
+  "moderationWarningsCount": "Warnings",
+  "moderationViolationsCount": "Total Violations",
+  "moderationPenaltiesCount": "Active Penalties",
+  "moderationRestrictionsCount": "Restrictions",
+  "moderationSubmitAppeal": "Submit Appeal",
+  "moderationAppealReason": "Appeal Reason",
+  "moderationAppealReasonHint": "Explain in detail why this penalty should be reviewed...",
+  "moderationAppealEvidence": "Evidence URL (Optional)",
+  "moderationAppealEvidenceHint": "https://example.com/proof.jpg",
+  "moderationAppealSubmitBtn": "Submit Appeal",
+  "moderationAppealSubmitting": "Submitting Appeal...",
+  "moderationAppealSuccess": "Appeal submitted successfully",
+  "moderationAppealAlreadyExists": "An appeal is already pending review for this penalty",
+  "moderationPenaltyNotAppealable": "Only active penalties can be appealed",
+  "moderationAppealDetailsTitle": "Appeal Details",
+  "moderationAdminDecision": "Admin Decision",
+  "moderationAdminNotes": "Admin Notes",
+  "moderationExpiresAt": "Expires: {date}",
+  "@moderationExpiresAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "moderationStartsAt": "Starts: {date}",
+  "@moderationStartsAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "moderationIssuedAt": "Issued: {date}",
+  "@moderationIssuedAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "moderationSubmittedAt": "Submitted: {date}",
+  "@moderationSubmittedAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "moderationReviewedAt": "Reviewed: {date}",
+  "@moderationReviewedAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "moderationNoPenalties": "No penalties recorded",
+  "moderationNoViolations": "No violations recorded",
+  "moderationNoAppeals": "No appeals submitted",
+  "moderationNoRestrictions": "No active restrictions on your account",
+  "moderationPermanentBanNotice": "Permanent Ban (No Expiry)",
+  "moderationPenaltyTypeWarning": "Warning",
+  "moderationPenaltyTypeSuspension": "Temporary Suspension",
+  "moderationPenaltyTypeBan": "Permanent Ban",
+  "moderationPenaltyTypeFeatureRestriction": "Feature Restriction",
+  "moderationPenaltyTypeAccountRestriction": "Account Restriction",
+  "moderationPenaltyStatusActive": "Active",
+  "moderationPenaltyStatusExpired": "Expired",
+  "moderationPenaltyStatusRevoked": "Revoked",
+  "moderationPenaltyStatusCancelled": "Cancelled",
+  "moderationRestrictionRequestRide": "Ride Requests",
+  "moderationRestrictionJoinSharedRide": "Join Shared Rides",
+  "moderationRestrictionJoinPassengerPool": "Join Passenger Pools",
+  "moderationRestrictionWalletTransfer": "Wallet Transfer",
+  "moderationRestrictionPayment": "Payment Processing",
+  "moderationRestrictionFullAccount": "Full Account Access",
+  "moderationViolationRiderTripCancellation": "Ride Cancellation",
+  "moderationViolationNoShow": "No Show at Pickup",
+  "moderationViolationLateCancellation": "Late Cancellation",
+  "moderationViolationSharedRideMisuse": "Shared Ride Misuse",
+  "moderationViolationPassengerPoolMisuse": "Passenger Pool Misuse",
+  "moderationViolationPaymentAbuse": "Payment Abuse",
+  "moderationViolationWalletAbuse": "Wallet Abuse",
+  "moderationViolationAbusiveBehavior": "Abusive Behavior",
+  "moderationViolationFraud": "Fraud Activity",
+  "moderationViolationManualAdmin": "Administrative Violation",
+  "moderationSeverityLow": "Low",
+  "moderationSeverityMedium": "Medium",
+  "moderationSeverityHigh": "High",
+  "moderationSeverityCritical": "Critical",
+  "moderationAppealStatusPending": "Pending Review",
+  "moderationAppealStatusUnderReview": "Under Review",
+  "moderationAppealStatusApproved": "Approved",
+  "moderationAppealStatusRejected": "Rejected",
+  "moderationAppealStatusCancelled": "Cancelled",
+  "moderationReasonRequired": "Please enter the appeal reason",
+  "moderationReasonTooLong": "Reason cannot exceed 2000 characters",
+  "moderationInvalidEvidenceUrl": "Please enter a valid URL",
+  "moderationPenaltyRef": "Penalty #{id}",
+  "@moderationPenaltyRef": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "moderationAppealRef": "Appeal #{id}",
+  "@moderationAppealRef": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "moderationRealtimePenaltyTitle": "New Penalty Notice",
+  "moderationRealtimeLiftedTitle": "Restriction Lifted"
 }
 

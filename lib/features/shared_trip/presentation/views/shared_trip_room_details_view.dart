@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:mashena_rider/app/di/injector.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
@@ -49,6 +50,7 @@ class _SharedTripRoomDetailsScaffoldState
   String? _lastReportedStatus;
   String? _lastLiveNotice;
   String? _lastActionError;
+  SharedRidePassengerDroppedPayload? _lastCompanionDroppedPayload;
   bool _wasJoined = false;
   bool _hasShownDropOff = false;
 
@@ -109,7 +111,22 @@ class _SharedTripRoomDetailsScaffoldState
             _showRemovedDialog(context, state.removalReason);
           }
 
-          // 6. Rider dropped off summary & receipt modal (trigger once)
+          // 6. Companion dropped off notification (show fare & continue live tracking)
+          if (state.companionDroppedPayload != null &&
+              state.companionDroppedPayload != _lastCompanionDroppedPayload) {
+            _lastCompanionDroppedPayload = state.companionDroppedPayload;
+            final fareValue = state.companionDroppedPayload!.finalFare ??
+                state.companionDroppedPayload!.totalPaidFare ??
+                state.details.effectiveSeatFare;
+            context.showInfoToast(
+              s.sharedTripCompanionDropped(
+                fareValue.toStringAsFixed(0),
+                s.currencySyp,
+              ),
+            );
+          }
+
+          // 7. Account holder dropped off summary & receipt modal (trigger once)
           if (state.currentUserDroppedOffPayload != null && !_hasShownDropOff) {
             _hasShownDropOff = true;
             _showDroppedOffBottomSheet(
@@ -117,6 +134,12 @@ class _SharedTripRoomDetailsScaffoldState
               state.currentUserDroppedOffPayload!,
               state.details,
             );
+          }
+
+          // 8. Left Shared Ride
+          if (state.hasLeft) {
+            context.showSuccessToast(s.sharedTripLeaveSuccess);
+            context.go(AppRoutes.homePath);
           }
         }
       },
@@ -132,38 +155,84 @@ class _SharedTripRoomDetailsScaffoldState
         body:
             BlocBuilder<SharedTripRoomDetailsCubit, SharedTripRoomDetailsState>(
               builder: (context, state) {
-                if (state is SharedTripRoomDetailsLoading ||
-                    state is SharedTripRoomDetailsInitial) {
-                  return _buildLoadingState(context);
-                }
+                final isLeaving =
+                    state is SharedTripRoomDetailsSuccess && state.isLeaving;
 
-                if (state is SharedTripRoomDetailsError) {
-                  return _buildErrorState(context, state.message);
-                }
+                return ModalProgressHUD(
+                  inAsyncCall: isLeaving,
+                  child: Builder(
+                    builder: (context) {
+                      if (state is SharedTripRoomDetailsLoading ||
+                          state is SharedTripRoomDetailsInitial) {
+                        return _buildLoadingState(context);
+                      }
 
-                if (state is SharedTripRoomDetailsSuccess) {
-                  return _buildContent(context, state);
-                }
+                      if (state is SharedTripRoomDetailsError) {
+                        return _buildErrorState(context, state.message);
+                      }
 
-                return const SizedBox.shrink();
+                      if (state is SharedTripRoomDetailsSuccess) {
+                        return _buildContent(context, state);
+                      }
+
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                );
               },
             ),
         bottomNavigationBar:
             BlocBuilder<SharedTripRoomDetailsCubit, SharedTripRoomDetailsState>(
               builder: (context, state) {
                 if (state is SharedTripRoomDetailsSuccess) {
-                  return state.joinedPassenger == null
-                      ? RoomDetailsBottomBar(
-                          details: state.details,
-                          onJoinPressed: state.isJoining
-                              ? null
-                              : () => _onJoinTapped(context, state.details),
-                        )
-                      : const SizedBox.shrink();
+                  return RoomDetailsBottomBar(
+                    details: state.details,
+                    isUserJoined: state.isUserJoined,
+                    isLeaving: state.isLeaving,
+                    onJoinPressed: state.isJoining
+                        ? null
+                        : () => _onJoinTapped(context, state.details),
+                    onLeavePressed: state.isLeaving
+                        ? null
+                        : () => _confirmLeaveRoom(
+                            context,
+                            context.read<SharedTripRoomDetailsCubit>(),
+                          ),
+                  );
                 }
                 return const SizedBox.shrink();
               },
             ),
+      ),
+    );
+  }
+
+  void _confirmLeaveRoom(
+    BuildContext context,
+    SharedTripRoomDetailsCubit cubit,
+  ) {
+    final s = S.of(context);
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => AlertDialog(
+        title: Text(s.sharedTripLeaveConfirmTitle),
+        content: Text(s.sharedTripLeaveConfirmBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogCtx).pop(),
+            child: Text(s.commonCancel),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.of(dialogCtx).pop();
+              cubit.leaveRoom();
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.errorColor,
+            ),
+            child: Text(s.sharedTripLeaveRoom),
+          ),
+        ],
       ),
     );
   }
@@ -241,7 +310,9 @@ class _SharedTripRoomDetailsScaffoldState
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       builder: (sheetContext) {
-        final fareValue = payload.finalFare ?? details.effectiveSeatFare;
+        final fareValue = payload.finalFare ??
+            payload.totalPaidFare ??
+            details.effectiveSeatFare;
 
         return PopScope(
           onPopInvokedWithResult: (didPop, _) {

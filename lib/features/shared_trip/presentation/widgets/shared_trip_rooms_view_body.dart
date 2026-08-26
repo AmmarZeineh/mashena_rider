@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
+import 'package:mashena_rider/features/pool/presentation/models/pool_discovery_args.dart';
 import 'package:mashena_rider/features/shared_trip/presentation/cubits/shared_trip_rooms_cubit/shared_trip_rooms_cubit.dart';
 import 'package:mashena_rider/features/shared_trip/presentation/cubits/shared_trip_rooms_cubit/shared_trip_rooms_state.dart';
 import 'shared_ride_card.dart';
@@ -30,7 +33,7 @@ class SharedTripRoomsViewBody extends StatelessWidget {
                 }
 
                 if (state.rooms.isEmpty) {
-                  return _buildEmptyState(context);
+                  return _buildEmptyState(context, state);
                 }
 
                 return _buildRoomsList(context, state);
@@ -90,7 +93,7 @@ class SharedTripRoomsViewBody extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context) {
+  Widget _buildEmptyState(BuildContext context, SharedTripRoomsState state) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -122,12 +125,29 @@ class SharedTripRoomsViewBody extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            Text(
-              S.of(context).sharedTripSearchingRooms,
-              style: textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
+            const SizedBox(height: 20),
+            FilledButton.icon(
+              onPressed: () {
+                context.push(
+                  AppRoutes.poolDiscoveryPath,
+                  extra: PoolDiscoveryArgs(
+                    pickup: state.pickupPlace,
+                    destination: state.destinationPlace,
+                  ),
+                );
+              },
+              icon: const Icon(Icons.groups_3_rounded),
+              label: const Text('Try Passenger Pool Instead'),
+              style: FilledButton.styleFrom(
+                backgroundColor: colorScheme.primary,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
           ],
         ),

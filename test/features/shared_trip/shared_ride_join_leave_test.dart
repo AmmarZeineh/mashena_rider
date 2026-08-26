@@ -7,6 +7,7 @@ import 'package:mashena_rider/features/shared_trip/domain/entities/join_shared_r
 import 'package:mocktail/mocktail.dart';
 
 class MockApiClient extends Mock implements ApiClient {}
+
 class MockSharedTripSocketDataSource extends Mock
     implements SharedTripSocketDataSource {}
 
@@ -35,13 +36,16 @@ void main() {
       );
     });
 
-    test('joinSharedRide calls API and maps response to SharedRidePassengerEntity', () async {
-      when(
-        () => mockApiClient.post(
-          '/shared-rides/12/join',
-          body: {'seatsNeeded': 2},
-        ),
-      ).thenAnswer((_) async => {
+    test(
+      'joinSharedRide calls API and maps response to SharedRidePassengerEntity',
+      () async {
+        when(
+          () => mockApiClient.post(
+            '/shared-rides/12/join',
+            body: {'seatsNeeded': 2},
+          ),
+        ).thenAnswer(
+          (_) async => {
             'id': 105,
             'sharedRideId': 12,
             'riderProfileId': 8,
@@ -63,16 +67,15 @@ void main() {
             'canceledAt': null,
             'removedAt': null,
             'removeReason': null,
-          });
+          },
+        );
 
-      final result = await repository.joinSharedRide(
-        const JoinSharedRideParams(roomId: 12, seatsNeeded: 2),
-      );
+        final result = await repository.joinSharedRide(
+          const JoinSharedRideParams(roomId: 12, seatsNeeded: 2),
+        );
 
-      expect(result.isRight(), true);
-      result.fold(
-        (_) => fail('Should succeed'),
-        (passenger) {
+        expect(result.isRight(), true);
+        result.fold((_) => fail('Should succeed'), (passenger) {
           expect(passenger.id, 105);
           expect(passenger.sharedRideId, 12);
           expect(passenger.riderName, 'Ahmad Ali');
@@ -80,14 +83,15 @@ void main() {
           expect(passenger.status, 'JOINED');
           expect(passenger.paymentStatus, 'PENDING');
           expect(passenger.totalPaidFare, 0.0);
-        },
-      );
-    });
+        });
+      },
+    );
 
-    test('leaveSharedRide calls API and maps response to updated SharedRideRoomDetailsEntity', () async {
-      when(
-        () => mockApiClient.post('/shared-rides/12/leave'),
-      ).thenAnswer((_) async => {
+    test(
+      'leaveSharedRide calls API and maps response to updated SharedRideRoomDetailsEntity',
+      () async {
+        when(() => mockApiClient.post('/shared-rides/12/leave')).thenAnswer(
+          (_) async => {
             'id': 12,
             'driverProfileId': 3,
             'vehicleId': 5,
@@ -121,21 +125,20 @@ void main() {
             'endType': null,
             'createdAt': '2026-08-17T07:30:00.000Z',
             'passengers': [],
-          });
+          },
+        );
 
-      final result = await repository.leaveSharedRide(12);
+        final result = await repository.leaveSharedRide(12);
 
-      expect(result.isRight(), true);
-      result.fold(
-        (_) => fail('Should succeed'),
-        (details) {
+        expect(result.isRight(), true);
+        result.fold((_) => fail('Should succeed'), (details) {
           expect(details.id, 12);
           expect(details.occupiedSeats, 0);
           expect(details.availableSeats, 4);
           expect(details.status, 'OPEN');
           expect(details.passengers.isEmpty, true);
-        },
-      );
-    });
+        });
+      },
+    );
   });
 }

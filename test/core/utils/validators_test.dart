@@ -58,15 +58,30 @@ void main() {
         expect(Validators.password('Pass@1234'), isNull);
       });
 
-      test('should reject passwords lacking uppercase, lowercase, numbers or special chars', () {
-        expect(Validators.isStrongPassword('short1!'), isFalse); // < 8 chars
-        expect(Validators.isStrongPassword('password123!'), isFalse); // no uppercase
-        expect(Validators.isStrongPassword('PASSWORD123!'), isFalse); // no lowercase
-        expect(Validators.isStrongPassword('Password!!!!'), isFalse); // no number
-        expect(Validators.isStrongPassword('Password1234'), isFalse); // no special char
-        expect(Validators.password('weakpass'), ValidationError.weakPassword);
-        expect(Validators.password(null), ValidationError.requiredField);
-      });
+      test(
+        'should reject passwords lacking uppercase, lowercase, numbers or special chars',
+        () {
+          expect(Validators.isStrongPassword('short1!'), isFalse); // < 8 chars
+          expect(
+            Validators.isStrongPassword('password123!'),
+            isFalse,
+          ); // no uppercase
+          expect(
+            Validators.isStrongPassword('PASSWORD123!'),
+            isFalse,
+          ); // no lowercase
+          expect(
+            Validators.isStrongPassword('Password!!!!'),
+            isFalse,
+          ); // no number
+          expect(
+            Validators.isStrongPassword('Password1234'),
+            isFalse,
+          ); // no special char
+          expect(Validators.password('weakpass'), ValidationError.weakPassword);
+          expect(Validators.password(null), ValidationError.requiredField);
+        },
+      );
     });
 
     group('passwordsMatch', () {
@@ -81,10 +96,19 @@ void main() {
         );
       });
 
-      test('should return requiredField when either password is null or empty', () {
-        expect(Validators.passwordsMatch(null, 'Pass@1234'), ValidationError.requiredField);
-        expect(Validators.passwordsMatch('Pass@1234', ''), ValidationError.requiredField);
-      });
+      test(
+        'should return requiredField when either password is null or empty',
+        () {
+          expect(
+            Validators.passwordsMatch(null, 'Pass@1234'),
+            ValidationError.requiredField,
+          );
+          expect(
+            Validators.passwordsMatch('Pass@1234', ''),
+            ValidationError.requiredField,
+          );
+        },
+      );
     });
 
     group('isOtp & otp', () {

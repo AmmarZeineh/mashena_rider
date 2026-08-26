@@ -30,6 +30,9 @@ abstract interface class RideSocketDataSource {
   /// Stream that fires when the ride request expires without finding a driver.
   Stream<int> get rideExpiredStream;
 
+  /// Stream of the socket connection state updates.
+  Stream<bool> get connectionStatusStream;
+
   /// Connects the underlying socket to the server.
   Future<void> connectSocket();
 
@@ -61,18 +64,27 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
   final StreamController<int> _rideExpiredController =
       StreamController<int>.broadcast();
 
+  // Callback references for clean unregistration
+  late final void Function(dynamic) _onRideMatched;
+  late final void Function(dynamic) _onDriverLocation;
+  late final void Function(dynamic) _onDriverArrived;
+  late final void Function(dynamic) _onDriverStarted;
+  late final void Function(dynamic) _onTripCompleted;
+  late final void Function(dynamic) _onTripCancelled;
+  late final void Function(dynamic) _onRideExpired;
+
   RideSocketDataSourceImpl(this._socketClient) {
     _initSocketListeners();
   }
 
   void _initSocketListeners() {
-    _socketClient.on('ride:matched', (data) {
+    _onRideMatched = (data) {
       LoggerService.debug(
         'Received ride:matched event: $data',
         name: 'features.home.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_rideMatchedController.isClosed) {
           final rideRequestId = data['rideRequestId'];
           if (rideRequestId != null) {
             _rideMatchedController.add(int.parse(rideRequestId.toString()));
@@ -86,15 +98,16 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('ride:matched', _onRideMatched);
 
-    _socketClient.on('driver:location', (data) {
+    _onDriverLocation = (data) {
       LoggerService.debug(
         'Received driver:location event: $data',
         name: 'features.home.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_driverLocationController.isClosed) {
           final lat = data['lat'];
           final lng = data['lng'];
           LoggerService.debug(
@@ -120,7 +133,7 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           }
         } else {
           LoggerService.debug(
-            'driver:location payload is not a Map: ${data.runtimeType}',
+            'driver:location payload is not a Map or controller is closed: ${data.runtimeType}',
             name: 'features.home.socket',
           );
         }
@@ -132,15 +145,16 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('driver:location', _onDriverLocation);
 
-    _socketClient.on('trip:driver-arrived', (data) {
+    _onDriverArrived = (data) {
       LoggerService.debug(
         'Received trip:driver-arrived event: $data',
         name: 'features.home.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_driverArrivedController.isClosed) {
           final payload = DriverArrivedPayload.fromJson(
             Map<String, dynamic>.from(data),
           );
@@ -154,15 +168,16 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('trip:driver-arrived', _onDriverArrived);
 
-    _socketClient.on('trip:driver-started', (data) {
+    _onDriverStarted = (data) {
       LoggerService.debug(
         'Received trip:driver-started event: $data',
         name: 'features.home.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_driverStartedController.isClosed) {
           final tripId = data['tripId'];
           if (tripId != null) {
             _driverStartedController.add(int.parse(tripId.toString()));
@@ -176,15 +191,16 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('trip:driver-started', _onDriverStarted);
 
-    _socketClient.on('trip:completed', (data) {
+    _onTripCompleted = (data) {
       LoggerService.debug(
         'Received trip:completed event: $data',
         name: 'features.home.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_tripCompletedController.isClosed) {
           final payload = TripCompletedPayload.fromJson(
             Map<String, dynamic>.from(data),
           );
@@ -198,15 +214,16 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('trip:completed', _onTripCompleted);
 
-    _socketClient.on('trip:cancelled', (data) {
+    _onTripCancelled = (data) {
       LoggerService.debug(
         'Received trip:cancelled event: $data',
         name: 'features.home.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_tripCancelledController.isClosed) {
           final payload = TripCancelledPayload.fromJson(
             Map<String, dynamic>.from(data),
           );
@@ -220,15 +237,16 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('trip:cancelled', _onTripCancelled);
 
-    _socketClient.on('ride:expired', (data) {
+    _onRideExpired = (data) {
       LoggerService.debug(
         'Received ride:expired event: $data',
         name: 'features.home.socket',
       );
       try {
-        if (data is Map) {
+        if (data is Map && !_rideExpiredController.isClosed) {
           final rideRequestId = data['rideRequestId'];
           if (rideRequestId != null) {
             _rideExpiredController.add(int.parse(rideRequestId.toString()));
@@ -242,7 +260,8 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
           stackTrace: stackTrace,
         );
       }
-    });
+    };
+    _socketClient.on('ride:expired', _onRideExpired);
   }
 
   @override
@@ -269,6 +288,9 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
 
   @override
   Stream<int> get rideExpiredStream => _rideExpiredController.stream;
+
+  @override
+  Stream<bool> get connectionStatusStream => _socketClient.connectionStatusStream;
 
   @override
   Future<void> connectSocket() => _socketClient.connect();
@@ -299,12 +321,33 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
 
   @override
   Future<void> dispose() async {
-    await _rideMatchedController.close();
-    await _driverLocationController.close();
-    await _driverArrivedController.close();
-    await _driverStartedController.close();
-    await _tripCompletedController.close();
-    await _tripCancelledController.close();
-    await _rideExpiredController.close();
+    // Cleanly unregister callbacks from socket client
+    _socketClient.off('ride:matched', _onRideMatched);
+    _socketClient.off('driver:location', _onDriverLocation);
+    _socketClient.off('trip:driver-arrived', _onDriverArrived);
+    _socketClient.off('trip:driver-started', _onDriverStarted);
+    _socketClient.off('trip:completed', _onTripCompleted);
+    _socketClient.off('trip:cancelled', _onTripCancelled);
+    _socketClient.off('ride:expired', _onRideExpired);
+
+    if (!_rideMatchedController.isClosed) await _rideMatchedController.close();
+    if (!_driverLocationController.isClosed) {
+      await _driverLocationController.close();
+    }
+    if (!_driverArrivedController.isClosed) {
+      await _driverArrivedController.close();
+    }
+    if (!_driverStartedController.isClosed) {
+      await _driverStartedController.close();
+    }
+    if (!_tripCompletedController.isClosed) {
+      await _tripCompletedController.close();
+    }
+    if (!_tripCancelledController.isClosed) {
+      await _tripCancelledController.close();
+    }
+    if (!_rideExpiredController.isClosed) {
+      await _rideExpiredController.close();
+    }
   }
 }

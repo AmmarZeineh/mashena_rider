@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
+import 'package:mashena_rider/core/services/notification_router.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/features/notifications/domain/entities/notification_item.dart';
+import 'package:mashena_rider/features/notifications/presentation/cubits/notifications_cubit.dart';
 import 'package:mashena_rider/features/notifications/presentation/widgets/notification_type_helper.dart';
 
 class NotificationCard extends StatelessWidget {
@@ -39,6 +42,13 @@ class NotificationCard extends StatelessWidget {
     return '$day $month ${dt.year} • $hour:$minute $period';
   }
 
+  void _handleTap(BuildContext context) {
+    if (!item.isRead) {
+      context.read<NotificationsCubit>().markAsRead(item.id);
+    }
+    NotificationRouter.routeFromItem(item);
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
@@ -71,123 +81,131 @@ class NotificationCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Notification Type Icon
-            Container(
-              width: 44.r,
-              height: 44.r,
-              decoration: BoxDecoration(
-                color: typeHelper.backgroundColor,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Icon(
-                  typeHelper.icon,
-                  color: typeHelper.iconColor,
-                  size: 22.r,
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16.r),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16.r),
+          onTap: () => _handleTap(context),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Notification Type Icon
+                Container(
+                  width: 44.r,
+                  height: 44.r,
+                  decoration: BoxDecoration(
+                    color: typeHelper.backgroundColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      typeHelper.icon,
+                      color: typeHelper.iconColor,
+                      size: 22.r,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(width: 14.w),
+                SizedBox(width: 14.w),
 
-            // Notification Content (Title, Body, Metadata, Timestamp)
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title Row with Unread Dot
-                  Row(
+                // Notification Content (Title, Body, Metadata, Timestamp)
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Text(
-                          item.title,
-                          style: AppTextStyles.w600_16.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface,
+                      // Title Row with Unread Dot
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item.title,
+                              style: AppTextStyles.w600_16.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
                           ),
-                        ),
+                          if (isUnread) ...[
+                            SizedBox(width: 8.w),
+                            Container(
+                              width: 8.r,
+                              height: 8.r,
+                              decoration: const BoxDecoration(
+                                color: AppColors.primaryColor,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
-                      if (isUnread) ...[
-                        SizedBox(width: 8.w),
-                        Container(
-                          width: 8.r,
-                          height: 8.r,
-                          decoration: const BoxDecoration(
-                            color: AppColors.primaryColor,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  SizedBox(height: 6.h),
+                      SizedBox(height: 6.h),
 
-                  // Body Message
-                  Text(
-                    item.body,
-                    style: AppTextStyles.w400_14.copyWith(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.75),
-                      height: 1.35,
-                    ),
-                  ),
-
-                  // Metadata Badges (if any)
-                  if (tripId != null ||
-                      rideRequestId != null ||
-                      amount != null) ...[
-                    SizedBox(height: 10.h),
-                    Wrap(
-                      spacing: 8.w,
-                      runSpacing: 6.h,
-                      children: [
-                        if (tripId != null && tripId is int)
-                          _MetadataChip(
-                            label: s.notificationTripId(tripId),
-                            icon: Icons.tag_rounded,
-                          ),
-                        if (rideRequestId != null && rideRequestId is int)
-                          _MetadataChip(
-                            label: s.notificationRideRequestId(rideRequestId),
-                            icon: Icons.confirmation_number_outlined,
-                          ),
-                        if (amount != null)
-                          _MetadataChip(
-                            label: '$amount ${s.appCurrency}',
-                            icon: Icons.account_balance_wallet_outlined,
-                            isAccent: true,
-                          ),
-                      ],
-                    ),
-                  ],
-
-                  SizedBox(height: 8.h),
-
-                  // Timestamp
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.access_time_rounded,
-                        size: 12.r,
-                        color: AppColors.textGrey,
-                      ),
-                      SizedBox(width: 4.w),
+                      // Body Message
                       Text(
-                        formattedTime,
-                        style: AppTextStyles.w500_12.copyWith(
-                          color: AppColors.textGrey,
+                        item.body,
+                        style: AppTextStyles.w400_14.copyWith(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.75),
+                          height: 1.35,
                         ),
+                      ),
+
+                      // Metadata Badges (if any)
+                      if (tripId != null ||
+                          rideRequestId != null ||
+                          amount != null) ...[
+                        SizedBox(height: 10.h),
+                        Wrap(
+                          spacing: 8.w,
+                          runSpacing: 6.h,
+                          children: [
+                            if (tripId != null && tripId is int)
+                              _MetadataChip(
+                                label: s.notificationTripId(tripId),
+                                icon: Icons.tag_rounded,
+                              ),
+                            if (rideRequestId != null && rideRequestId is int)
+                              _MetadataChip(
+                                label: s.notificationRideRequestId(rideRequestId),
+                                icon: Icons.confirmation_number_outlined,
+                              ),
+                            if (amount != null)
+                              _MetadataChip(
+                                label: '$amount ${s.appCurrency}',
+                                icon: Icons.account_balance_wallet_outlined,
+                                isAccent: true,
+                              ),
+                          ],
+                        ),
+                      ],
+
+                      SizedBox(height: 8.h),
+
+                      // Timestamp
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.access_time_rounded,
+                            size: 12.r,
+                            color: AppColors.textGrey,
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            formattedTime,
+                            style: AppTextStyles.w500_12.copyWith(
+                              color: AppColors.textGrey,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

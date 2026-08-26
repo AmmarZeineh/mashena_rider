@@ -274,6 +274,13 @@ class SharedRidePassengerDroppedPayload {
   final double? finalDistanceKm;
   final int? finalDurationSec;
   final DateTime timestamp;
+  final SharedRidePassengerModel? passenger;
+  final bool accountHolderOnBoard;
+  final DateTime? accountHolderDroppedOffAt;
+  final int? activeSeats;
+  final int? seatsNeeded;
+  final double? totalPaidFare;
+  final String? passengerStatus;
 
   const SharedRidePassengerDroppedPayload({
     required this.sharedRideId,
@@ -286,15 +293,58 @@ class SharedRidePassengerDroppedPayload {
     this.finalDistanceKm,
     this.finalDurationSec,
     required this.timestamp,
+    this.passenger,
+    this.accountHolderOnBoard = false,
+    this.accountHolderDroppedOffAt,
+    this.activeSeats,
+    this.seatsNeeded,
+    this.totalPaidFare,
+    this.passengerStatus,
   });
 
   factory SharedRidePassengerDroppedPayload.fromJson(
     Map<String, dynamic> json,
   ) {
+    SharedRidePassengerModel? passModel;
     Map<String, dynamic>? pass;
     if (json['passenger'] is Map<String, dynamic>) {
       pass = json['passenger'] as Map<String, dynamic>;
+      try {
+        passModel = SharedRidePassengerModel.fromJson(pass);
+      } catch (_) {}
     }
+
+    final bool accountHolderOnBoard =
+        pass != null && pass['accountHolderOnBoard'] != null
+        ? readBool(pass['accountHolderOnBoard'])
+        : (json['accountHolderOnBoard'] != null
+              ? readBool(json['accountHolderOnBoard'])
+              : false);
+
+    final String passengerStatus = pass != null && pass['status'] != null
+        ? pass['status'].toString()
+        : (json['status'] as String? ?? 'DROPPED_OFF');
+
+    final double? totalPaidFare = pass != null && pass['totalPaidFare'] != null
+        ? readDouble(pass['totalPaidFare'])
+        : (json['totalPaidFare'] != null
+              ? readDouble(json['totalPaidFare'])
+              : null);
+
+    final int? activeSeats = pass != null && pass['activeSeats'] != null
+        ? readInt(pass['activeSeats'])
+        : (json['activeSeats'] != null ? readInt(json['activeSeats']) : null);
+
+    final int? seatsNeeded = pass != null && pass['seatsNeeded'] != null
+        ? readInt(pass['seatsNeeded'])
+        : (json['seatsNeeded'] != null ? readInt(json['seatsNeeded']) : null);
+
+    final DateTime? accountHolderDroppedOffAt =
+        (pass != null && pass['accountHolderDroppedOffAt'] != null)
+        ? DateTime.tryParse(pass['accountHolderDroppedOffAt'].toString())
+        : (json['accountHolderDroppedOffAt'] != null
+              ? DateTime.tryParse(json['accountHolderDroppedOffAt'].toString())
+              : null);
 
     return SharedRidePassengerDroppedPayload(
       sharedRideId: readInt(json['sharedRideId']),
@@ -327,6 +377,13 @@ class SharedRidePassengerDroppedPayload {
       timestamp: json['timestamp'] != null
           ? DateTime.tryParse(json['timestamp'].toString()) ?? DateTime.now()
           : DateTime.now(),
+      passenger: passModel,
+      accountHolderOnBoard: accountHolderOnBoard,
+      accountHolderDroppedOffAt: accountHolderDroppedOffAt,
+      activeSeats: activeSeats,
+      seatsNeeded: seatsNeeded,
+      totalPaidFare: totalPaidFare,
+      passengerStatus: passengerStatus,
     );
   }
 }

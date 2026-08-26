@@ -304,6 +304,24 @@ class SEn extends S {
   String get sharedTripConfirmJoin => 'Confirm & Join';
 
   @override
+  String get sharedTripLeaveRoom => 'Leave Shared Trip';
+
+  @override
+  String get sharedTripLeaveConfirmTitle => 'Leave Shared Trip?';
+
+  @override
+  String get sharedTripLeaveConfirmBody =>
+      'Are you sure you want to leave this shared trip? Your seat will become available for others.';
+
+  @override
+  String get sharedTripLeaveSuccess => 'You have left the shared trip.';
+
+  @override
+  String sharedTripCompanionDropped(String fare, String currency) {
+    return 'A companion has been dropped off. Fare: $fare $currency';
+  }
+
+  @override
   String get rideFindingDriver => 'Finding a driver...';
 
   @override
@@ -846,6 +864,9 @@ class SEn extends S {
   }
 
   @override
+  String get markAllAsRead => 'Mark all as read';
+
+  @override
   String notificationTripId(int id) {
     return 'Trip #$id';
   }
@@ -854,4 +875,380 @@ class SEn extends S {
   String notificationRideRequestId(int id) {
     return 'Request #$id';
   }
+
+  @override
+  String get poolTransport => 'Pool Transport';
+
+  @override
+  String get poolFindLobby => 'Find Pool Lobby';
+
+  @override
+  String get poolCreateLobby => 'Create Pool Lobby';
+
+  @override
+  String get poolPublishLobby => 'Publish Pool Lobby';
+
+  @override
+  String get poolMatchingNearby => 'Matching Pools Nearby';
+
+  @override
+  String get poolSearchingLobbies => 'Searching for matching pool lobbies...';
+
+  @override
+  String get poolNoLobbiesFound => 'No Pool Lobbies Found';
+
+  @override
+  String get poolNoLobbiesFoundSubtitle =>
+      'Be the first to create a pool lobby and other passengers traveling your direction will join you!';
+
+  @override
+  String get poolMeetingPoint => 'Shared Meeting Point';
+
+  @override
+  String get poolMeetingPointDesc => 'Walk here to meet the driver & riders';
+
+  @override
+  String get poolPassengersRoster => 'Passengers Roster';
+
+  @override
+  String get poolTargetDepartureTime => 'Target Departure Time';
+
+  @override
+  String get poolTotalCapacity => 'Total Passenger Capacity';
+
+  @override
+  String get poolCapacityDesc => 'Room will be sent to drivers once full.';
+
+  @override
+  String get poolSeatsYouNeed => 'Seats You Need';
+
+  @override
+  String get poolSeatsYouNeedDesc => 'Number of seats for you & companions';
+
+  @override
+  String get poolJoinSuccess => 'Joined pool room successfully!';
+
+  @override
+  String get poolCreateSuccess => 'Pool room created! Waiting in lobby.';
+
+  @override
+  String get poolCancelRoom => 'Cancel Pool Room';
+
+  @override
+  String get poolLeaveRoom => 'Leave Pool Room';
+
+  @override
+  String get poolCancelConfirmTitle => 'Cancel Pool Room?';
+
+  @override
+  String get poolCancelConfirmBody =>
+      'Cancelling this room will disband the lobby and notify all joined passengers.';
+
+  @override
+  String get poolLeaveConfirmTitle => 'Leave Pool Room?';
+
+  @override
+  String get poolLeaveConfirmBody =>
+      'Are you sure you want to leave this pool room? Your seat will become available for others.';
+
+  @override
+  String get poolDriverFound => 'Driver Found! Starting your ride.';
+
+  @override
+  String get poolExpiredTitle => 'Pool Room Expired';
+
+  @override
+  String get poolExpiredBody =>
+      'No driver was matched before the departure time. The room has expired.';
+
+  @override
+  String get poolCancelledTitle => 'Pool Room Cancelled';
+
+  @override
+  String get poolCancelledBody => 'The host has cancelled this pool room.';
+
+  @override
+  String get poolRemovedTitle => 'Removed from Room';
+
+  @override
+  String get poolRemovedBody => 'You were removed from this pool room.';
+
+  @override
+  String get poolStatusLooking => 'Looking for Passengers';
+
+  @override
+  String get poolStatusReady => 'Finding Driver...';
+
+  @override
+  String get poolStatusMatched => 'Driver Assigned!';
+
+  @override
+  String get drawerModeration => 'Moderation & Restrictions';
+
+  @override
+  String get moderationTitle => 'Account Status & Moderation';
+
+  @override
+  String get moderationOverviewTab => 'Overview';
+
+  @override
+  String get moderationPenaltiesTab => 'Penalties';
+
+  @override
+  String get moderationViolationsTab => 'Violations';
+
+  @override
+  String get moderationAppealsTab => 'Appeals';
+
+  @override
+  String get moderationAccountStatus => 'Account Status';
+
+  @override
+  String get moderationStatusActive => 'Good Standing';
+
+  @override
+  String get moderationStatusWarning => 'Warning Issued';
+
+  @override
+  String get moderationStatusRestricted => 'Restricted';
+
+  @override
+  String get moderationStatusSuspended => 'Suspended';
+
+  @override
+  String get moderationStatusBanned => 'Banned';
+
+  @override
+  String get moderationActiveRestrictions => 'Active Restrictions';
+
+  @override
+  String get moderationActivePenalties => 'Active Penalties';
+
+  @override
+  String get moderationRecentViolations => 'Recent Violations';
+
+  @override
+  String get moderationActiveAppeals => 'Active Appeals';
+
+  @override
+  String get moderationWarningsCount => 'Warnings';
+
+  @override
+  String get moderationViolationsCount => 'Total Violations';
+
+  @override
+  String get moderationPenaltiesCount => 'Active Penalties';
+
+  @override
+  String get moderationRestrictionsCount => 'Restrictions';
+
+  @override
+  String get moderationSubmitAppeal => 'Submit Appeal';
+
+  @override
+  String get moderationAppealReason => 'Appeal Reason';
+
+  @override
+  String get moderationAppealReasonHint =>
+      'Explain in detail why this penalty should be reviewed...';
+
+  @override
+  String get moderationAppealEvidence => 'Evidence URL (Optional)';
+
+  @override
+  String get moderationAppealEvidenceHint => 'https://example.com/proof.jpg';
+
+  @override
+  String get moderationAppealSubmitBtn => 'Submit Appeal';
+
+  @override
+  String get moderationAppealSubmitting => 'Submitting Appeal...';
+
+  @override
+  String get moderationAppealSuccess => 'Appeal submitted successfully';
+
+  @override
+  String get moderationAppealAlreadyExists =>
+      'An appeal is already pending review for this penalty';
+
+  @override
+  String get moderationPenaltyNotAppealable =>
+      'Only active penalties can be appealed';
+
+  @override
+  String get moderationAppealDetailsTitle => 'Appeal Details';
+
+  @override
+  String get moderationAdminDecision => 'Admin Decision';
+
+  @override
+  String get moderationAdminNotes => 'Admin Notes';
+
+  @override
+  String moderationExpiresAt(String date) {
+    return 'Expires: $date';
+  }
+
+  @override
+  String moderationStartsAt(String date) {
+    return 'Starts: $date';
+  }
+
+  @override
+  String moderationIssuedAt(String date) {
+    return 'Issued: $date';
+  }
+
+  @override
+  String moderationSubmittedAt(String date) {
+    return 'Submitted: $date';
+  }
+
+  @override
+  String moderationReviewedAt(String date) {
+    return 'Reviewed: $date';
+  }
+
+  @override
+  String get moderationNoPenalties => 'No penalties recorded';
+
+  @override
+  String get moderationNoViolations => 'No violations recorded';
+
+  @override
+  String get moderationNoAppeals => 'No appeals submitted';
+
+  @override
+  String get moderationNoRestrictions =>
+      'No active restrictions on your account';
+
+  @override
+  String get moderationPermanentBanNotice => 'Permanent Ban (No Expiry)';
+
+  @override
+  String get moderationPenaltyTypeWarning => 'Warning';
+
+  @override
+  String get moderationPenaltyTypeSuspension => 'Temporary Suspension';
+
+  @override
+  String get moderationPenaltyTypeBan => 'Permanent Ban';
+
+  @override
+  String get moderationPenaltyTypeFeatureRestriction => 'Feature Restriction';
+
+  @override
+  String get moderationPenaltyTypeAccountRestriction => 'Account Restriction';
+
+  @override
+  String get moderationPenaltyStatusActive => 'Active';
+
+  @override
+  String get moderationPenaltyStatusExpired => 'Expired';
+
+  @override
+  String get moderationPenaltyStatusRevoked => 'Revoked';
+
+  @override
+  String get moderationPenaltyStatusCancelled => 'Cancelled';
+
+  @override
+  String get moderationRestrictionRequestRide => 'Ride Requests';
+
+  @override
+  String get moderationRestrictionJoinSharedRide => 'Join Shared Rides';
+
+  @override
+  String get moderationRestrictionJoinPassengerPool => 'Join Passenger Pools';
+
+  @override
+  String get moderationRestrictionWalletTransfer => 'Wallet Transfer';
+
+  @override
+  String get moderationRestrictionPayment => 'Payment Processing';
+
+  @override
+  String get moderationRestrictionFullAccount => 'Full Account Access';
+
+  @override
+  String get moderationViolationRiderTripCancellation => 'Ride Cancellation';
+
+  @override
+  String get moderationViolationNoShow => 'No Show at Pickup';
+
+  @override
+  String get moderationViolationLateCancellation => 'Late Cancellation';
+
+  @override
+  String get moderationViolationSharedRideMisuse => 'Shared Ride Misuse';
+
+  @override
+  String get moderationViolationPassengerPoolMisuse => 'Passenger Pool Misuse';
+
+  @override
+  String get moderationViolationPaymentAbuse => 'Payment Abuse';
+
+  @override
+  String get moderationViolationWalletAbuse => 'Wallet Abuse';
+
+  @override
+  String get moderationViolationAbusiveBehavior => 'Abusive Behavior';
+
+  @override
+  String get moderationViolationFraud => 'Fraud Activity';
+
+  @override
+  String get moderationViolationManualAdmin => 'Administrative Violation';
+
+  @override
+  String get moderationSeverityLow => 'Low';
+
+  @override
+  String get moderationSeverityMedium => 'Medium';
+
+  @override
+  String get moderationSeverityHigh => 'High';
+
+  @override
+  String get moderationSeverityCritical => 'Critical';
+
+  @override
+  String get moderationAppealStatusPending => 'Pending Review';
+
+  @override
+  String get moderationAppealStatusUnderReview => 'Under Review';
+
+  @override
+  String get moderationAppealStatusApproved => 'Approved';
+
+  @override
+  String get moderationAppealStatusRejected => 'Rejected';
+
+  @override
+  String get moderationAppealStatusCancelled => 'Cancelled';
+
+  @override
+  String get moderationReasonRequired => 'Please enter the appeal reason';
+
+  @override
+  String get moderationReasonTooLong => 'Reason cannot exceed 2000 characters';
+
+  @override
+  String get moderationInvalidEvidenceUrl => 'Please enter a valid URL';
+
+  @override
+  String moderationPenaltyRef(int id) {
+    return 'Penalty #$id';
+  }
+
+  @override
+  String moderationAppealRef(int id) {
+    return 'Appeal #$id';
+  }
+
+  @override
+  String get moderationRealtimePenaltyTitle => 'New Penalty Notice';
+
+  @override
+  String get moderationRealtimeLiftedTitle => 'Restriction Lifted';
 }

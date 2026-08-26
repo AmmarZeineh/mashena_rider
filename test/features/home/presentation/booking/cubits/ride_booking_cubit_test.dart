@@ -24,8 +24,12 @@ import 'package:mashena_rider/features/home/presentation/trip/cubits/driver_trac
 import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_lifecycle_cubit/trip_lifecycle_cubit.dart';
 
 class MockRideRepository extends Mock implements RideRepository {}
-class MockSubmitRideRequestUsecase extends Mock implements SubmitRideRequestUsecase {}
+
+class MockSubmitRideRequestUsecase extends Mock
+    implements SubmitRideRequestUsecase {}
+
 class MockCancelRideUsecase extends Mock implements CancelRideUsecase {}
+
 class MockOSRMRouteService extends Mock implements OSRMRouteService {}
 
 void main() {
@@ -59,7 +63,7 @@ void main() {
         address: 'Dest Address',
         latitude: 33.5200,
         longitude: 36.2800,
-      )
+      ),
     ],
     estimateResponse: const RideEstimateResponse(
       distanceKm: 2.5,
@@ -91,20 +95,41 @@ void main() {
     mockOsrm = MockOSRMRouteService();
     authEventBus = AuthEventBus();
 
-    when(() => mockRideRepo.rideMatchedStream).thenAnswer((_) => const Stream<int>.empty());
-    when(() => mockRideRepo.driverArrivedStream).thenAnswer((_) => const Stream<DriverArrived>.empty());
-    when(() => mockRideRepo.driverStartedStream).thenAnswer((_) => const Stream<int>.empty());
-    when(() => mockRideRepo.tripCompletedStream).thenAnswer((_) => const Stream<TripCompleted>.empty());
-    when(() => mockRideRepo.tripCancelledStream).thenAnswer((_) => const Stream<TripCancelled>.empty());
-    when(() => mockRideRepo.rideExpiredStream).thenAnswer((_) => const Stream<int>.empty());
-    when(() => mockRideRepo.driverLocationStream).thenAnswer((_) => const Stream<MapLatLng>.empty());
+    when(
+      () => mockRideRepo.rideMatchedStream,
+    ).thenAnswer((_) => const Stream<int>.empty());
+    when(
+      () => mockRideRepo.driverArrivedStream,
+    ).thenAnswer((_) => const Stream<DriverArrived>.empty());
+    when(
+      () => mockRideRepo.driverStartedStream,
+    ).thenAnswer((_) => const Stream<int>.empty());
+    when(
+      () => mockRideRepo.tripCompletedStream,
+    ).thenAnswer((_) => const Stream<TripCompleted>.empty());
+    when(
+      () => mockRideRepo.tripCancelledStream,
+    ).thenAnswer((_) => const Stream<TripCancelled>.empty());
+    when(
+      () => mockRideRepo.rideExpiredStream,
+    ).thenAnswer((_) => const Stream<int>.empty());
+    when(
+      () => mockRideRepo.driverLocationStream,
+    ).thenAnswer((_) => const Stream<MapLatLng>.empty());
+    when(
+      () => mockRideRepo.connectionStatusStream,
+    ).thenAnswer((_) => const Stream<bool>.empty());
     when(() => mockRideRepo.connectSocket()).thenAnswer((_) async {});
     when(() => mockRideRepo.listenToRide(any())).thenReturn(null);
     when(() => mockRideRepo.stopListeningToRide(any())).thenReturn(null);
 
     tripLifecycleCubit = TripLifecycleCubit(mockRideRepo, authEventBus);
     mapStateCubit = MapStateCubit();
-    driverTrackingCubit = DriverTrackingCubit(mockRideRepo, mockOsrm, mapStateCubit);
+    driverTrackingCubit = DriverTrackingCubit(
+      mockRideRepo,
+      mockOsrm,
+      mapStateCubit,
+    );
 
     rideBookingCubit = RideBookingCubit(
       mockSubmitRide,
@@ -136,30 +161,35 @@ void main() {
       expect(rideBookingCubit.state.confirmedRideResult, testConfirmedRide);
     });
 
-    test('submitRideSelection connects socket, submits request, and starts tracking on success', () async {
-      rideBookingCubit.setConfirmedRide(testConfirmedRide);
+    test(
+      'submitRideSelection connects socket, submits request, and starts tracking on success',
+      () async {
+        rideBookingCubit.setConfirmedRide(testConfirmedRide);
 
-      when(
-        () => mockSubmitRide(
-          request: testConfirmedRide.request,
-          vehicleTypeId: 1,
-        ),
-      ).thenAnswer((_) async => const Right(testSubmission));
+        when(
+          () => mockSubmitRide(
+            request: testConfirmedRide.request,
+            vehicleTypeId: 1,
+          ),
+        ).thenAnswer((_) async => const Right(testSubmission));
 
-      final expectedStates = [
-        predicate<RideBookingState>((s) => s.isSubmitting == true),
-        predicate<RideBookingState>(
-          (s) => s.isSubmitting == false && s.submissionResponse == testSubmission,
-        ),
-      ];
+        final expectedStates = [
+          predicate<RideBookingState>((s) => s.isSubmitting == true),
+          predicate<RideBookingState>(
+            (s) =>
+                s.isSubmitting == false &&
+                s.submissionResponse == testSubmission,
+          ),
+        ];
 
-      expectLater(rideBookingCubit.stream, emitsInOrder(expectedStates));
+        expectLater(rideBookingCubit.stream, emitsInOrder(expectedStates));
 
-      await rideBookingCubit.submitRideSelection(1);
+        await rideBookingCubit.submitRideSelection(1);
 
-      verify(() => mockRideRepo.connectSocket()).called(1);
-      verify(() => mockRideRepo.listenToRide(777)).called(1);
-    });
+        verify(() => mockRideRepo.connectSocket()).called(1);
+        verify(() => mockRideRepo.listenToRide(777)).called(1);
+      },
+    );
 
     test('submitRideSelection emits failure on API error', () async {
       rideBookingCubit.setConfirmedRide(testConfirmedRide);
@@ -170,13 +200,17 @@ void main() {
           vehicleTypeId: 1,
         ),
       ).thenAnswer(
-        (_) async => const Left(Failure(FailureCode.server, rawMessage: 'No drivers available')),
+        (_) async => const Left(
+          Failure(FailureCode.server, rawMessage: 'No drivers available'),
+        ),
       );
 
       final expectedStates = [
         predicate<RideBookingState>((s) => s.isSubmitting == true),
         predicate<RideBookingState>(
-          (s) => s.isSubmitting == false && s.error?.rawMessage == 'No drivers available',
+          (s) =>
+              s.isSubmitting == false &&
+              s.error?.rawMessage == 'No drivers available',
         ),
       ];
 
@@ -185,40 +219,51 @@ void main() {
       await rideBookingCubit.submitRideSelection(1);
     });
 
-    test('cancelRide blocks cancellation when trip has already started', () async {
-      rideBookingCubit.setConfirmedRide(testConfirmedRide);
-      when(
-        () => mockSubmitRide(
-          request: testConfirmedRide.request,
-          vehicleTypeId: 1,
-        ),
-      ).thenAnswer((_) async => const Right(testSubmission));
-      await rideBookingCubit.submitRideSelection(1);
+    test(
+      'cancelRide blocks cancellation when trip has already started',
+      () async {
+        rideBookingCubit.setConfirmedRide(testConfirmedRide);
+        when(
+          () => mockSubmitRide(
+            request: testConfirmedRide.request,
+            vehicleTypeId: 1,
+          ),
+        ).thenAnswer((_) async => const Right(testSubmission));
+        await rideBookingCubit.submitRideSelection(1);
 
-      await rideBookingCubit.cancelRide(isTripStarted: true);
+        await rideBookingCubit.cancelRide(isTripStarted: true);
 
-      expect(rideBookingCubit.state.error?.rawMessage, 'error_cannot_cancel_started_trip');
-      verifyNever(() => mockCancelRide(any()));
-    });
+        expect(
+          rideBookingCubit.state.error?.rawMessage,
+          'error_cannot_cancel_started_trip',
+        );
+        verifyNever(() => mockCancelRide(any()));
+      },
+    );
 
-    test('cancelRide calls cancelRideUsecase and clears booking on success', () async {
-      rideBookingCubit.setConfirmedRide(testConfirmedRide);
-      when(
-        () => mockSubmitRide(
-          request: testConfirmedRide.request,
-          vehicleTypeId: 1,
-        ),
-      ).thenAnswer((_) async => const Right(testSubmission));
-      await rideBookingCubit.submitRideSelection(1);
+    test(
+      'cancelRide calls cancelRideUsecase and clears booking on success',
+      () async {
+        rideBookingCubit.setConfirmedRide(testConfirmedRide);
+        when(
+          () => mockSubmitRide(
+            request: testConfirmedRide.request,
+            vehicleTypeId: 1,
+          ),
+        ).thenAnswer((_) async => const Right(testSubmission));
+        await rideBookingCubit.submitRideSelection(1);
 
-      when(() => mockCancelRide(777)).thenAnswer((_) async => const Right(null));
+        when(
+          () => mockCancelRide(777),
+        ).thenAnswer((_) async => const Right(null));
 
-      await rideBookingCubit.cancelRide(isTripStarted: false);
+        await rideBookingCubit.cancelRide(isTripStarted: false);
 
-      expect(rideBookingCubit.state.submissionResponse, isNull);
-      verify(() => mockCancelRide(777)).called(1);
-      verify(() => mockRideRepo.stopListeningToRide(777)).called(2);
-    });
+        expect(rideBookingCubit.state.submissionResponse, isNull);
+        verify(() => mockCancelRide(777)).called(1);
+        verify(() => mockRideRepo.stopListeningToRide(777)).called(2);
+      },
+    );
 
     test('clearBooking resets state and dependent cubits', () {
       rideBookingCubit.setConfirmedRide(testConfirmedRide);

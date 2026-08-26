@@ -15,12 +15,12 @@ abstract class TripShareModel with _$TripShareModel {
     String? expiresAt,
   }) = _TripShareModel;
 
-  factory TripShareModel.fromJson(Map<String, dynamic> json) {
-    final data = (json['data'] is Map<String, dynamic>)
-        ? json['data'] as Map<String, dynamic>
-        : json;
-    return _$TripShareModelFromJson(data);
-  }
+  factory TripShareModel.fromJson(Map<String, dynamic> json) =>
+      _$TripShareModelFromJson(
+        (json['data'] is Map<String, dynamic>)
+            ? json['data'] as Map<String, dynamic>
+            : json,
+      );
 
   TripShare toEntity() {
     return TripShare(

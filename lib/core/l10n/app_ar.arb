@@ -111,6 +111,17 @@
   "sharedTripBackToHome": "العودة للرئيسية",
   "sharedTripFinalFare": "الأجرة النهائية",
   "sharedTripConfirmJoin": "تأكيد الانضمام",
+  "sharedTripLeaveRoom": "مغادرة الرحلة المشتركة",
+  "sharedTripLeaveConfirmTitle": "مغادرة الرحلة المشتركة؟",
+  "sharedTripLeaveConfirmBody": "هل أنت متأكد من رغبتك في مغادرة الرحلة المشتركة؟ سيصبح مقعدك متاحاً للآخرين.",
+  "sharedTripLeaveSuccess": "لقد غادرت الرحلة المشتركة بنجاح.",
+  "sharedTripCompanionDropped": "تم إنزال مرافق بنجاح. الأجرة: {fare} {currency}",
+  "@sharedTripCompanionDropped": {
+    "placeholders": {
+      "fare": { "type": "String" },
+      "currency": { "type": "String" }
+    }
+  },
   "rideFindingDriver": "جارٍ البحث عن سائق...",
   "rideDriverOnWay": "السائق في الطريق",
   "rideDriverArrived": "وصل السائق",
@@ -341,6 +352,7 @@
       "count": { "type": "int" }
     }
   },
+  "markAllAsRead": "تحديد الكل كمقروء",
   "notificationTripId": "رحلة #{id}",
   "@notificationTripId": {
     "placeholders": {
@@ -352,6 +364,159 @@
     "placeholders": {
       "id": { "type": "int" }
     }
-  }
+  },
+  "poolTransport": "النقل التشاركي",
+  "poolFindLobby": "البحث عن غرفة تجمع",
+  "poolCreateLobby": "إنشاء غرفة تجمع",
+  "poolPublishLobby": "نشر غرفة التجمع",
+  "poolMatchingNearby": "غرف التجمع القريبة المتطابقة",
+  "poolSearchingLobbies": "جاري البحث عن غرف تجمع متطابقة...",
+  "poolNoLobbiesFound": "لم يتم العثور على غرف تجمع",
+  "poolNoLobbiesFoundSubtitle": "كن أول من ينشئ غرفة تجمع لينضم إليك ركاب آخرون بنفس وجهتك!",
+  "poolMeetingPoint": "نقطة الالتقاء المشتركة",
+  "poolMeetingPointDesc": "توجه سيراً إلى هنا لمقابلة السائق والركاب",
+  "poolPassengersRoster": "قائمة الركاب",
+  "poolTargetDepartureTime": "وقت الانطلاق المستهدف",
+  "poolTotalCapacity": "إجمالي سعة الركاب",
+  "poolCapacityDesc": "سيتم إرسال الغرفة للسائقين فور اكتمال الركاب.",
+  "poolSeatsYouNeed": "المقاعد المطلوبة",
+  "poolSeatsYouNeedDesc": "عدد المقاعد لك ولمرافقيك",
+  "poolJoinSuccess": "تم الانضمام إلى غرفة التجمع بنجاح!",
+  "poolCreateSuccess": "تم إنشاء غرفة التجمع! بانتظار الركاب في اللوبي.",
+  "poolCancelRoom": "إلغاء غرفة التجمع",
+  "poolLeaveRoom": "مغادرة غرفة التجمع",
+  "poolCancelConfirmTitle": "إلغاء غرفة التجمع؟",
+  "poolCancelConfirmBody": "سيؤدي إلغاء الغرفة إلى حل غرفة التجمع وإشعار جميع الركاب المنضمين.",
+  "poolLeaveConfirmTitle": "مغادرة غرفة التجمع؟",
+  "poolLeaveConfirmBody": "هل أنت متأكد من رغبتك في مغادرة غرفة التجمع؟ سيصبح مقعدك متاحاً للآخرين.",
+  "poolDriverFound": "تم العثور على سائق! تبدأ رحلتك الآن.",
+  "poolExpiredTitle": "انتهت صلاحية غرفة التجمع",
+  "poolExpiredBody": "لم يتم قبول أي سائق للرحلة قبل وقت الانطلاق. انتهت صلاحية الغرفة.",
+  "poolCancelledTitle": "تم إلغاء غرفة التجمع",
+  "poolCancelledBody": "قام منشئ الغرفة بإلغائها.",
+  "poolRemovedTitle": "تمت إزالتك من الغرفة",
+  "poolRemovedBody": "تمت إزالتك من غرفة التجمع هذه.",
+  "poolStatusLooking": "بانتظار انضمام الركاب",
+  "poolStatusReady": "جاري البحث عن سائق...",
+  "poolStatusMatched": "تم تعيين السائق!",
+  "drawerModeration": "الرقابة والقيود",
+  "moderationTitle": "حالة الحساب والرقابة",
+  "moderationOverviewTab": "نظرة عامة",
+  "moderationPenaltiesTab": "العقوبات",
+  "moderationViolationsTab": "المخالفات",
+  "moderationAppealsTab": "الاعتراضات",
+  "moderationAccountStatus": "حالة الحساب",
+  "moderationStatusActive": "حساب سليم ونشط",
+  "moderationStatusWarning": "يوجد تنبيه مسجل",
+  "moderationStatusRestricted": "مقيد جزئياً",
+  "moderationStatusSuspended": "معلق مؤقتاً",
+  "moderationStatusBanned": "محظور نهائياً",
+  "moderationActiveRestrictions": "القيود السارية",
+  "moderationActivePenalties": "العقوبات السارية",
+  "moderationRecentViolations": "أحدث المخالفات",
+  "moderationActiveAppeals": "الاعتراضات النشطة",
+  "moderationWarningsCount": "الإنذارات",
+  "moderationViolationsCount": "إجمالي المخالفات",
+  "moderationPenaltiesCount": "عقوبات سارية",
+  "moderationRestrictionsCount": "القيود الفعالة",
+  "moderationSubmitAppeal": "تقديم اعتراض",
+  "moderationAppealReason": "سبب الاعتراض",
+  "moderationAppealReasonHint": "اشرح بالتفصيل سبب الاعتراض ولماذا يجب إعادة النظر في العقوبة...",
+  "moderationAppealEvidence": "رابط الإثبات أو الدليل (اختياري)",
+  "moderationAppealEvidenceHint": "https://example.com/proof.jpg",
+  "moderationAppealSubmitBtn": "إرسال الاعتراض",
+  "moderationAppealSubmitting": "جاري إرسال الاعتراض...",
+  "moderationAppealSuccess": "تم تقديم طلب الاعتراض بنجاح",
+  "moderationAppealAlreadyExists": "يوجد اعتراض قيد المراجعة بالفعل لهذه العقوبة",
+  "moderationPenaltyNotAppealable": "يمكن الاعتراض فقط على العقوبات السارية والفعالة",
+  "moderationAppealDetailsTitle": "تفاصيل الاعتراض",
+  "moderationAdminDecision": "قرار الإدارة",
+  "moderationAdminNotes": "ملاحظات الإدارة",
+  "moderationExpiresAt": "ينتهي في: {date}",
+  "@moderationExpiresAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "moderationStartsAt": "بدأ في: {date}",
+  "@moderationStartsAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "moderationIssuedAt": "صدر في: {date}",
+  "@moderationIssuedAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "moderationSubmittedAt": "تاريخ التقديم: {date}",
+  "@moderationSubmittedAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "moderationReviewedAt": "تاريخ المراجعة: {date}",
+  "@moderationReviewedAt": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "moderationNoPenalties": "لا توجد عقوبات مسجلة",
+  "moderationNoViolations": "لا توجد مخالفات مسجلة",
+  "moderationNoAppeals": "لا توجد طلبات اعتراض مقدمة",
+  "moderationNoRestrictions": "لا توجد قيود مفعلة على حسابك",
+  "moderationPermanentBanNotice": "حظر دائم (بدون تاريخ انتهاء)",
+  "moderationPenaltyTypeWarning": "إنذار / تنبيه",
+  "moderationPenaltyTypeSuspension": "تعليق مؤقت",
+  "moderationPenaltyTypeBan": "حظر دائم",
+  "moderationPenaltyTypeFeatureRestriction": "تقييد ميزة معينة",
+  "moderationPenaltyTypeAccountRestriction": "تقييد شامل للحساب",
+  "moderationPenaltyStatusActive": "سارية",
+  "moderationPenaltyStatusExpired": "منتهية الصلاحية",
+  "moderationPenaltyStatusRevoked": "تم رفعها وإلغاؤها",
+  "moderationPenaltyStatusCancelled": "ملغاة",
+  "moderationRestrictionRequestRide": "طلب المشاوير العادية",
+  "moderationRestrictionJoinSharedRide": "المشاوير المشتركة",
+  "moderationRestrictionJoinPassengerPool": "غرف تجمع الركاب",
+  "moderationRestrictionWalletTransfer": "تحويل رصيد المحفظة",
+  "moderationRestrictionPayment": "عمليات الدفع",
+  "moderationRestrictionFullAccount": "تجميد الحساب بالكامل",
+  "moderationViolationRiderTripCancellation": "إلغاء المشوار بعد قبوله",
+  "moderationViolationNoShow": "عدم الحضور لنقطة الانطلاق",
+  "moderationViolationLateCancellation": "إلغاء متأخر للمشوار",
+  "moderationViolationSharedRideMisuse": "إساءة استخدام المشاوير المشتركة",
+  "moderationViolationPassengerPoolMisuse": "إساءة استخدام غرف الركاب",
+  "moderationViolationPaymentAbuse": "احتيال أو مشاكل دفع",
+  "moderationViolationWalletAbuse": "إساءة استخدام المحفظة",
+  "moderationViolationAbusiveBehavior": "سلوك غير لائق ومسيء",
+  "moderationViolationFraud": "نشاط احتيالي مشبوه",
+  "moderationViolationManualAdmin": "مخالفة إدارية مسجلة",
+  "moderationSeverityLow": "منخفض",
+  "moderationSeverityMedium": "متوسط",
+  "moderationSeverityHigh": "مرتفع",
+  "moderationSeverityCritical": "حرج",
+  "moderationAppealStatusPending": "قيد الانتظار",
+  "moderationAppealStatusUnderReview": "قيد المراجعة والتدقيق",
+  "moderationAppealStatusApproved": "تم قبول الاعتراض",
+  "moderationAppealStatusRejected": "تم رفض الاعتراض",
+  "moderationAppealStatusCancelled": "ملغى",
+  "moderationReasonRequired": "يرجى كتابة سبب الاعتراض",
+  "moderationReasonTooLong": "لا يمكن أن يتجاوز سبب الاعتراض 2000 حرف",
+  "moderationInvalidEvidenceUrl": "يرجى إدخال رابط صالح",
+  "moderationPenaltyRef": "عقوبة #{id}",
+  "@moderationPenaltyRef": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "moderationAppealRef": "اعتراض #{id}",
+  "@moderationAppealRef": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "moderationRealtimePenaltyTitle": "تنبيه رقابي جديد",
+  "moderationRealtimeLiftedTitle": "تم رفع القيد بنجاح"
 }
 

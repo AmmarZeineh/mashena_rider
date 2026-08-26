@@ -10,7 +10,9 @@ import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_u
 import 'package:mashena_rider/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_cubit.dart';
 
-class MockGetCachedSessionUsecase extends Mock implements GetCachedSessionUsecase {}
+class MockGetCachedSessionUsecase extends Mock
+    implements GetCachedSessionUsecase {}
+
 class MockLogoutUsecase extends Mock implements LogoutUsecase {}
 
 void main() {
@@ -50,60 +52,66 @@ void main() {
       expect(authCubit.state, const AuthState.initial());
     });
 
-    test('appStarted emits AuthState.authenticated when cached session is present', () async {
-      when(() => mockGetCached()).thenAnswer((_) async => Right(testSession));
+    test(
+      'appStarted emits AuthState.authenticated when cached session is present',
+      () async {
+        when(() => mockGetCached()).thenAnswer((_) async => Right(testSession));
 
-      final expectedStates = [
-        AuthState.authenticated(testSession),
-      ];
+        final expectedStates = [AuthState.authenticated(testSession)];
 
-      expectLater(authCubit.stream, emitsInOrder(expectedStates));
+        expectLater(authCubit.stream, emitsInOrder(expectedStates));
 
-      await authCubit.appStarted();
-    });
+        await authCubit.appStarted();
+      },
+    );
 
-    test('appStarted emits AuthState.unauthenticated when no cached session is present', () async {
-      when(() => mockGetCached()).thenAnswer(
-        (_) async => const Left(Failure(FailureCode.cache)),
-      );
+    test(
+      'appStarted emits AuthState.unauthenticated when no cached session is present',
+      () async {
+        when(
+          () => mockGetCached(),
+        ).thenAnswer((_) async => const Left(Failure(FailureCode.cache)));
 
-      final expectedStates = [
-        const AuthState.unauthenticated(),
-      ];
+        final expectedStates = [const AuthState.unauthenticated()];
 
-      expectLater(authCubit.stream, emitsInOrder(expectedStates));
+        expectLater(authCubit.stream, emitsInOrder(expectedStates));
 
-      await authCubit.appStarted();
-    });
+        await authCubit.appStarted();
+      },
+    );
 
     test('setSession directly transitions to AuthState.authenticated', () {
       authCubit.setSession(testSession);
       expect(authCubit.state, AuthState.authenticated(testSession));
     });
 
-    test('signOut calls LogoutUsecase and emits AuthState.unauthenticated', () async {
-      when(() => mockLogout(allDevices: false)).thenAnswer((_) async => const Right(unit));
+    test(
+      'signOut calls LogoutUsecase and emits AuthState.unauthenticated',
+      () async {
+        when(
+          () => mockLogout(allDevices: false),
+        ).thenAnswer((_) async => const Right(unit));
 
-      final expectedStates = [
-        const AuthState.unauthenticated(),
-      ];
+        final expectedStates = [const AuthState.unauthenticated()];
 
-      expectLater(authCubit.stream, emitsInOrder(expectedStates));
+        expectLater(authCubit.stream, emitsInOrder(expectedStates));
 
-      await authCubit.signOut();
-      verify(() => mockLogout(allDevices: false)).called(1);
-    });
+        await authCubit.signOut();
+        verify(() => mockLogout(allDevices: false)).called(1);
+      },
+    );
 
-    test('listens to AuthEventBus loggedOut event and transitions to unauthenticated', () async {
-      authCubit.setSession(testSession);
+    test(
+      'listens to AuthEventBus loggedOut event and transitions to unauthenticated',
+      () async {
+        authCubit.setSession(testSession);
 
-      final expectedStates = [
-        const AuthState.unauthenticated(),
-      ];
+        final expectedStates = [const AuthState.unauthenticated()];
 
-      expectLater(authCubit.stream, emitsInOrder(expectedStates));
+        expectLater(authCubit.stream, emitsInOrder(expectedStates));
 
-      authEventBus.emit(AuthEvent.loggedOut);
-    });
+        authEventBus.emit(AuthEvent.loggedOut);
+      },
+    );
   });
 }

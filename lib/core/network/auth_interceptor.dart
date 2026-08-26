@@ -51,6 +51,29 @@ class AuthInterceptor extends Interceptor {
   Future<Response?> _handleRefresh(DioException err) async {
     final requestOptions = err.requestOptions;
 
+    final currentToken = await tokenManager.getAccessToken();
+    final requestAuthHeader =
+        requestOptions.headers['Authorization'] as String?;
+    final requestToken = requestAuthHeader != null &&
+            requestAuthHeader.startsWith('Bearer ')
+        ? requestAuthHeader.substring(7).trim()
+        : requestAuthHeader?.trim();
+    final cleanCurrentToken =
+        currentToken != null && currentToken.startsWith('Bearer ')
+            ? currentToken.substring(7).trim()
+            : currentToken?.trim();
+
+    // If another concurrent request already refreshed the token in storage,
+    // and it's valid, immediately retry using the new token without refreshing again.
+    if (cleanCurrentToken != null &&
+        cleanCurrentToken.isNotEmpty &&
+        cleanCurrentToken != requestToken &&
+        !tokenRefreshService.isTokenExpired(cleanCurrentToken)) {
+      requestOptions.headers['Authorization'] = 'Bearer $cleanCurrentToken';
+      requestOptions.extra[NetworkConstants.retryKey] = true;
+      return dio.fetch(requestOptions);
+    }
+
     final success = await tokenRefreshService.refreshToken();
     if (!success) return null;
 
@@ -63,3 +86,4 @@ class AuthInterceptor extends Interceptor {
     return dio.fetch(requestOptions);
   }
 }
+
