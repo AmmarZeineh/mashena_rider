@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import '../../domain/entities/pool_member_entity.dart';
@@ -17,6 +18,7 @@ class PoolMemberAvatarGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark
         ? Theme.of(context).colorScheme.surfaceContainerHigh
@@ -56,7 +58,7 @@ class PoolMemberAvatarGroup extends StatelessWidget {
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    'Passengers Roster',
+                    s.poolPassengersRoster,
                     style: AppTextStyles.w700_14.copyWith(
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
@@ -70,7 +72,7 @@ class PoolMemberAvatarGroup extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Text(
-                  '$occupiedCount / $totalCapacity Seats',
+                  s.poolOccupiedSeats(occupiedCount, totalCapacity),
                   style: AppTextStyles.w600_12.copyWith(
                     color: AppColors.primaryColor,
                   ),
@@ -99,10 +101,11 @@ class PoolMemberAvatarGroup extends StatelessWidget {
   }
 
   Widget _buildMemberTile(BuildContext context, PoolMemberEntity member) {
+    final s = S.of(context);
     final isCreator = member.riderProfileId == room.creatorRiderProfileId;
     final isMe = member.riderProfileId == currentUserId;
 
-    final name = member.riderName ?? 'Passenger #${member.id}';
+    final name = member.riderName ?? s.poolPassengerNumber(member.id);
     final initial = name.isNotEmpty ? name[0].toUpperCase() : 'P';
 
     return Container(
@@ -151,7 +154,7 @@ class PoolMemberAvatarGroup extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        isMe ? '$name (You)' : name,
+                        isMe ? s.poolPassengerYou(name) : name,
                         style: AppTextStyles.w600_14.copyWith(
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
@@ -171,7 +174,7 @@ class PoolMemberAvatarGroup extends StatelessWidget {
                           borderRadius: BorderRadius.circular(6.r),
                         ),
                         child: Text(
-                          'Host',
+                          s.poolHost,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 10.sp,
@@ -184,7 +187,7 @@ class PoolMemberAvatarGroup extends StatelessWidget {
                 ),
                 SizedBox(height: 2.h),
                 Text(
-                  '${member.seatsNeeded} ${member.seatsNeeded == 1 ? "seat" : "seats"} requested',
+                  s.poolSeatsRequested(member.seatsNeeded),
                   style: AppTextStyles.w400_12.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -210,6 +213,7 @@ class PoolMemberAvatarGroup extends StatelessWidget {
   }
 
   Widget _buildEmptySeatTile(BuildContext context) {
+    final s = S.of(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
       decoration: BoxDecoration(
@@ -234,7 +238,7 @@ class PoolMemberAvatarGroup extends StatelessWidget {
           ),
           SizedBox(width: 12.w),
           Text(
-            'Waiting for a passenger...',
+            s.poolWaitingForPassenger,
             style: AppTextStyles.w400_12.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontStyle: FontStyle.italic,

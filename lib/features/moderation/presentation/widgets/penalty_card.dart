@@ -57,23 +57,38 @@ class PenaltyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm');
+
+    final cardBg = isDark
+        ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.7)
+        : Colors.white;
+    final borderColor = penalty.isAppealable
+        ? AppColors.errorColor.withValues(alpha: isDark ? 0.5 : 0.3)
+        : (isDark
+            ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+            : AppColors.borderColor.withValues(alpha: 0.6));
+    final timeColor = isDark
+        ? colorScheme.onSurfaceVariant
+        : AppColors.textGrey;
 
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBg,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: penalty.isAppealable
-              ? AppColors.errorColor.withValues(alpha: 0.3)
-              : AppColors.borderColor.withValues(alpha: 0.6),
+          color: borderColor,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.2)
+                : Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -91,7 +106,7 @@ class PenaltyCard extends StatelessWidget {
                     Text(
                       _getPenaltyTypeLabel(context, penalty.penaltyType),
                       style: AppTextStyles.w700_16.copyWith(
-                        color: Colors.black87,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     SizedBox(width: 8.w),
@@ -108,7 +123,7 @@ class PenaltyCard extends StatelessWidget {
             Text(
               penalty.reason,
               style: AppTextStyles.w400_14.copyWith(
-                color: Colors.black87,
+                color: colorScheme.onSurface,
                 height: 1.35,
               ),
             ),
@@ -121,10 +136,17 @@ class PenaltyCard extends StatelessWidget {
               spacing: 6.w,
               runSpacing: 6.h,
               children: penalty.restrictions.map((r) {
+                final badgeBg = isDark
+                    ? colorScheme.surfaceContainerLow
+                    : const Color(0xFFFFEDD5);
+                final badgeFg = isDark
+                    ? const Color(0xFFFB923C)
+                    : const Color(0xFFC2410C);
+
                 return Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFEDD5),
+                    color: badgeBg,
                     borderRadius: BorderRadius.circular(6.r),
                   ),
                   child: Row(
@@ -133,13 +155,13 @@ class PenaltyCard extends StatelessWidget {
                       Icon(
                         Icons.lock_outline,
                         size: 12.r,
-                        color: const Color(0xFFC2410C),
+                        color: badgeFg,
                       ),
                       SizedBox(width: 4.w),
                       Text(
                         _getRestrictionLabel(context, r.restrictionType),
                         style: AppTextStyles.w600_12.copyWith(
-                          color: const Color(0xFFC2410C),
+                          color: badgeFg,
                         ),
                       ),
                     ],
@@ -150,7 +172,12 @@ class PenaltyCard extends StatelessWidget {
           ],
 
           SizedBox(height: 12.h),
-          const Divider(height: 1, color: Color(0xFFF3F4F6)),
+          Divider(
+            height: 1,
+            color: isDark
+                ? colorScheme.outlineVariant.withValues(alpha: 0.2)
+                : const Color(0xFFF3F4F6),
+          ),
           SizedBox(height: 10.h),
 
           // Date & Actions footer
@@ -159,7 +186,7 @@ class PenaltyCard extends StatelessWidget {
               Icon(
                 Icons.access_time_rounded,
                 size: 14.r,
-                color: AppColors.textGrey,
+                color: timeColor,
               ),
               SizedBox(width: 4.w),
               Expanded(
@@ -170,7 +197,7 @@ class PenaltyCard extends StatelessWidget {
                         )
                       : s.moderationPermanentBanNotice,
                   style: AppTextStyles.w500_12.copyWith(
-                    color: AppColors.textGrey,
+                    color: timeColor,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -193,7 +220,7 @@ class PenaltyCard extends StatelessWidget {
                     ),
                     visualDensity: VisualDensity.compact,
                     backgroundColor: AppColors.primaryColor.withValues(
-                      alpha: 0.08,
+                      alpha: isDark ? 0.15 : 0.08,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.r),

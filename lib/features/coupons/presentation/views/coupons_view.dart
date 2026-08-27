@@ -53,12 +53,19 @@ class _CouponsViewContentState extends State<_CouponsViewContent>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.lightScaffold,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text(S.of(context).drawerCoupons, style: AppTextStyles.w600_18),
+        title: Text(
+          S.of(context).drawerCoupons,
+          style: AppTextStyles.w600_18.copyWith(color: colorScheme.onSurface),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
       ),
       body: BlocConsumer<CouponsCubit, CouponsState>(
@@ -99,10 +106,16 @@ class _CouponsViewContentState extends State<_CouponsViewContent>
                   Container(
                     padding: EdgeInsets.all(4.r),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
+                      color: isDark
+                          ? colorScheme.surfaceContainerHigh.withValues(
+                              alpha: 0.6,
+                            )
+                          : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
-                        color: AppColors.borderColor.withValues(alpha: 0.5),
+                        color: isDark
+                            ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+                            : AppColors.borderColor.withValues(alpha: 0.5),
                       ),
                     ),
                     child: TabBar(
@@ -113,7 +126,9 @@ class _CouponsViewContentState extends State<_CouponsViewContent>
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       labelColor: Colors.white,
-                      unselectedLabelColor: AppColors.textGrey,
+                      unselectedLabelColor: isDark
+                          ? colorScheme.onSurfaceVariant
+                          : AppColors.textGrey,
                       labelStyle: AppTextStyles.w600_14,
                       unselectedLabelStyle: AppTextStyles.w500_14,
                       dividerColor: Colors.transparent,

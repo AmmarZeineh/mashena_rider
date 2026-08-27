@@ -18,6 +18,9 @@ class TripStatusFilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     final filters = <_FilterItem>[
       _FilterItem(status: null, label: s.commonAll),
@@ -37,24 +40,33 @@ class TripStatusFilterBar extends StatelessWidget {
           final item = filters[index];
           final isSelected = selectedStatus == item.status;
 
+          final unselectedBg = isDark
+              ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.7)
+              : Colors.white;
+
+          final borderColor = isSelected
+              ? AppColors.primaryColor
+              : (isDark
+                  ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+                  : AppColors.borderColor.withValues(alpha: 0.5));
+
+          final unselectedTextColor =
+              isDark ? colorScheme.onSurfaceVariant : AppColors.textGrey;
+
           return ChoiceChip(
             label: Text(
               item.label,
               style: isSelected
                   ? AppTextStyles.w600_14.copyWith(color: Colors.white)
-                  : AppTextStyles.w500_14.copyWith(color: AppColors.textGrey),
+                  : AppTextStyles.w500_14.copyWith(color: unselectedTextColor),
             ),
             selected: isSelected,
             onSelected: (_) => onStatusSelected(item.status),
             selectedColor: AppColors.primaryColor,
-            backgroundColor: Colors.white,
-            elevation: isSelected ? 2 : 0,
+            backgroundColor: unselectedBg,
+            elevation: isSelected ? (isDark ? 0 : 2) : 0,
             pressElevation: 1,
-            side: BorderSide(
-              color: isSelected
-                  ? AppColors.primaryColor
-                  : AppColors.borderColor.withValues(alpha: 0.5),
-            ),
+            side: BorderSide(color: borderColor),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.r),
             ),

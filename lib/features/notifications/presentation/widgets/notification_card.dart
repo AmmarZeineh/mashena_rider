@@ -52,6 +52,10 @@ class NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
+
     final typeHelper = NotificationTypeHelper.fromType(item.type);
     final formattedTime = _formatDateTime(item.createdAt);
     final isUnread = !item.isRead;
@@ -60,22 +64,38 @@ class NotificationCard extends StatelessWidget {
     final rideRequestId = item.metadata?['rideRequestId'];
     final amount = item.metadata?['amount'];
 
+    final cardBg = isDark
+        ? (isUnread
+            ? AppColors.primaryColor.withValues(alpha: 0.12)
+            : colorScheme.surfaceContainerHigh.withValues(alpha: 0.7))
+        : (isUnread
+            ? AppColors.primaryColor.withValues(alpha: 0.03)
+            : Colors.white);
+
+    final borderColor = isDark
+        ? (isUnread
+            ? AppColors.primaryColor.withValues(alpha: 0.5)
+            : colorScheme.outlineVariant.withValues(alpha: 0.25))
+        : (isUnread
+            ? AppColors.primaryColor.withValues(alpha: 0.3)
+            : AppColors.borderColor.withValues(alpha: 0.5));
+
+    final timeColor = isDark ? colorScheme.onSurfaceVariant : AppColors.textGrey;
+
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
-        color: isUnread
-            ? AppColors.primaryColor.withValues(alpha: 0.03)
-            : Colors.white,
+        color: cardBg,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: isUnread
-              ? AppColors.primaryColor.withValues(alpha: 0.3)
-              : AppColors.borderColor.withValues(alpha: 0.5),
+          color: borderColor,
           width: isUnread ? 1.2 : 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -122,7 +142,7 @@ class NotificationCard extends StatelessWidget {
                             child: Text(
                               item.title,
                               style: AppTextStyles.w600_16.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface,
+                                color: colorScheme.onSurface,
                               ),
                             ),
                           ),
@@ -145,9 +165,7 @@ class NotificationCard extends StatelessWidget {
                       Text(
                         item.body,
                         style: AppTextStyles.w400_14.copyWith(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.75),
+                          color: colorScheme.onSurface.withValues(alpha: 0.75),
                           height: 1.35,
                         ),
                       ),
@@ -189,13 +207,13 @@ class NotificationCard extends StatelessWidget {
                           Icon(
                             Icons.access_time_rounded,
                             size: 12.r,
-                            color: AppColors.textGrey,
+                            color: timeColor,
                           ),
                           SizedBox(width: 4.w),
                           Text(
                             formattedTime,
                             style: AppTextStyles.w500_12.copyWith(
-                              color: AppColors.textGrey,
+                              color: timeColor,
                             ),
                           ),
                         ],
@@ -225,12 +243,15 @@ class _MetadataChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bg = isAccent
+        ? AppColors.shieldGreen.withValues(alpha: isDark ? 0.2 : 0.1)
+        : AppColors.primaryColor.withValues(alpha: isDark ? 0.2 : 0.08);
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
       decoration: BoxDecoration(
-        color: isAccent
-            ? AppColors.shieldGreen.withValues(alpha: 0.1)
-            : AppColors.primaryColor.withValues(alpha: 0.08),
+        color: bg,
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(

@@ -86,17 +86,20 @@ class _SharedTripRoomDetailsScaffoldState
             _lastReportedStatus = currentStatus;
           } else if (_lastReportedStatus != currentStatus) {
             _lastReportedStatus = currentStatus;
+            final s = S.of(context);
             if (state.details.isCanceled) {
               context.showErrorToast(
                 state.details.cancellationReason != null &&
                         state.details.cancellationReason!.isNotEmpty
-                    ? 'Trip Canceled: ${state.details.cancellationReason}'
-                    : 'The ride has been canceled.',
+                    ? s.sharedTripCanceledReason(
+                        state.details.cancellationReason!,
+                      )
+                    : s.sharedTripCanceledNotice,
               );
             } else if (state.details.isInProgress) {
-              context.showInfoToast('Trip has started! Tracking live route.');
+              context.showInfoToast(s.sharedTripStartedNotice);
             } else if (state.details.isCompleted) {
-              context.showSuccessToast('Trip completed! Thank you for riding.');
+              context.showSuccessToast(s.sharedTripCompletedNotice);
             }
           }
 
@@ -253,22 +256,23 @@ class _SharedTripRoomDetailsScaffoldState
   }
 
   void _showRemovedDialog(BuildContext context, String? reason) {
+    final s = S.of(context);
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Row(
+          title: Row(
             children: [
-              Icon(Icons.warning_amber_rounded, color: AppColors.errorColor),
-              SizedBox(width: 8),
-              Text('Removed from Ride'),
+              const Icon(Icons.warning_amber_rounded, color: AppColors.errorColor),
+              const SizedBox(width: 8),
+              Text(s.sharedTripRemovedTitle),
             ],
           ),
           content: Text(
             reason != null && reason.isNotEmpty
-                ? 'You were removed from this shared ride by the driver.\n\nReason: $reason'
-                : 'You were removed from this shared ride by the driver.',
+                ? s.sharedTripRemovedBodyReason(reason)
+                : s.sharedTripRemovedBody,
           ),
           actions: [
             FilledButton(
@@ -276,7 +280,7 @@ class _SharedTripRoomDetailsScaffoldState
                 Navigator.of(dialogContext).pop();
                 context.go(AppRoutes.homePath);
               },
-              child: const Text('OK'),
+              child: Text(s.commonOk),
             ),
           ],
         );
@@ -425,7 +429,9 @@ class _SharedTripRoomDetailsScaffoldState
                                   ),
                                   SizedBox(width: 4.w),
                                   Text(
-                                    '${payload.finalDistanceKm!.toStringAsFixed(1)} km',
+                                    s.rideDistanceKm(
+                                      payload.finalDistanceKm!.toStringAsFixed(1),
+                                    ),
                                     style: AppTextStyles.w500_12.copyWith(
                                       color: AppColors.textGrey,
                                     ),
@@ -442,7 +448,9 @@ class _SharedTripRoomDetailsScaffoldState
                                   ),
                                   SizedBox(width: 4.w),
                                   Text(
-                                    '${(payload.finalDurationSec! / 60).round()} min',
+                                    s.rideDurationMin(
+                                      '${(payload.finalDurationSec! / 60).round()}',
+                                    ),
                                     style: AppTextStyles.w500_12.copyWith(
                                       color: AppColors.textGrey,
                                     ),

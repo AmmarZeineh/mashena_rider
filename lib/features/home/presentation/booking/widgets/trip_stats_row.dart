@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate_response.dart';
@@ -11,6 +12,7 @@ class TripStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -20,7 +22,7 @@ class TripStatsRow extends StatelessWidget {
           context,
           icon: Icons.speed_rounded,
           value: _formatNum(response.distanceKm),
-          unit: 'km',
+          unit: s.unitKm,
           color: colorScheme.primary,
         ),
         _buildDivider(context),
@@ -28,7 +30,7 @@ class TripStatsRow extends StatelessWidget {
           context,
           icon: Icons.access_time_rounded,
           value: _formatNum(response.durationMin),
-          unit: 'min',
+          unit: s.unitMin,
           color: colorScheme.secondary,
         ),
         if (response.stopsCount > 0) ...[
@@ -37,7 +39,7 @@ class TripStatsRow extends StatelessWidget {
             context,
             icon: Icons.place_rounded,
             value: response.stopsCount.toString(),
-            unit: 'stops',
+            unit: s.unitStops,
             color: colorScheme.tertiary,
           ),
         ],

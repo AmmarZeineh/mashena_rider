@@ -159,6 +159,22 @@
   "settingsDarkMode": "Dark Mode",
   "settingsChangeLanguage": "Change Language",
   "settingsAboutApp": "About App",
+  "drawerSettings": "Settings",
+  "settingsTheme": "Theme",
+  "settingsThemeSubtitle": "Choose how Mashena Rider looks to you",
+  "settingsThemeSystem": "System Default",
+  "settingsThemeSystemDesc": "Match your device system settings",
+  "settingsThemeLight": "Light Mode",
+  "settingsThemeLightDesc": "Classic bright look with optimal clarity",
+  "settingsThemeDark": "Dark Mode",
+  "settingsThemeDarkDesc": "Easy on the eyes in low-light conditions",
+  "settingsLanguage": "Language",
+  "settingsLanguageSubtitle": "Select your preferred application language",
+  "settingsLanguageEnglish": "English",
+  "settingsLanguageArabic": "العربية (Arabic)",
+  "settingsAppInfo": "App Information",
+  "settingsAppVersion": "Version 1.0.0",
+  "settingsAppDescription": "Mashena Rider - Safe, reliable and comfortable rides",
   "errorsNetwork": "Check your internet connection",
   "errorsUnauthorized": "Unauthorized access",
   "errorsLocationPermission": "Please allow location access",
@@ -337,6 +353,9 @@
   },
   "couponAppliedSuccess": "Coupon applied successfully",
   "enterValidCouponCode": "Please enter a coupon code",
+  "couponOriginalFare": "Original Fare",
+  "couponSaved": "Saved",
+  "couponFinalFare": "Final Fare",
   "appCurrency": "SYP",
   "shareRide": "Share Ride",
   "shareRideSubtitle": "Share your live trip tracking link with family or friends",
@@ -534,6 +553,222 @@
     }
   },
   "moderationRealtimePenaltyTitle": "New Penalty Notice",
-  "moderationRealtimeLiftedTitle": "Restriction Lifted"
+  "moderationRealtimeLiftedTitle": "Restriction Lifted",
+  "drawerActiveTrips": "Active Trips",
+  "activeTripsTitle": "Active Trips",
+  "activeTripsSubtitle": "Ongoing & in-progress rides",
+  "activeTripsEmptyTitle": "No Active Trips",
+  "activeTripsEmptySubtitle": "You do not have any active or ongoing trips at the moment.",
+  "activeTripsLiveTracking": "Live Tracking",
+  "activeTripsRegularTrip": "Regular Ride",
+  "activeTripsSharedRide": "Shared Ride",
+  "activeTripsCompanionBooking": "Companion Booking",
+  "activeTripsSelf": "Personal Ride",
+  "activeTripsTripId": "Trip #{id}",
+  "@activeTripsTripId": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "activeTripsRideRequestId": "Request #{id}",
+  "@activeTripsRideRequestId": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "activeTripsSharedRideId": "Room #{id}",
+  "@activeTripsSharedRideId": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "activeTripsPassengerId": "Passenger #{id}",
+  "@activeTripsPassengerId": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "activeTripsActiveSeats": "{count} Active Seats",
+  "@activeTripsActiveSeats": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "activeTripsAccountHolderOnBoard": "Account Holder On Board",
+  "activeTripsAccountHolderNotOnBoard": "Companion On Board",
+  "activeTripsStatusStarted": "Started",
+  "activeTripsStatusInProgress": "In Progress",
+  "activeTripsStatusDriverArrived": "Driver Arrived",
+  "activeTripsStatusOpen": "Open Room",
+  "activeTripsStatusReady": "Ready",
+  "activeTripsStatusAccepted": "Accepted",
+  "activeTripsStatusPending": "Finding Driver",
+  "commonNoResultsFound": "No results found",
+  "unitKm": "km",
+  "unitMin": "min",
+  "unitStops": "stops",
+  "rideChooseYourRide": "Choose your ride",
+  "rideCarType": "Car type",
+  "rideNoCarTypesAvailable": "No car types are available for this trip right now.",
+  "sharedTripTryPoolInstead": "Try Passenger Pool Instead",
+  "sharedTripRemovedTitle": "Removed from Ride",
+  "sharedTripRemovedBody": "You were removed from this shared ride by the driver.",
+  "sharedTripRemovedBodyReason": "You were removed from this shared ride by the driver.\n\nReason: {reason}",
+  "@sharedTripRemovedBodyReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "sharedTripCanceledNotice": "The ride has been canceled.",
+  "sharedTripCanceledReason": "Trip Canceled: {reason}",
+  "@sharedTripCanceledReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "sharedTripStartedNotice": "Trip has started! Tracking live route.",
+  "sharedTripCompletedNotice": "Trip completed! Thank you for riding.",
+  "poolCreateNewLobby": "Create New Pool Lobby",
+  "poolCreateRoomTitle": "Create Pool Room",
+  "poolYourJourney": "Your Pool Journey",
+  "poolLobbyTitle": "Pool Lobby #{id}",
+  "@poolLobbyTitle": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "poolDepartureTime": "Departure: {time}",
+  "@poolDepartureTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "poolWalkUnderOneMin": "< 1 min walk",
+  "poolWalkMinutes": "{minutes} min walk",
+  "@poolWalkMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "poolOptimalMeetingPoint": "Optimal central meeting point",
+  "poolOccupiedSeats": "{current} / {total} Seats",
+  "@poolOccupiedSeats": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "poolPassengerNumber": "Passenger #{id}",
+  "@poolPassengerNumber": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "poolPassengerYou": "{name} (You)",
+  "@poolPassengerYou": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "poolHost": "Host",
+  "poolSeatsRequested": "{count, plural, =1{1 seat requested} other{{count} seats requested}}",
+  "@poolSeatsRequested": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "poolWaitingForPassenger": "Waiting for a passenger...",
+  "poolStatusSwitchingTracking": "Switching to active ride tracking",
+  "poolStatusRoomFullDriversNotified": "Room is full ({current}/{max}) • Drivers notified",
+  "@poolStatusRoomFullDriversNotified": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "poolStatusPassengersJoined": "{current}/{max} passengers joined",
+  "@poolStatusPassengersJoined": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "poolDepartingSoon": "Departing soon",
+  "poolDepartsAt": "Departs at {time}",
+  "@poolDepartsAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "poolSeatsOpen": "{count}/{max} seats open",
+  "@poolSeatsOpen": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "poolHostedBy": "Hosted by {name}",
+  "@poolHostedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "poolJoinPool": "Join Pool",
+  "drawerWallet": "Wallet",
+  "walletBalance": "Balance",
+  "walletStatusActive": "Active",
+  "walletStatusInactive": "Inactive",
+  "walletDetails": "Wallet Details",
+  "walletId": "Wallet ID",
+  "walletCreatedAt": "Created Date",
+  "walletUpdatedAt": "Last Updated",
+  "walletErrorLoading": "Failed to load wallet",
+  "walletRetry": "Retry",
+  "walletTransactions": "Transactions",
+  "walletTransactionsHistory": "Transaction History",
+  "walletDeposit": "Deposit",
+  "walletWithdraw": "Withdrawal",
+  "walletTransfer": "Transfer",
+  "walletTripPayment": "Trip Payment",
+  "walletNoTransactions": "No transactions found",
+  "walletTapToViewTransactions": "Tap to view transactions",
+  "walletBalanceAfter": "Balance after",
+  "walletBalanceBefore": "Balance before"
 }
 

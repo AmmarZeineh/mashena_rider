@@ -59,13 +59,19 @@ class _TripHistoryContentState extends State<_TripHistoryContent> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.lightScaffold,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text(s.tripHistoryTitle, style: AppTextStyles.w600_18),
+        title: Text(
+          s.tripHistoryTitle,
+          style: AppTextStyles.w600_18.copyWith(color: colorScheme.onSurface),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
       ),
       body: SafeArea(
@@ -147,7 +153,7 @@ class _TripHistoryContentState extends State<_TripHistoryContent> {
                                   padding: EdgeInsets.all(20.r),
                                   decoration: BoxDecoration(
                                     color: AppColors.primaryColor.withValues(
-                                      alpha: 0.08,
+                                      alpha: isDark ? 0.18 : 0.08,
                                     ),
                                     shape: BoxShape.circle,
                                   ),

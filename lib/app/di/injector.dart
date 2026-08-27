@@ -37,9 +37,7 @@ import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/core/services/nominatim_service.dart';
 import 'package:mashena_rider/core/services/osrm_route_service.dart';
 
-// ======================
-// Features - Onboarding
-// ======================
+import 'package:mashena_rider/features/settings/presentation/cubits/settings_cubit.dart';
 import 'package:mashena_rider/features/onboarding/domain/usecases/complete_onboarding_usecase.dart';
 import 'package:mashena_rider/features/onboarding/domain/usecases/get_onboarding_status_usecase.dart';
 
@@ -128,12 +126,31 @@ import 'package:mashena_rider/features/moderation/domain/usecases/get_violations
 import 'package:mashena_rider/features/moderation/domain/usecases/get_active_restrictions_usecase.dart';
 import 'package:mashena_rider/features/moderation/domain/usecases/submit_appeal_usecase.dart';
 import 'package:mashena_rider/features/moderation/domain/usecases/get_appeals_history_usecase.dart';
+
+// ======================
+// Features - Active Trips
+// ======================
+import 'package:mashena_rider/features/active_trips/data/datasources/active_trips_remote_data_source.dart';
+import 'package:mashena_rider/features/active_trips/data/repositories/active_trips_repository_impl.dart';
+import 'package:mashena_rider/features/active_trips/domain/repositories/active_trips_repository.dart';
+import 'package:mashena_rider/features/active_trips/domain/usecases/get_active_trips_usecase.dart';
+import 'package:mashena_rider/features/active_trips/presentation/cubits/active_trips_cubit.dart';
 import 'package:mashena_rider/features/moderation/domain/usecases/get_appeal_details_usecase.dart';
 import 'package:mashena_rider/features/moderation/presentation/cubits/moderation_overview_cubit/moderation_overview_cubit.dart';
 import 'package:mashena_rider/features/moderation/presentation/cubits/penalties_history_cubit/penalties_history_cubit.dart';
 import 'package:mashena_rider/features/moderation/presentation/cubits/violations_history_cubit/violations_history_cubit.dart';
 import 'package:mashena_rider/features/moderation/presentation/cubits/appeals_history_cubit/appeals_history_cubit.dart';
 import 'package:mashena_rider/features/moderation/presentation/cubits/submit_appeal_cubit/submit_appeal_cubit.dart';
+
+// ======================
+// Features - Wallet
+// ======================
+import 'package:mashena_rider/features/wallet/data/repositories/wallet_repository_impl.dart';
+import 'package:mashena_rider/features/wallet/domain/repositories/wallet_repository.dart';
+import 'package:mashena_rider/features/wallet/domain/usecases/get_my_wallet_usecase.dart';
+import 'package:mashena_rider/features/wallet/domain/usecases/get_my_wallet_transactions_usecase.dart';
+import 'package:mashena_rider/features/wallet/presentation/cubits/wallet_cubit/wallet_cubit.dart';
+import 'package:mashena_rider/features/wallet/presentation/cubits/wallet_transactions_cubit/wallet_transactions_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -216,21 +233,25 @@ Future<void> configureDependencies() async {
       // In development, provide a fallback URL to prevent silent failures
       // In production, throw an error to alert about missing configuration
       if (kDebugMode) {
-        print('WARNING: BASE_URL is empty. Using fallback URL for development.');
+        print(
+          'WARNING: BASE_URL is empty. Using fallback URL for development.',
+        );
         // Use a placeholder - in real scenarios, this should be configured properly
         // This prevents Dio from crashing but will cause API calls to fail obviously
         // which is better than silent failures
         final fallbackUrl = 'https://placeholder-api.mashena-rider.com';
-        return Dio(BaseOptions(
-          baseUrl: fallbackUrl,
-          connectTimeout: config.connectTimeout,
-          receiveTimeout: config.receiveTimeout,
-          sendTimeout: config.sendTimeout,
-          headers: const {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        ));
+        return Dio(
+          BaseOptions(
+            baseUrl: fallbackUrl,
+            connectTimeout: config.connectTimeout,
+            receiveTimeout: config.receiveTimeout,
+            sendTimeout: config.sendTimeout,
+            headers: const {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          ),
+        );
       } else {
         throw StateError(
           'BASE_URL is not configured. Please check your .env file and ensure BASE_URL is set.',
@@ -661,5 +682,54 @@ Future<void> configureDependencies() async {
 
   getIt.registerFactory<SubmitAppealCubit>(
     () => SubmitAppealCubit(getIt<SubmitAppealUsecase>()),
+  );
+
+  // ======================
+  // Features - Active Trips
+  // ======================
+  getIt.registerLazySingleton<ActiveTripsRemoteDataSource>(
+    () => ActiveTripsRemoteDataSourceImpl(getIt<ApiClient>()),
+  );
+
+  getIt.registerLazySingleton<ActiveTripsRepository>(
+    () => ActiveTripsRepositoryImpl(getIt<ActiveTripsRemoteDataSource>()),
+  );
+
+  getIt.registerFactory<GetActiveTripsUsecase>(
+    () => GetActiveTripsUsecase(getIt<ActiveTripsRepository>()),
+  );
+
+  getIt.registerFactory<ActiveTripsCubit>(
+    () => ActiveTripsCubit(getIt<GetActiveTripsUsecase>()),
+  );
+
+  // ======================
+  // Features - Settings
+  // ======================
+  getIt.registerLazySingleton<SettingsCubit>(
+    () => SettingsCubit(getIt<LocalStorage>()),
+  );
+
+  // ======================
+  // Features - Wallet
+  // ======================
+  getIt.registerLazySingleton<WalletRepository>(
+    () => WalletRepositoryImpl(getIt<ApiClient>()),
+  );
+
+  getIt.registerFactory<GetMyWalletUsecase>(
+    () => GetMyWalletUsecase(getIt<WalletRepository>()),
+  );
+
+  getIt.registerFactory<WalletCubit>(
+    () => WalletCubit(getIt<GetMyWalletUsecase>()),
+  );
+
+  getIt.registerFactory<GetMyWalletTransactionsUsecase>(
+    () => GetMyWalletTransactionsUsecase(getIt<WalletRepository>()),
+  );
+
+  getIt.registerFactory<WalletTransactionsCubit>(
+    () => WalletTransactionsCubit(getIt<GetMyWalletTransactionsUsecase>()),
   );
 }

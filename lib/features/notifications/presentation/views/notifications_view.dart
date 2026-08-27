@@ -60,13 +60,16 @@ class _NotificationsViewContentState extends State<_NotificationsViewContent> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: AppColors.lightScaffold,
       appBar: AppBar(
-        title: Text(s.notificationsTitle, style: AppTextStyles.w600_18),
+        title: Text(
+          s.notificationsTitle,
+          style: AppTextStyles.w600_18.copyWith(color: colorScheme.onSurface),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.white,
         elevation: 0,
         actions: [
           BlocBuilder<NotificationsCubit, NotificationsState>(
@@ -82,7 +85,7 @@ class _NotificationsViewContentState extends State<_NotificationsViewContent> {
                       vertical: 4.h,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withValues(alpha: 0.1),
+                      color: AppColors.primaryColor.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(16.r),
                     ),
                     child: Center(
@@ -137,7 +140,9 @@ class _NotificationsViewContentState extends State<_NotificationsViewContent> {
                       SizedBox(height: 16.h),
                       Text(
                         state.failure?.rawMessage ?? s.commonError,
-                        style: AppTextStyles.w600_16,
+                        style: AppTextStyles.w600_16.copyWith(
+                          color: colorScheme.onSurface,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 20.h),

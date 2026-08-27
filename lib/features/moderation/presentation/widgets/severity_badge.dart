@@ -13,33 +13,37 @@ class SeverityBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final (label, fg, bg) = switch (severity) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final (label, fg, lightBg) = switch (severity) {
       ViolationSeverity.low => (
         s.moderationSeverityLow,
-        const Color(0xFF2563EB),
+        isDark ? const Color(0xFF60A5FA) : const Color(0xFF2563EB),
         const Color(0xFFEFF6FF),
       ),
       ViolationSeverity.medium => (
         s.moderationSeverityMedium,
-        const Color(0xFFD97706),
+        isDark ? const Color(0xFFFBBF24) : const Color(0xFFD97706),
         const Color(0xFFFEF3C7),
       ),
       ViolationSeverity.high => (
         s.moderationSeverityHigh,
-        const Color(0xFFEA580C),
+        isDark ? const Color(0xFFFB923C) : const Color(0xFFEA580C),
         const Color(0xFFFFEDD5),
       ),
       ViolationSeverity.critical => (
         s.moderationSeverityCritical,
-        const Color(0xFFDC2626),
+        isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626),
         const Color(0xFFFEE2E2),
       ),
       ViolationSeverity.unknown => (
         s.commonAll,
-        const Color(0xFF6B7280),
+        isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
         const Color(0xFFF3F4F6),
       ),
     };
+
+    final bg = isDark ? fg.withValues(alpha: 0.18) : lightBg;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),

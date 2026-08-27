@@ -1,9 +1,9 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/constants/app_pagination.dart';
 import 'package:mashena_rider/features/moderation/domain/usecases/get_appeals_history_usecase.dart';
 import 'package:mashena_rider/features/moderation/presentation/cubits/appeals_history_cubit/appeals_history_state.dart';
 
-class AppealsHistoryCubit extends Cubit<AppealsHistoryState> {
+class AppealsHistoryCubit extends BaseCubit<AppealsHistoryState> {
   final GetAppealsHistoryUsecase _getAppealsHistoryUsecase;
 
   AppealsHistoryCubit(this._getAppealsHistoryUsecase)

@@ -1,10 +1,10 @@
-import 'package:bloc/bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/constants/app_constants.dart';
 import 'package:mashena_rider/features/home/domain/repositories/rating_repository.dart';
 
 import 'trip_rating_state.dart';
 
-class TripRatingCubit extends Cubit<TripRatingState> {
+class TripRatingCubit extends BaseCubit<TripRatingState> {
   TripRatingCubit(this._ratingRepository) : super(const TripRatingState()) {
     _fetchTags();
   }

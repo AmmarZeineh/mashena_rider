@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_usecase.dart';
 import '../../../domain/entities/join_shared_ride_params.dart';
 import '../../../domain/entities/shared_ride_passenger_entity.dart';
@@ -10,7 +10,7 @@ import '../../../domain/usecases/join_shared_ride_usecase.dart';
 import '../../../domain/usecases/leave_shared_ride_usecase.dart';
 import 'shared_trip_room_details_state.dart';
 
-class SharedTripRoomDetailsCubit extends Cubit<SharedTripRoomDetailsState> {
+class SharedTripRoomDetailsCubit extends BaseCubit<SharedTripRoomDetailsState> {
   final GetSharedRideDetailsUsecase _getSharedRideDetailsUsecase;
   final JoinSharedRideUsecase _joinSharedRideUsecase;
   final LeaveSharedRideUsecase _leaveSharedRideUsecase;

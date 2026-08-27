@@ -19,6 +19,8 @@ class AppRoutes {
   static const profile = 'profile';
   static const tripHistory = 'tripHistory';
   static const coupons = 'coupons';
+  static const activeTrips = 'activeTrips';
+  static const settings = 'settings';
 
   // route paths (للـ URL)
   static const onboardingPath = '/onboarding';
@@ -40,4 +42,6 @@ class AppRoutes {
   static const profilePath = '/profile';
   static const tripHistoryPath = '/tripHistory';
   static const couponsPath = '/coupons';
+  static const activeTripsPath = '/activeTrips';
+  static const settingsPath = '/settings';
 }

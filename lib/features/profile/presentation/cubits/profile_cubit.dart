@@ -1,8 +1,8 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/features/profile/domain/repositories/profile_repository.dart';
 import 'package:mashena_rider/features/profile/presentation/cubits/profile_state.dart';
 
-class ProfileCubit extends Cubit<ProfileState> {
+class ProfileCubit extends BaseCubit<ProfileState> {
   final ProfileRepository repository;
 
   ProfileCubit(this.repository) : super(const ProfileState.initial());

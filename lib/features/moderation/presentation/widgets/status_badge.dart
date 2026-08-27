@@ -27,43 +27,47 @@ class StatusBadge extends StatelessWidget {
     UserAccountStatus status,
   ) {
     final s = S.of(context);
-    switch (status) {
-      case UserAccountStatus.active:
-        return StatusBadge(
-          label: s.moderationStatusActive,
-          foregroundColor: const Color(0xFF16A34A),
-          backgroundColor: const Color(0xFFDCFCE7),
-          icon: Icons.check_circle_outline_rounded,
-        );
-      case UserAccountStatus.warning:
-        return StatusBadge(
-          label: s.moderationStatusWarning,
-          foregroundColor: const Color(0xFFD97706),
-          backgroundColor: const Color(0xFFFEF3C7),
-          icon: Icons.warning_amber_rounded,
-        );
-      case UserAccountStatus.restricted:
-        return StatusBadge(
-          label: s.moderationStatusRestricted,
-          foregroundColor: const Color(0xFFEA580C),
-          backgroundColor: const Color(0xFFFFEDD5),
-          icon: Icons.lock_outline_rounded,
-        );
-      case UserAccountStatus.suspended:
-        return StatusBadge(
-          label: s.moderationStatusSuspended,
-          foregroundColor: const Color(0xFFDC2626),
-          backgroundColor: const Color(0xFFFEE2E2),
-          icon: Icons.pause_circle_outline_rounded,
-        );
-      case UserAccountStatus.banned:
-        return StatusBadge(
-          label: s.moderationStatusBanned,
-          foregroundColor: const Color(0xFF991B1B),
-          backgroundColor: const Color(0xFFFEE2E2),
-          icon: Icons.block_rounded,
-        );
-    }
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final (label, fg, lightBg, icon) = switch (status) {
+      UserAccountStatus.active => (
+        s.moderationStatusActive,
+        isDark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A),
+        const Color(0xFFDCFCE7),
+        Icons.check_circle_outline_rounded,
+      ),
+      UserAccountStatus.warning => (
+        s.moderationStatusWarning,
+        isDark ? const Color(0xFFFBBF24) : const Color(0xFFD97706),
+        const Color(0xFFFEF3C7),
+        Icons.warning_amber_rounded,
+      ),
+      UserAccountStatus.restricted => (
+        s.moderationStatusRestricted,
+        isDark ? const Color(0xFFFB923C) : const Color(0xFFEA580C),
+        const Color(0xFFFFEDD5),
+        Icons.lock_outline_rounded,
+      ),
+      UserAccountStatus.suspended => (
+        s.moderationStatusSuspended,
+        isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626),
+        const Color(0xFFFEE2E2),
+        Icons.pause_circle_outline_rounded,
+      ),
+      UserAccountStatus.banned => (
+        s.moderationStatusBanned,
+        isDark ? const Color(0xFFFCA5A5) : const Color(0xFF991B1B),
+        const Color(0xFFFEE2E2),
+        Icons.block_rounded,
+      ),
+    };
+
+    return StatusBadge(
+      label: label,
+      foregroundColor: fg,
+      backgroundColor: isDark ? fg.withValues(alpha: 0.18) : lightBg,
+      icon: icon,
+    );
   }
 
   factory StatusBadge.fromPenaltyStatus(
@@ -71,37 +75,41 @@ class StatusBadge extends StatelessWidget {
     PenaltyStatus status,
   ) {
     final s = S.of(context);
-    switch (status) {
-      case PenaltyStatus.active:
-        return StatusBadge(
-          label: s.moderationPenaltyStatusActive,
-          foregroundColor: const Color(0xFFDC2626),
-          backgroundColor: const Color(0xFFFEE2E2),
-          icon: Icons.error_outline_rounded,
-        );
-      case PenaltyStatus.expired:
-        return StatusBadge(
-          label: s.moderationPenaltyStatusExpired,
-          foregroundColor: const Color(0xFF4B5563),
-          backgroundColor: const Color(0xFFF3F4F6),
-          icon: Icons.access_time_rounded,
-        );
-      case PenaltyStatus.revoked:
-        return StatusBadge(
-          label: s.moderationPenaltyStatusRevoked,
-          foregroundColor: const Color(0xFF16A34A),
-          backgroundColor: const Color(0xFFDCFCE7),
-          icon: Icons.check_circle_outline_rounded,
-        );
-      case PenaltyStatus.cancelled:
-      case PenaltyStatus.unknown:
-        return StatusBadge(
-          label: s.moderationPenaltyStatusCancelled,
-          foregroundColor: const Color(0xFF6B7280),
-          backgroundColor: const Color(0xFFF3F4F6),
-          icon: Icons.cancel_outlined,
-        );
-    }
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final (label, fg, lightBg, icon) = switch (status) {
+      PenaltyStatus.active => (
+        s.moderationPenaltyStatusActive,
+        isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626),
+        const Color(0xFFFEE2E2),
+        Icons.error_outline_rounded,
+      ),
+      PenaltyStatus.expired => (
+        s.moderationPenaltyStatusExpired,
+        isDark ? const Color(0xFF9CA3AF) : const Color(0xFF4B5563),
+        const Color(0xFFF3F4F6),
+        Icons.access_time_rounded,
+      ),
+      PenaltyStatus.revoked => (
+        s.moderationPenaltyStatusRevoked,
+        isDark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A),
+        const Color(0xFFDCFCE7),
+        Icons.check_circle_outline_rounded,
+      ),
+      PenaltyStatus.cancelled || PenaltyStatus.unknown => (
+        s.moderationPenaltyStatusCancelled,
+        isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+        const Color(0xFFF3F4F6),
+        Icons.cancel_outlined,
+      ),
+    };
+
+    return StatusBadge(
+      label: label,
+      foregroundColor: fg,
+      backgroundColor: isDark ? fg.withValues(alpha: 0.18) : lightBg,
+      icon: icon,
+    );
   }
 
   factory StatusBadge.fromAppealStatus(
@@ -109,43 +117,47 @@ class StatusBadge extends StatelessWidget {
     AppealStatus status,
   ) {
     final s = S.of(context);
-    switch (status) {
-      case AppealStatus.pending:
-        return StatusBadge(
-          label: s.moderationAppealStatusPending,
-          foregroundColor: const Color(0xFFD97706),
-          backgroundColor: const Color(0xFFFEF3C7),
-          icon: Icons.hourglass_empty_rounded,
-        );
-      case AppealStatus.underReview:
-        return StatusBadge(
-          label: s.moderationAppealStatusUnderReview,
-          foregroundColor: AppColors.primaryColor,
-          backgroundColor: AppColors.primaryColor.withValues(alpha: 0.1),
-          icon: Icons.manage_search_rounded,
-        );
-      case AppealStatus.approved:
-        return StatusBadge(
-          label: s.moderationAppealStatusApproved,
-          foregroundColor: const Color(0xFF16A34A),
-          backgroundColor: const Color(0xFFDCFCE7),
-          icon: Icons.check_circle_outline_rounded,
-        );
-      case AppealStatus.rejected:
-        return StatusBadge(
-          label: s.moderationAppealStatusRejected,
-          foregroundColor: const Color(0xFFDC2626),
-          backgroundColor: const Color(0xFFFEE2E2),
-          icon: Icons.cancel_outlined,
-        );
-      case AppealStatus.cancelled:
-      case AppealStatus.unknown:
-        return StatusBadge(
-          label: s.moderationAppealStatusCancelled,
-          foregroundColor: const Color(0xFF6B7280),
-          backgroundColor: const Color(0xFFF3F4F6),
-        );
-    }
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final (label, fg, lightBg, icon) = switch (status) {
+      AppealStatus.pending => (
+        s.moderationAppealStatusPending,
+        isDark ? const Color(0xFFFBBF24) : const Color(0xFFD97706),
+        const Color(0xFFFEF3C7),
+        Icons.hourglass_empty_rounded,
+      ),
+      AppealStatus.underReview => (
+        s.moderationAppealStatusUnderReview,
+        AppColors.primaryColor,
+        AppColors.primaryColor.withValues(alpha: 0.1),
+        Icons.manage_search_rounded,
+      ),
+      AppealStatus.approved => (
+        s.moderationAppealStatusApproved,
+        isDark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A),
+        const Color(0xFFDCFCE7),
+        Icons.check_circle_outline_rounded,
+      ),
+      AppealStatus.rejected => (
+        s.moderationAppealStatusRejected,
+        isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626),
+        const Color(0xFFFEE2E2),
+        Icons.cancel_outlined,
+      ),
+      AppealStatus.cancelled || AppealStatus.unknown => (
+        s.moderationAppealStatusCancelled,
+        isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+        const Color(0xFFF3F4F6),
+        null,
+      ),
+    };
+
+    return StatusBadge(
+      label: label,
+      foregroundColor: fg,
+      backgroundColor: isDark ? fg.withValues(alpha: 0.18) : lightBg,
+      icon: icon,
+    );
   }
 
   @override

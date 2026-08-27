@@ -24,12 +24,16 @@ class AppealDetailsBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm');
+    final timeColor = isDark ? colorScheme.onSurfaceVariant : AppColors.textGrey;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? colorScheme.surfaceContainerHigh : Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       child: SingleChildScrollView(
@@ -43,7 +47,9 @@ class AppealDetailsBottomSheet extends StatelessWidget {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: AppColors.borderColor,
+                  color: isDark
+                      ? colorScheme.outlineVariant
+                      : AppColors.borderColor,
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -59,12 +65,14 @@ class AppealDetailsBottomSheet extends StatelessWidget {
                     children: [
                       Text(
                         s.moderationAppealRef(appeal.id),
-                        style: AppTextStyles.w700_20,
+                        style: AppTextStyles.w700_20.copyWith(
+                          color: colorScheme.onSurface,
+                        ),
                       ),
                       Text(
                         s.moderationPenaltyRef(appeal.penaltyId),
                         style: AppTextStyles.w500_12.copyWith(
-                          color: AppColors.textGrey,
+                          color: timeColor,
                         ),
                       ),
                     ],
@@ -76,20 +84,31 @@ class AppealDetailsBottomSheet extends StatelessWidget {
             SizedBox(height: 16.h),
 
             // Submission Reason
-            Text(s.moderationAppealReason, style: AppTextStyles.w600_14),
+            Text(
+              s.moderationAppealReason,
+              style: AppTextStyles.w600_14.copyWith(
+                color: colorScheme.onSurface,
+              ),
+            ),
             SizedBox(height: 6.h),
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(12.r),
               decoration: BoxDecoration(
-                color: const Color(0xFFF9FAFB),
+                color: isDark
+                    ? colorScheme.surfaceContainerLow
+                    : const Color(0xFFF9FAFB),
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: AppColors.borderColor),
+                border: Border.all(
+                  color: isDark
+                      ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+                      : AppColors.borderColor,
+                ),
               ),
               child: Text(
                 appeal.reason,
                 style: AppTextStyles.w400_14.copyWith(
-                  color: Colors.black87,
+                  color: colorScheme.onSurface,
                   height: 1.35,
                 ),
               ),
@@ -97,13 +116,20 @@ class AppealDetailsBottomSheet extends StatelessWidget {
 
             if (appeal.evidence != null && appeal.evidence!.isNotEmpty) ...[
               SizedBox(height: 12.h),
-              Text(s.moderationAppealEvidence, style: AppTextStyles.w600_14),
+              Text(
+                s.moderationAppealEvidence,
+                style: AppTextStyles.w600_14.copyWith(
+                  color: colorScheme.onSurface,
+                ),
+              ),
               SizedBox(height: 6.h),
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(10.r),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEFF6FF),
+                  color: isDark
+                      ? AppColors.primaryColor.withValues(alpha: 0.15)
+                      : const Color(0xFFEFF6FF),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Row(
@@ -133,28 +159,45 @@ class AppealDetailsBottomSheet extends StatelessWidget {
             if (appeal.adminDecision != null &&
                 appeal.adminDecision!.isNotEmpty) ...[
               SizedBox(height: 16.h),
-              Text(s.moderationAdminDecision, style: AppTextStyles.w600_14),
+              Text(
+                s.moderationAdminDecision,
+                style: AppTextStyles.w600_14.copyWith(
+                  color: colorScheme.onSurface,
+                ),
+              ),
               SizedBox(height: 6.h),
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(12.r),
                 decoration: BoxDecoration(
-                  color: appeal.status.isApproved
-                      ? const Color(0xFFF0FDF4)
-                      : const Color(0xFFFEF2F2),
+                  color: isDark
+                      ? (appeal.status.isApproved
+                          ? const Color(0xFF14532D).withValues(alpha: 0.3)
+                          : const Color(0xFF7F1D1D).withValues(alpha: 0.3))
+                      : (appeal.status.isApproved
+                          ? const Color(0xFFF0FDF4)
+                          : const Color(0xFFFEF2F2)),
                   borderRadius: BorderRadius.circular(10.r),
                   border: Border.all(
-                    color: appeal.status.isApproved
-                        ? const Color(0xFF86EFAC)
-                        : const Color(0xFFFECACA),
+                    color: isDark
+                        ? (appeal.status.isApproved
+                            ? const Color(0xFF15803D)
+                            : const Color(0xFF991B1B))
+                        : (appeal.status.isApproved
+                            ? const Color(0xFF86EFAC)
+                            : const Color(0xFFFECACA)),
                   ),
                 ),
                 child: Text(
                   appeal.adminDecision!,
                   style: AppTextStyles.w500_14.copyWith(
-                    color: appeal.status.isApproved
-                        ? const Color(0xFF15803D)
-                        : const Color(0xFFB91C1C),
+                    color: isDark
+                        ? (appeal.status.isApproved
+                            ? const Color(0xFF4ADE80)
+                            : const Color(0xFFF87171))
+                        : (appeal.status.isApproved
+                            ? const Color(0xFF15803D)
+                            : const Color(0xFFB91C1C)),
                   ),
                 ),
               ),
@@ -162,18 +205,27 @@ class AppealDetailsBottomSheet extends StatelessWidget {
 
             if (appeal.adminNotes != null && appeal.adminNotes!.isNotEmpty) ...[
               SizedBox(height: 12.h),
-              Text(s.moderationAdminNotes, style: AppTextStyles.w600_14),
+              Text(
+                s.moderationAdminNotes,
+                style: AppTextStyles.w600_14.copyWith(
+                  color: colorScheme.onSurface,
+                ),
+              ),
               SizedBox(height: 6.h),
               Text(
                 appeal.adminNotes!,
                 style: AppTextStyles.w400_14.copyWith(
-                  color: AppColors.textGrey,
+                  color: timeColor,
                 ),
               ),
             ],
 
             SizedBox(height: 16.h),
-            const Divider(color: Color(0xFFF3F4F6)),
+            Divider(
+              color: isDark
+                  ? colorScheme.outlineVariant.withValues(alpha: 0.2)
+                  : const Color(0xFFF3F4F6),
+            ),
             SizedBox(height: 10.h),
 
             // Timeline details
@@ -183,7 +235,7 @@ class AppealDetailsBottomSheet extends StatelessWidget {
                   Icon(
                     Icons.schedule_rounded,
                     size: 14.r,
-                    color: AppColors.textGrey,
+                    color: timeColor,
                   ),
                   SizedBox(width: 6.w),
                   Text(
@@ -191,7 +243,7 @@ class AppealDetailsBottomSheet extends StatelessWidget {
                       dateFormat.format(appeal.submittedAt!),
                     ),
                     style: AppTextStyles.w500_12.copyWith(
-                      color: AppColors.textGrey,
+                      color: timeColor,
                     ),
                   ),
                 ],
@@ -204,7 +256,7 @@ class AppealDetailsBottomSheet extends StatelessWidget {
                   Icon(
                     Icons.check_circle_outline,
                     size: 14.r,
-                    color: AppColors.textGrey,
+                    color: timeColor,
                   ),
                   SizedBox(width: 6.w),
                   Text(
@@ -212,7 +264,7 @@ class AppealDetailsBottomSheet extends StatelessWidget {
                       dateFormat.format(appeal.reviewedAt!),
                     ),
                     style: AppTextStyles.w500_12.copyWith(
-                      color: AppColors.textGrey,
+                      color: timeColor,
                     ),
                   ),
                 ],

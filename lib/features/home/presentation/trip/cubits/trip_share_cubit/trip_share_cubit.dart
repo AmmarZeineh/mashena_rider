@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_share.dart';
 import 'package:mashena_rider/features/home/domain/usecases/revoke_share_trip_usecase.dart';
 import 'package:mashena_rider/features/home/domain/usecases/share_trip_usecase.dart';
 
 part 'trip_share_state.dart';
 
-class TripShareCubit extends Cubit<TripShareState> {
+class TripShareCubit extends BaseCubit<TripShareState> {
   final ShareTripUsecase _shareTripUsecase;
   final RevokeShareTripUsecase _revokeShareTripUsecase;
 

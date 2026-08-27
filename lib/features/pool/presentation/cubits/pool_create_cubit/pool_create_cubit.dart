@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/features/pool/domain/entities/create_pool_params.dart';
 import 'package:mashena_rider/features/pool/domain/usecases/create_pool_room_usecase.dart';
 import 'package:mashena_rider/features/pool/presentation/models/pool_discovery_args.dart';
 import 'pool_create_state.dart';
 
-class PoolCreateCubit extends Cubit<PoolCreateState> {
+class PoolCreateCubit extends BaseCubit<PoolCreateState> {
   final CreatePoolRoomUsecase _createPoolRoomUsecase;
   final PoolDiscoveryArgs args;
 

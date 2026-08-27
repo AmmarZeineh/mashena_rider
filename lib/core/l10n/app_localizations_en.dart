@@ -409,6 +409,58 @@ class SEn extends S {
   String get settingsAboutApp => 'About App';
 
   @override
+  String get drawerSettings => 'Settings';
+
+  @override
+  String get settingsTheme => 'Theme';
+
+  @override
+  String get settingsThemeSubtitle => 'Choose how Mashena Rider looks to you';
+
+  @override
+  String get settingsThemeSystem => 'System Default';
+
+  @override
+  String get settingsThemeSystemDesc => 'Match your device system settings';
+
+  @override
+  String get settingsThemeLight => 'Light Mode';
+
+  @override
+  String get settingsThemeLightDesc =>
+      'Classic bright look with optimal clarity';
+
+  @override
+  String get settingsThemeDark => 'Dark Mode';
+
+  @override
+  String get settingsThemeDarkDesc =>
+      'Easy on the eyes in low-light conditions';
+
+  @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get settingsLanguageSubtitle =>
+      'Select your preferred application language';
+
+  @override
+  String get settingsLanguageEnglish => 'English';
+
+  @override
+  String get settingsLanguageArabic => 'العربية (Arabic)';
+
+  @override
+  String get settingsAppInfo => 'App Information';
+
+  @override
+  String get settingsAppVersion => 'Version 1.0.0';
+
+  @override
+  String get settingsAppDescription =>
+      'Mashena Rider - Safe, reliable and comfortable rides';
+
+  @override
   String get errorsNetwork => 'Check your internet connection';
 
   @override
@@ -776,6 +828,15 @@ class SEn extends S {
 
   @override
   String get enterValidCouponCode => 'Please enter a coupon code';
+
+  @override
+  String get couponOriginalFare => 'Original Fare';
+
+  @override
+  String get couponSaved => 'Saved';
+
+  @override
+  String get couponFinalFare => 'Final Fare';
 
   @override
   String get appCurrency => 'SYP';
@@ -1251,4 +1312,296 @@ class SEn extends S {
 
   @override
   String get moderationRealtimeLiftedTitle => 'Restriction Lifted';
+
+  @override
+  String get drawerActiveTrips => 'Active Trips';
+
+  @override
+  String get activeTripsTitle => 'Active Trips';
+
+  @override
+  String get activeTripsSubtitle => 'Ongoing & in-progress rides';
+
+  @override
+  String get activeTripsEmptyTitle => 'No Active Trips';
+
+  @override
+  String get activeTripsEmptySubtitle =>
+      'You do not have any active or ongoing trips at the moment.';
+
+  @override
+  String get activeTripsLiveTracking => 'Live Tracking';
+
+  @override
+  String get activeTripsRegularTrip => 'Regular Ride';
+
+  @override
+  String get activeTripsSharedRide => 'Shared Ride';
+
+  @override
+  String get activeTripsCompanionBooking => 'Companion Booking';
+
+  @override
+  String get activeTripsSelf => 'Personal Ride';
+
+  @override
+  String activeTripsTripId(int id) {
+    return 'Trip #$id';
+  }
+
+  @override
+  String activeTripsRideRequestId(int id) {
+    return 'Request #$id';
+  }
+
+  @override
+  String activeTripsSharedRideId(int id) {
+    return 'Room #$id';
+  }
+
+  @override
+  String activeTripsPassengerId(int id) {
+    return 'Passenger #$id';
+  }
+
+  @override
+  String activeTripsActiveSeats(int count) {
+    return '$count Active Seats';
+  }
+
+  @override
+  String get activeTripsAccountHolderOnBoard => 'Account Holder On Board';
+
+  @override
+  String get activeTripsAccountHolderNotOnBoard => 'Companion On Board';
+
+  @override
+  String get activeTripsStatusStarted => 'Started';
+
+  @override
+  String get activeTripsStatusInProgress => 'In Progress';
+
+  @override
+  String get activeTripsStatusDriverArrived => 'Driver Arrived';
+
+  @override
+  String get activeTripsStatusOpen => 'Open Room';
+
+  @override
+  String get activeTripsStatusReady => 'Ready';
+
+  @override
+  String get activeTripsStatusAccepted => 'Accepted';
+
+  @override
+  String get activeTripsStatusPending => 'Finding Driver';
+
+  @override
+  String get commonNoResultsFound => 'No results found';
+
+  @override
+  String get unitKm => 'km';
+
+  @override
+  String get unitMin => 'min';
+
+  @override
+  String get unitStops => 'stops';
+
+  @override
+  String get rideChooseYourRide => 'Choose your ride';
+
+  @override
+  String get rideCarType => 'Car type';
+
+  @override
+  String get rideNoCarTypesAvailable =>
+      'No car types are available for this trip right now.';
+
+  @override
+  String get sharedTripTryPoolInstead => 'Try Passenger Pool Instead';
+
+  @override
+  String get sharedTripRemovedTitle => 'Removed from Ride';
+
+  @override
+  String get sharedTripRemovedBody =>
+      'You were removed from this shared ride by the driver.';
+
+  @override
+  String sharedTripRemovedBodyReason(String reason) {
+    return 'You were removed from this shared ride by the driver.\n\nReason: $reason';
+  }
+
+  @override
+  String get sharedTripCanceledNotice => 'The ride has been canceled.';
+
+  @override
+  String sharedTripCanceledReason(String reason) {
+    return 'Trip Canceled: $reason';
+  }
+
+  @override
+  String get sharedTripStartedNotice =>
+      'Trip has started! Tracking live route.';
+
+  @override
+  String get sharedTripCompletedNotice =>
+      'Trip completed! Thank you for riding.';
+
+  @override
+  String get poolCreateNewLobby => 'Create New Pool Lobby';
+
+  @override
+  String get poolCreateRoomTitle => 'Create Pool Room';
+
+  @override
+  String get poolYourJourney => 'Your Pool Journey';
+
+  @override
+  String poolLobbyTitle(int id) {
+    return 'Pool Lobby #$id';
+  }
+
+  @override
+  String poolDepartureTime(String time) {
+    return 'Departure: $time';
+  }
+
+  @override
+  String get poolWalkUnderOneMin => '< 1 min walk';
+
+  @override
+  String poolWalkMinutes(int minutes) {
+    return '$minutes min walk';
+  }
+
+  @override
+  String get poolOptimalMeetingPoint => 'Optimal central meeting point';
+
+  @override
+  String poolOccupiedSeats(int current, int total) {
+    return '$current / $total Seats';
+  }
+
+  @override
+  String poolPassengerNumber(int id) {
+    return 'Passenger #$id';
+  }
+
+  @override
+  String poolPassengerYou(String name) {
+    return '$name (You)';
+  }
+
+  @override
+  String get poolHost => 'Host';
+
+  @override
+  String poolSeatsRequested(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count seats requested',
+      one: '1 seat requested',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get poolWaitingForPassenger => 'Waiting for a passenger...';
+
+  @override
+  String get poolStatusSwitchingTracking => 'Switching to active ride tracking';
+
+  @override
+  String poolStatusRoomFullDriversNotified(int current, int max) {
+    return 'Room is full ($current/$max) • Drivers notified';
+  }
+
+  @override
+  String poolStatusPassengersJoined(int current, int max) {
+    return '$current/$max passengers joined';
+  }
+
+  @override
+  String get poolDepartingSoon => 'Departing soon';
+
+  @override
+  String poolDepartsAt(String time) {
+    return 'Departs at $time';
+  }
+
+  @override
+  String poolSeatsOpen(int count, int max) {
+    return '$count/$max seats open';
+  }
+
+  @override
+  String poolHostedBy(String name) {
+    return 'Hosted by $name';
+  }
+
+  @override
+  String get poolJoinPool => 'Join Pool';
+
+  @override
+  String get drawerWallet => 'Wallet';
+
+  @override
+  String get walletBalance => 'Balance';
+
+  @override
+  String get walletStatusActive => 'Active';
+
+  @override
+  String get walletStatusInactive => 'Inactive';
+
+  @override
+  String get walletDetails => 'Wallet Details';
+
+  @override
+  String get walletId => 'Wallet ID';
+
+  @override
+  String get walletCreatedAt => 'Created Date';
+
+  @override
+  String get walletUpdatedAt => 'Last Updated';
+
+  @override
+  String get walletErrorLoading => 'Failed to load wallet';
+
+  @override
+  String get walletRetry => 'Retry';
+
+  @override
+  String get walletTransactions => 'Transactions';
+
+  @override
+  String get walletTransactionsHistory => 'Transaction History';
+
+  @override
+  String get walletDeposit => 'Deposit';
+
+  @override
+  String get walletWithdraw => 'Withdrawal';
+
+  @override
+  String get walletTransfer => 'Transfer';
+
+  @override
+  String get walletTripPayment => 'Trip Payment';
+
+  @override
+  String get walletNoTransactions => 'No transactions found';
+
+  @override
+  String get walletTapToViewTransactions => 'Tap to view transactions';
+
+  @override
+  String get walletBalanceAfter => 'Balance after';
+
+  @override
+  String get walletBalanceBefore => 'Balance before';
 }

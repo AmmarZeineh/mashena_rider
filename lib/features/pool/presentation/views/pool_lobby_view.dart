@@ -43,6 +43,8 @@ class _PoolLobbyScaffoldState extends State<_PoolLobbyScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+
     return BlocConsumer<PoolLobbyCubit, PoolLobbyState>(
       listener: (context, state) {
         // 1. Toast notifications
@@ -58,7 +60,7 @@ class _PoolLobbyScaffoldState extends State<_PoolLobbyScaffold> {
 
         // 3. Matched Driver Handoff -> Switch to Active Shared Ride
         if (state.matchedSharedRideId != null) {
-          context.showSuccessToast('Driver Found! Starting your ride.');
+          context.showSuccessToast(s.poolDriverFound);
           context.pushReplacement(
             AppRoutes.sharedTripRoomDetailsPath,
             extra: state.matchedSharedRideId,
@@ -74,9 +76,8 @@ class _PoolLobbyScaffoldState extends State<_PoolLobbyScaffold> {
         if (state.isExpired) {
           _showNoticeDialog(
             context,
-            title: 'Pool Room Expired',
-            message:
-                'No driver was matched before the departure time. The room has expired.',
+            title: s.poolExpiredTitle,
+            message: s.poolExpiredBody,
           );
         }
 
@@ -84,8 +85,8 @@ class _PoolLobbyScaffoldState extends State<_PoolLobbyScaffold> {
         if (state.isCancelled && !state.isCreator) {
           _showNoticeDialog(
             context,
-            title: 'Pool Room Cancelled',
-            message: 'The host has cancelled this pool room.',
+            title: s.poolCancelledTitle,
+            message: s.poolCancelledBody,
           );
         }
 
@@ -93,8 +94,8 @@ class _PoolLobbyScaffoldState extends State<_PoolLobbyScaffold> {
         if (state.isRemoved) {
           _showNoticeDialog(
             context,
-            title: 'Removed from Room',
-            message: 'You were removed from this pool room.',
+            title: s.poolRemovedTitle,
+            message: s.poolRemovedBody,
           );
         }
       },
@@ -103,7 +104,7 @@ class _PoolLobbyScaffoldState extends State<_PoolLobbyScaffold> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Pool Lobby #${cubit.roomId}'),
+            title: Text(s.poolLobbyTitle(cubit.roomId)),
             centerTitle: true,
             elevation: 0,
             leading: IconButton(
@@ -127,6 +128,7 @@ class _PoolLobbyScaffoldState extends State<_PoolLobbyScaffold> {
     PoolLobbyState state,
     PoolLobbyCubit cubit,
   ) {
+    final s = S.of(context);
     final room = state.room!;
 
     return Stack(
@@ -200,7 +202,11 @@ class _PoolLobbyScaffoldState extends State<_PoolLobbyScaffold> {
                           ),
                           SizedBox(width: 6.w),
                           Text(
-                            'Departure: ${DateFormat('h:mm a').format(room.departureTime!.toLocal())}',
+                            s.poolDepartureTime(
+                              DateFormat('h:mm a').format(
+                                room.departureTime!.toLocal(),
+                              ),
+                            ),
                             style: AppTextStyles.w600_12.copyWith(
                               color: AppColors.primaryColor,
                             ),

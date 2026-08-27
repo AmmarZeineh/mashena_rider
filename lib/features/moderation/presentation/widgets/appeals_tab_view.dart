@@ -67,7 +67,12 @@ class _AppealsTabViewState extends State<AppealsTabView> {
                   color: AppColors.errorColor,
                 ),
                 SizedBox(height: 12.h),
-                Text(s.commonError, style: AppTextStyles.w600_16),
+                Text(
+                  s.commonError,
+                  style: AppTextStyles.w600_16.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
                 SizedBox(height: 12.h),
                 ElevatedButton(
                   onPressed: () =>
@@ -80,6 +85,11 @@ class _AppealsTabViewState extends State<AppealsTabView> {
         }
 
         if (state.items.isEmpty) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          final emptyColor = isDark
+              ? Theme.of(context).colorScheme.onSurfaceVariant
+              : AppColors.textGrey;
+
           return RefreshIndicator(
             onRefresh: () => context.read<AppealsHistoryCubit>().refresh(),
             color: AppColors.primaryColor,
@@ -91,7 +101,7 @@ class _AppealsTabViewState extends State<AppealsTabView> {
                   child: Text(
                     s.moderationNoAppeals,
                     style: AppTextStyles.w600_16.copyWith(
-                      color: AppColors.textGrey,
+                      color: emptyColor,
                     ),
                   ),
                 ),

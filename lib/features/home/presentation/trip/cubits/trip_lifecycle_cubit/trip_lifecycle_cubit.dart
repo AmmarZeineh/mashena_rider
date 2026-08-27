@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'package:equatable/equatable.dart';
-import 'package:mashena_rider/core/services/logger_service.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mashena_rider/core/auth/auth_event.dart';
 import 'package:mashena_rider/core/auth/auth_event_bus.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
+import 'package:mashena_rider/core/services/logger_service.dart';
 import 'package:mashena_rider/features/home/domain/entities/driver_arrived.dart';
 import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_cancelled.dart';
@@ -22,7 +21,7 @@ part 'trip_lifecycle_state.dart';
 ///  - Reconnecting the socket on token refresh
 ///
 /// Downstream cubits ([DriverTrackingCubit]) react to state changes from here.
-class TripLifecycleCubit extends Cubit<TripLifecycleState> {
+class TripLifecycleCubit extends BaseCubit<TripLifecycleState> {
   TripLifecycleCubit(this._rideRepository, this._authEventBus)
     : super(const TripLifecycleState()) {
     _subscribeToSocketStreams();

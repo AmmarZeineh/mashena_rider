@@ -27,10 +27,10 @@ class SharedTripAddressBottomSection extends StatelessWidget {
       }
 
       if (state.searchResults.isEmpty) {
-        return const Center(
+        return Center(
           child: Padding(
-            padding: EdgeInsets.all(24),
-            child: Text("No results found"),
+            padding: const EdgeInsets.all(24),
+            child: Text(S.of(context).commonNoResultsFound),
           ),
         );
       }

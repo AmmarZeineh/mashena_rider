@@ -10,6 +10,7 @@ class BackendEndpoints {
   static String shareTripByRide(int rideRequestId) =>
       '/trips/by-ride/$rideRequestId/share';
   static const String riderTripHistory = '/trips/rider/history';
+  static const String activeContexts = '/rider/tracking-contexts';
   static const String refresh = '/auth/refresh';
   static const String ratingTags = '/rating-tags';
   static const String logout = '/auth/logout';
@@ -50,6 +51,10 @@ class BackendEndpoints {
   static String appealPenalty(int id) => '/me/penalties/$id/appeal';
   static const String myAppeals = '/me/appeals';
   static String appealDetails(int id) => '/me/appeals/$id';
+
+  // Wallet
+  static const String myWallet = '/wallets/me';
+  static const String walletTransactions = '/wallets/me/transactions';
 
   // External APIs
   static const String nominatimSearch =

@@ -91,7 +91,20 @@ class _SubmitAppealBottomSheetState extends State<SubmitAppealBottomSheet> {
         }
       },
       builder: (context, state) {
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
+        final colorScheme = theme.colorScheme;
         final isSubmitting = state.status == SubmitAppealStatus.submitting;
+        final timeColor = isDark ? colorScheme.onSurfaceVariant : AppColors.textGrey;
+
+        final fieldBorder = OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide(
+            color: isDark
+                ? colorScheme.outlineVariant.withValues(alpha: 0.3)
+                : AppColors.borderColor,
+          ),
+        );
 
         return Container(
           padding: EdgeInsets.only(
@@ -101,7 +114,7 @@ class _SubmitAppealBottomSheetState extends State<SubmitAppealBottomSheet> {
             top: 12.h,
           ),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? colorScheme.surfaceContainerHigh : Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
           ),
           child: SingleChildScrollView(
@@ -115,7 +128,9 @@ class _SubmitAppealBottomSheetState extends State<SubmitAppealBottomSheet> {
                     width: 40.w,
                     height: 4.h,
                     decoration: BoxDecoration(
-                      color: AppColors.borderColor,
+                      color: isDark
+                          ? colorScheme.outlineVariant
+                          : AppColors.borderColor,
                       borderRadius: BorderRadius.circular(2.r),
                     ),
                   ),
@@ -128,7 +143,9 @@ class _SubmitAppealBottomSheetState extends State<SubmitAppealBottomSheet> {
                     Container(
                       padding: EdgeInsets.all(8.r),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withValues(alpha: 0.1),
+                        color: AppColors.primaryColor.withValues(
+                          alpha: isDark ? 0.18 : 0.1,
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -144,12 +161,14 @@ class _SubmitAppealBottomSheetState extends State<SubmitAppealBottomSheet> {
                         children: [
                           Text(
                             s.moderationSubmitAppeal,
-                            style: AppTextStyles.w700_18,
+                            style: AppTextStyles.w700_18.copyWith(
+                              color: colorScheme.onSurface,
+                            ),
                           ),
                           Text(
                             s.moderationPenaltyRef(widget.penalty.id),
                             style: AppTextStyles.w500_12.copyWith(
-                              color: AppColors.textGrey,
+                              color: timeColor,
                             ),
                           ),
                         ],
@@ -164,9 +183,15 @@ class _SubmitAppealBottomSheetState extends State<SubmitAppealBottomSheet> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12.r),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF9FAFB),
+                    color: isDark
+                        ? colorScheme.surfaceContainerLow
+                        : const Color(0xFFF9FAFB),
                     borderRadius: BorderRadius.circular(10.r),
-                    border: Border.all(color: AppColors.borderColor),
+                    border: Border.all(
+                      color: isDark
+                          ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+                          : AppColors.borderColor,
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +199,7 @@ class _SubmitAppealBottomSheetState extends State<SubmitAppealBottomSheet> {
                       Text(
                         widget.penalty.reason,
                         style: AppTextStyles.w500_14.copyWith(
-                          color: Colors.black87,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ],
@@ -188,14 +213,16 @@ class _SubmitAppealBottomSheetState extends State<SubmitAppealBottomSheet> {
                   children: [
                     Text(
                       s.moderationAppealReason,
-                      style: AppTextStyles.w600_14,
+                      style: AppTextStyles.w600_14.copyWith(
+                        color: colorScheme.onSurface,
+                      ),
                     ),
                     Text(
                       '$_charCount / 2000',
                       style: AppTextStyles.w500_12.copyWith(
                         color: _charCount > 2000
                             ? AppColors.errorColor
-                            : AppColors.textGrey,
+                            : timeColor,
                       ),
                     ),
                   ],
@@ -205,6 +232,9 @@ class _SubmitAppealBottomSheetState extends State<SubmitAppealBottomSheet> {
                   controller: _reasonController,
                   maxLines: 4,
                   maxLength: 2000,
+                  style: AppTextStyles.w400_14.copyWith(
+                    color: colorScheme.onSurface,
+                  ),
                   buildCounter: (
                     _, {
                     required currentLength,
@@ -216,10 +246,10 @@ class _SubmitAppealBottomSheetState extends State<SubmitAppealBottomSheet> {
                     hintStyle: AppTextStyles.w400_14.copyWith(
                       color: AppColors.textfieldHintGrey,
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                      borderSide: const BorderSide(color: AppColors.borderColor),
-                    ),
+                    filled: isDark,
+                    fillColor: isDark ? colorScheme.surfaceContainerLow : null,
+                    border: fieldBorder,
+                    enabledBorder: fieldBorder,
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.r),
                       borderSide: const BorderSide(
@@ -246,22 +276,31 @@ class _SubmitAppealBottomSheetState extends State<SubmitAppealBottomSheet> {
                 // Evidence URL optional field
                 Text(
                   s.moderationAppealEvidence,
-                  style: AppTextStyles.w600_14,
+                  style: AppTextStyles.w600_14.copyWith(
+                    color: colorScheme.onSurface,
+                  ),
                 ),
                 SizedBox(height: 8.h),
                 TextField(
                   controller: _evidenceController,
                   keyboardType: TextInputType.url,
+                  style: AppTextStyles.w400_14.copyWith(
+                    color: colorScheme.onSurface,
+                  ),
                   decoration: InputDecoration(
                     hintText: s.moderationAppealEvidenceHint,
                     hintStyle: AppTextStyles.w400_14.copyWith(
                       color: AppColors.textfieldHintGrey,
                     ),
-                    prefixIcon: const Icon(Icons.link, size: 20),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                      borderSide: const BorderSide(color: AppColors.borderColor),
+                    filled: isDark,
+                    fillColor: isDark ? colorScheme.surfaceContainerLow : null,
+                    prefixIcon: Icon(
+                      Icons.link,
+                      size: 20,
+                      color: isDark ? colorScheme.onSurfaceVariant : null,
                     ),
+                    border: fieldBorder,
+                    enabledBorder: fieldBorder,
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.r),
                       borderSide: const BorderSide(

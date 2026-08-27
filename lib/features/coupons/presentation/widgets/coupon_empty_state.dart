@@ -10,6 +10,16 @@ class CouponEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
+    final textColor =
+        isDark ? colorScheme.onSurfaceVariant : AppColors.textGrey;
+    final iconColor = isDark
+        ? colorScheme.onSurfaceVariant.withValues(alpha: 0.6)
+        : AppColors.textGrey.withValues(alpha: 0.5);
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -17,12 +27,12 @@ class CouponEmptyState extends StatelessWidget {
           Icon(
             Icons.confirmation_number_outlined,
             size: 64.r,
-            color: AppColors.textGrey.withValues(alpha: 0.5),
+            color: iconColor,
           ),
           SizedBox(height: 12.h),
           Text(
             emptyMessage,
-            style: AppTextStyles.w400_14.copyWith(color: AppColors.textGrey),
+            style: AppTextStyles.w400_14.copyWith(color: textColor),
           ),
         ],
       ),

@@ -107,7 +107,7 @@ class RideTile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4.r),
                         ),
                         child: Text(
-                          'SELECTED',
+                          localizations.commonSelected.toUpperCase(),
                           style: AppTextStyles.w700_12.copyWith(
                             color: Colors.white,
                           ),

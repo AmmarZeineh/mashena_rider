@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:mashena_rider/core/services/logger_service.dart';
-import 'dart:math' show pi, sin, cos, atan2;
+import 'dart:math' show atan2, cos, pi, sin;
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_marker.dart';
+import 'package:mashena_rider/core/services/logger_service.dart';
 import 'package:mashena_rider/core/services/osrm_route_service.dart';
 import 'package:mashena_rider/features/home/domain/repositories/ride_repository.dart';
 import 'package:mashena_rider/features/home/presentation/ride_flow/ride_flow_coordinator.dart';
@@ -17,7 +17,7 @@ part 'driver_tracking_state.dart';
 /// (marker + polyline along road) and exposes ETA / distance.
 ///
 /// Writes the visual result to [MapStateCubit] — it never owns the map.
-class DriverTrackingCubit extends Cubit<DriverTrackingState> {
+class DriverTrackingCubit extends BaseCubit<DriverTrackingState> {
   DriverTrackingCubit(
     this._rideRepository,
     this._osrmRouteService,

@@ -79,6 +79,9 @@ class _ModerationContentState extends State<_ModerationContent>
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
 
     return BlocListener<ModerationOverviewCubit, ModerationOverviewState>(
       listenWhen: (p, c) =>
@@ -97,11 +100,12 @@ class _ModerationContentState extends State<_ModerationContent>
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightScaffold,
         appBar: AppBar(
-          title: Text(s.moderationTitle, style: AppTextStyles.w600_18),
+          title: Text(
+            s.moderationTitle,
+            style: AppTextStyles.w600_18.copyWith(color: colorScheme.onSurface),
+          ),
           centerTitle: true,
-          backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
@@ -204,7 +208,9 @@ class _ModerationContentState extends State<_ModerationContent>
                     TabBar(
                       controller: _tabController,
                       labelColor: AppColors.primaryColor,
-                      unselectedLabelColor: AppColors.textGrey,
+                      unselectedLabelColor: isDark
+                          ? colorScheme.onSurfaceVariant
+                          : AppColors.textGrey,
                       labelStyle: AppTextStyles.w600_14,
                       unselectedLabelStyle: AppTextStyles.w500_14,
                       indicatorColor: AppColors.primaryColor,
@@ -316,12 +322,17 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
         border: Border(
           bottom: BorderSide(
-            color: Color(0xFFF3F4F6),
+            color: isDark
+                ? colorScheme.outlineVariant.withValues(alpha: 0.2)
+                : const Color(0xFFF3F4F6),
             width: 1,
           ),
         ),

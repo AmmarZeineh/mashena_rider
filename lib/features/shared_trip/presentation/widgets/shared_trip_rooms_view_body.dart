@@ -94,6 +94,7 @@ class SharedTripRoomsViewBody extends StatelessWidget {
   }
 
   Widget _buildEmptyState(BuildContext context, SharedTripRoomsState state) {
+    final s = S.of(context);
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -137,7 +138,7 @@ class SharedTripRoomsViewBody extends StatelessWidget {
                 );
               },
               icon: const Icon(Icons.groups_3_rounded),
-              label: const Text('Try Passenger Pool Instead'),
+              label: Text(s.sharedTripTryPoolInstead),
               style: FilledButton.styleFrom(
                 backgroundColor: colorScheme.primary,
                 padding: const EdgeInsets.symmetric(

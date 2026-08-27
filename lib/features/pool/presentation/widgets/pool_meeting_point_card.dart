@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 
@@ -15,23 +16,26 @@ class PoolMeetingPointCard extends StatelessWidget {
     this.walkingDurationSeconds,
   });
 
-  String _formatDistance(double? meters) {
+  String _formatDistance(BuildContext context, double? meters) {
     if (meters == null) return '--';
     if (meters < 1000) {
       return '${meters.round()} m';
     }
-    return '${(meters / 1000).toStringAsFixed(1)} km';
+    final s = S.of(context);
+    return s.rideDistanceKm((meters / 1000).toStringAsFixed(1));
   }
 
-  String _formatDuration(double? seconds) {
+  String _formatDuration(BuildContext context, double? seconds) {
     if (seconds == null) return '--';
+    final s = S.of(context);
     final minutes = (seconds / 60).round();
-    if (minutes < 1) return '< 1 min walk';
-    return '$minutes min walk';
+    if (minutes < 1) return s.poolWalkUnderOneMin;
+    return s.poolWalkMinutes(minutes);
   }
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark
         ? Theme.of(context).colorScheme.surfaceContainerHigh
@@ -75,14 +79,14 @@ class PoolMeetingPointCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Shared Meeting Point',
+                      s.poolMeetingPoint,
                       style: AppTextStyles.w700_14.copyWith(
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     SizedBox(height: 2.h),
                     Text(
-                      'Walk here to meet the driver & riders',
+                      s.poolMeetingPointDesc,
                       style: AppTextStyles.w400_12.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -110,7 +114,7 @@ class PoolMeetingPointCard extends StatelessWidget {
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        _formatDistance(walkingDistanceMeters),
+                        _formatDistance(context, walkingDistanceMeters),
                         style: AppTextStyles.w600_12.copyWith(
                           color: AppColors.shieldGreen,
                         ),
@@ -142,7 +146,7 @@ class PoolMeetingPointCard extends StatelessWidget {
                   child: Text(
                     address != null && address!.isNotEmpty
                         ? address!
-                        : 'Optimal central meeting point',
+                        : s.poolOptimalMeetingPoint,
                     style: AppTextStyles.w500_14.copyWith(
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
@@ -153,7 +157,7 @@ class PoolMeetingPointCard extends StatelessWidget {
                 if (walkingDurationSeconds != null) ...[
                   SizedBox(width: 8.w),
                   Text(
-                    _formatDuration(walkingDurationSeconds),
+                    _formatDuration(context, walkingDurationSeconds),
                     style: AppTextStyles.w600_12.copyWith(
                       color: AppColors.shieldGreen,
                     ),

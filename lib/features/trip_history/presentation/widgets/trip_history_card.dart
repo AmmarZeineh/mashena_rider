@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
 import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
@@ -10,33 +11,14 @@ class TripHistoryCard extends StatelessWidget {
 
   const TripHistoryCard({super.key, required this.item});
 
-  String _formatDateTime(String? rawIsoDate) {
+  String _formatDateTime(BuildContext context, String? rawIsoDate) {
     if (rawIsoDate == null || rawIsoDate.isEmpty) return '';
     try {
       final dt = DateTime.parse(rawIsoDate).toLocal();
-      final monthNames = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ];
-      final month = monthNames[dt.month - 1];
-      final day = dt.day.toString().padLeft(2, '0');
-      final hour = (dt.hour % 12 == 0 ? 12 : dt.hour % 12).toString().padLeft(
-        2,
-        '0',
-      );
-      final minute = dt.minute.toString().padLeft(2, '0');
-      final period = dt.hour >= 12 ? 'PM' : 'AM';
-      return '$day $month ${dt.year} • $hour:$minute $period';
+      final locale = Localizations.localeOf(context).toString();
+      final dateStr = DateFormat.yMMMd(locale).format(dt);
+      final timeStr = DateFormat.jm(locale).format(dt);
+      return '$dateStr • $timeStr';
     } catch (_) {
       return rawIsoDate;
     }
@@ -47,6 +29,7 @@ class TripHistoryCard extends StatelessWidget {
     final s = S.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     final isCompleted = item.isCompleted;
     final statusText = isCompleted
@@ -57,26 +40,44 @@ class TripHistoryCard extends StatelessWidget {
         ? AppColors.shieldGreen
         : (item.isCancelled ? AppColors.errorColor : AppColors.primaryColor);
 
-    final formattedDate = _formatDateTime(item.createdAt);
+    final formattedDate = _formatDateTime(context, item.createdAt);
     final driver = item.driver;
     final vehicle = item.vehicle;
+
+    final cardBg = isDark
+        ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.7)
+        : Colors.white;
+
+    final borderColor = isDark
+        ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+        : AppColors.borderColor.withValues(alpha: 0.5);
+
+    final secondaryTextColor =
+        isDark ? colorScheme.onSurfaceVariant : AppColors.textGrey;
+
+    final footerBg = isDark
+        ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.35)
+        : const Color(0xFFF8F9FD);
+
+    final dividerColor = isDark
+        ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+        : AppColors.borderColor.withValues(alpha: 0.4);
 
     return Container(
       margin: EdgeInsets.only(bottom: 14.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBg,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.2)
+                : Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: const Offset(0, 3),
           ),
         ],
-        border: Border.all(
-          color: AppColors.borderColor.withValues(alpha: 0.4),
-          width: 1,
-        ),
+        border: Border.all(color: borderColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,14 +94,14 @@ class TripHistoryCard extends StatelessWidget {
                       Icon(
                         Icons.calendar_today_outlined,
                         size: 14.r,
-                        color: AppColors.textGrey,
+                        color: secondaryTextColor,
                       ),
                       SizedBox(width: 6.w),
                       Expanded(
                         child: Text(
                           formattedDate,
                           style: AppTextStyles.w500_12.copyWith(
-                            color: AppColors.textGrey,
+                            color: secondaryTextColor,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -117,7 +118,7 @@ class TripHistoryCard extends StatelessWidget {
                     vertical: 4.h,
                   ),
                   decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.12),
+                    color: statusColor.withValues(alpha: isDark ? 0.18 : 0.12),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
@@ -129,7 +130,7 @@ class TripHistoryCard extends StatelessWidget {
             ),
           ),
 
-          const Divider(height: 1, color: AppColors.borderColor),
+          Divider(height: 1, color: dividerColor),
 
           // Route Timeline (Pickup to Destination)
           Padding(
@@ -152,7 +153,9 @@ class TripHistoryCard extends StatelessWidget {
                     Container(
                       width: 2.w,
                       height: 32.h,
-                      color: AppColors.borderColor,
+                      color: isDark
+                          ? colorScheme.outlineVariant.withValues(alpha: 0.35)
+                          : AppColors.borderColor.withValues(alpha: 0.5),
                     ),
                     Icon(
                       Icons.location_on,
@@ -206,7 +209,7 @@ class TripHistoryCard extends StatelessWidget {
                     Text(
                       s.appCurrency,
                       style: AppTextStyles.w500_12.copyWith(
-                        color: AppColors.textGrey,
+                        color: secondaryTextColor,
                       ),
                     ),
                   ],
@@ -220,9 +223,12 @@ class TripHistoryCard extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
               decoration: BoxDecoration(
-                color: AppColors.lightScaffold,
+                color: footerBg,
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(16.r),
+                ),
+                border: Border(
+                  top: BorderSide(color: dividerColor),
                 ),
               ),
               child: Row(
@@ -236,7 +242,7 @@ class TripHistoryCard extends StatelessWidget {
                           CircleAvatar(
                             radius: 14.r,
                             backgroundColor: AppColors.primaryColor.withValues(
-                              alpha: 0.1,
+                              alpha: isDark ? 0.2 : 0.1,
                             ),
                             child: Icon(
                               Icons.person,
@@ -257,15 +263,24 @@ class TripHistoryCard extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                if (vehicle != null && vehicle.model != null)
+                                if (vehicle != null &&
+                                    (vehicle.model != null ||
+                                        vehicle.color != null)) ...[
                                   Text(
-                                    '${vehicle.model} • ${vehicle.color ?? ''}',
+                                    [vehicle.model, vehicle.color]
+                                        .where(
+                                          (str) =>
+                                              str != null &&
+                                              str.trim().isNotEmpty,
+                                        )
+                                        .join(' • '),
                                     style: AppTextStyles.w400_12.copyWith(
-                                      color: AppColors.textGrey,
+                                      color: secondaryTextColor,
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
+                                ],
                               ],
                             ),
                           ),
@@ -280,13 +295,13 @@ class TripHistoryCard extends StatelessWidget {
                         Icon(
                           Icons.route_outlined,
                           size: 14.r,
-                          color: AppColors.textGrey,
+                          color: secondaryTextColor,
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          '${item.distanceKm} km',
+                          '${item.distanceKm} ${s.unitKm}',
                           style: AppTextStyles.w500_12.copyWith(
-                            color: AppColors.textGrey,
+                            color: secondaryTextColor,
                           ),
                         ),
                       ],
@@ -296,13 +311,13 @@ class TripHistoryCard extends StatelessWidget {
                         Icon(
                           Icons.access_time_rounded,
                           size: 14.r,
-                          color: AppColors.textGrey,
+                          color: secondaryTextColor,
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          '${(item.durationSec! / 60).round()} min',
+                          '${(item.durationSec! / 60).round()} ${s.unitMin}',
                           style: AppTextStyles.w500_12.copyWith(
-                            color: AppColors.textGrey,
+                            color: secondaryTextColor,
                           ),
                         ),
                       ],
@@ -317,3 +332,4 @@ class TripHistoryCard extends StatelessWidget {
     );
   }
 }
+

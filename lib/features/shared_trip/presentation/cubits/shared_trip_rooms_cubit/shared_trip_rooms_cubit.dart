@@ -1,11 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/features/home/domain/entities/place_entity.dart';
 import '../../../domain/entities/search_shared_ride_params.dart';
 import '../../../domain/usecases/search_shared_rides_usecase.dart';
 import '../../models/shared_trip_rooms_args.dart';
 import 'shared_trip_rooms_state.dart';
 
-class SharedTripRoomsCubit extends Cubit<SharedTripRoomsState> {
+class SharedTripRoomsCubit extends BaseCubit<SharedTripRoomsState> {
   final SearchSharedRidesUsecase _searchSharedRidesUsecase;
 
   SharedTripRoomsCubit({

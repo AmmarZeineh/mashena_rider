@@ -406,6 +406,54 @@ class SAr extends S {
   String get settingsAboutApp => 'حول التطبيق';
 
   @override
+  String get drawerSettings => 'الإعدادات';
+
+  @override
+  String get settingsTheme => 'المظهر';
+
+  @override
+  String get settingsThemeSubtitle => 'اختر مظهر التطبيق المفضل لديك';
+
+  @override
+  String get settingsThemeSystem => 'تلقائي حسب النظام';
+
+  @override
+  String get settingsThemeSystemDesc => 'مطابقة إعدادات مظهر جهازك';
+
+  @override
+  String get settingsThemeLight => 'الوضع الفاتح';
+
+  @override
+  String get settingsThemeLightDesc => 'مظهر مشرق وأنيق للرؤية بوضوح';
+
+  @override
+  String get settingsThemeDark => 'الوضع الداكن';
+
+  @override
+  String get settingsThemeDarkDesc => 'مريح للعينين في الإضاءة المنخفضة';
+
+  @override
+  String get settingsLanguage => 'اللغة';
+
+  @override
+  String get settingsLanguageSubtitle => 'حدد لغة التطبيق المفضلة';
+
+  @override
+  String get settingsLanguageEnglish => 'English (الإنجليزية)';
+
+  @override
+  String get settingsLanguageArabic => 'العربية';
+
+  @override
+  String get settingsAppInfo => 'معلومات التطبيق';
+
+  @override
+  String get settingsAppVersion => 'الإصدار 1.0.0';
+
+  @override
+  String get settingsAppDescription => 'مشينا راكب - رحلات آمنة وموثوقة ومريحة';
+
+  @override
   String get errorsNetwork => 'تحقق من اتصال الإنترنت';
 
   @override
@@ -768,6 +816,15 @@ class SAr extends S {
 
   @override
   String get enterValidCouponCode => 'يرجى إدخال كود الكوبون';
+
+  @override
+  String get couponOriginalFare => 'الأجرة الأصلية';
+
+  @override
+  String get couponSaved => 'التوفير';
+
+  @override
+  String get couponFinalFare => 'الأجرة النهائية';
 
   @override
   String get appCurrency => 'ل.س';
@@ -1249,4 +1306,298 @@ class SAr extends S {
 
   @override
   String get moderationRealtimeLiftedTitle => 'تم رفع القيد بنجاح';
+
+  @override
+  String get drawerActiveTrips => 'الرحلات النشطة';
+
+  @override
+  String get activeTripsTitle => 'الرحلات النشطة';
+
+  @override
+  String get activeTripsSubtitle => 'الرحلات الجارية وقيد التنفيذ';
+
+  @override
+  String get activeTripsEmptyTitle => 'لا توجد رحلات نشطة';
+
+  @override
+  String get activeTripsEmptySubtitle =>
+      'ليس لديك أي رحلات نشطة أو قيد التنفيذ في الوقت الحالي.';
+
+  @override
+  String get activeTripsLiveTracking => 'تتبع مباشر';
+
+  @override
+  String get activeTripsRegularTrip => 'رحلة عادية';
+
+  @override
+  String get activeTripsSharedRide => 'رحلة مشتركة';
+
+  @override
+  String get activeTripsCompanionBooking => 'حجز لمرافق';
+
+  @override
+  String get activeTripsSelf => 'رحلة شخصية';
+
+  @override
+  String activeTripsTripId(int id) {
+    return 'رحلة #$id';
+  }
+
+  @override
+  String activeTripsRideRequestId(int id) {
+    return 'طلب #$id';
+  }
+
+  @override
+  String activeTripsSharedRideId(int id) {
+    return 'غرفة #$id';
+  }
+
+  @override
+  String activeTripsPassengerId(int id) {
+    return 'راكب #$id';
+  }
+
+  @override
+  String activeTripsActiveSeats(int count) {
+    return '$count مقاعد نشطة';
+  }
+
+  @override
+  String get activeTripsAccountHolderOnBoard => 'صاحب الحساب على متن الرحلة';
+
+  @override
+  String get activeTripsAccountHolderNotOnBoard => 'المرافق على متن الرحلة';
+
+  @override
+  String get activeTripsStatusStarted => 'بدأت الرحلة';
+
+  @override
+  String get activeTripsStatusInProgress => 'قيد التنفيذ';
+
+  @override
+  String get activeTripsStatusDriverArrived => 'وصل السائق';
+
+  @override
+  String get activeTripsStatusOpen => 'غرفة مفتوحة';
+
+  @override
+  String get activeTripsStatusReady => 'جاهزة للانطلاق';
+
+  @override
+  String get activeTripsStatusAccepted => 'تم القبول';
+
+  @override
+  String get activeTripsStatusPending => 'جاري البحث عن سائق';
+
+  @override
+  String get commonNoResultsFound => 'لا توجد نتائج';
+
+  @override
+  String get unitKm => 'كم';
+
+  @override
+  String get unitMin => 'دقيقة';
+
+  @override
+  String get unitStops => 'توقفات';
+
+  @override
+  String get rideChooseYourRide => 'اختر نوع الرحلة';
+
+  @override
+  String get rideCarType => 'نوع السيارة';
+
+  @override
+  String get rideNoCarTypesAvailable =>
+      'لا توجد أنواع سيارات متاحة لهذه الرحلة حالياً.';
+
+  @override
+  String get sharedTripTryPoolInstead => 'جرّب تجمع الركاب بدلاً من ذلك';
+
+  @override
+  String get sharedTripRemovedTitle => 'تمت الإزالة من الرحلة';
+
+  @override
+  String get sharedTripRemovedBody =>
+      'تمت إزالتك من هذه الرحلة المشتركة من قبل السائق.';
+
+  @override
+  String sharedTripRemovedBodyReason(String reason) {
+    return 'تمت إزالتك من هذه الرحلة المشتركة من قبل السائق.\n\nالسبب: $reason';
+  }
+
+  @override
+  String get sharedTripCanceledNotice => 'تم إلغاء الرحلة.';
+
+  @override
+  String sharedTripCanceledReason(String reason) {
+    return 'تم إلغاء الرحلة: $reason';
+  }
+
+  @override
+  String get sharedTripStartedNotice =>
+      'بدأت الرحلة! جاري تتبع المسار المباشر.';
+
+  @override
+  String get sharedTripCompletedNotice =>
+      'اكتملت الرحلة! شكراً لاستخدامك مشوار.';
+
+  @override
+  String get poolCreateNewLobby => 'إنشاء غرفة تجمع جديدة';
+
+  @override
+  String get poolCreateRoomTitle => 'إنشاء غرفة تجمع';
+
+  @override
+  String get poolYourJourney => 'مسار رحلتك في التجمع';
+
+  @override
+  String poolLobbyTitle(int id) {
+    return 'لوبي التجمع #$id';
+  }
+
+  @override
+  String poolDepartureTime(String time) {
+    return 'الانطلاق: $time';
+  }
+
+  @override
+  String get poolWalkUnderOneMin => 'أقل من دقيقة مشياً';
+
+  @override
+  String poolWalkMinutes(int minutes) {
+    return '$minutes دقيقة مشياً';
+  }
+
+  @override
+  String get poolOptimalMeetingPoint => 'نقطة تجمع مركزية مناسبة';
+
+  @override
+  String poolOccupiedSeats(int current, int total) {
+    return '$current / $total مقاعد';
+  }
+
+  @override
+  String poolPassengerNumber(int id) {
+    return 'راكب #$id';
+  }
+
+  @override
+  String poolPassengerYou(String name) {
+    return '$name (أنت)';
+  }
+
+  @override
+  String get poolHost => 'المضيف';
+
+  @override
+  String poolSeatsRequested(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count مقعداً مطلوباً',
+      few: '$count مقاعد مطلوبة',
+      two: 'مقعدان مطلوبان',
+      one: 'مقعد واحد مطلوب',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get poolWaitingForPassenger => 'بانتظار انضمام راكب...';
+
+  @override
+  String get poolStatusSwitchingTracking => 'الانتقال إلى تتبع الرحلة المباشر';
+
+  @override
+  String poolStatusRoomFullDriversNotified(int current, int max) {
+    return 'اكتملت الغرفة ($current/$max) • تم إشعار السائقين';
+  }
+
+  @override
+  String poolStatusPassengersJoined(int current, int max) {
+    return 'انضم $current/$max ركاب';
+  }
+
+  @override
+  String get poolDepartingSoon => 'الانطلاق قريباً';
+
+  @override
+  String poolDepartsAt(String time) {
+    return 'الانطلاق في $time';
+  }
+
+  @override
+  String poolSeatsOpen(int count, int max) {
+    return '$count/$max مقاعد متاحة';
+  }
+
+  @override
+  String poolHostedBy(String name) {
+    return 'المضيف: $name';
+  }
+
+  @override
+  String get poolJoinPool => 'انضمام للتجمع';
+
+  @override
+  String get drawerWallet => 'المحفظة';
+
+  @override
+  String get walletBalance => 'الرصيد';
+
+  @override
+  String get walletStatusActive => 'نشط';
+
+  @override
+  String get walletStatusInactive => 'غير نشط';
+
+  @override
+  String get walletDetails => 'تفاصيل المحفظة';
+
+  @override
+  String get walletId => 'معرّف المحفظة';
+
+  @override
+  String get walletCreatedAt => 'تاريخ الإنشاء';
+
+  @override
+  String get walletUpdatedAt => 'آخر تحديث';
+
+  @override
+  String get walletErrorLoading => 'فشل في تحميل بيانات المحفظة';
+
+  @override
+  String get walletRetry => 'إعادة المحاولة';
+
+  @override
+  String get walletTransactions => 'المعاملات';
+
+  @override
+  String get walletTransactionsHistory => 'سجل المعاملات';
+
+  @override
+  String get walletDeposit => 'إيداع';
+
+  @override
+  String get walletWithdraw => 'سحب';
+
+  @override
+  String get walletTransfer => 'تحويل';
+
+  @override
+  String get walletTripPayment => 'دفع رحلة';
+
+  @override
+  String get walletNoTransactions => 'لا توجد معاملات بعد';
+
+  @override
+  String get walletTapToViewTransactions => 'اضغط لعرض المعاملات';
+
+  @override
+  String get walletBalanceAfter => 'الرصيد بعد';
+
+  @override
+  String get walletBalanceBefore => 'الرصيد قبل';
 }

@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/constants/app_pagination.dart';
 import 'package:mashena_rider/features/moderation/domain/entities/penalty_status.dart';
 import 'package:mashena_rider/features/moderation/domain/usecases/get_penalties_history_usecase.dart';
 import 'package:mashena_rider/features/moderation/presentation/cubits/penalties_history_cubit/penalties_history_state.dart';
 
-class PenaltiesHistoryCubit extends Cubit<PenaltiesHistoryState> {
+class PenaltiesHistoryCubit extends BaseCubit<PenaltiesHistoryState> {
   final GetPenaltiesHistoryUsecase _getPenaltiesHistoryUsecase;
 
   PenaltiesHistoryCubit(this._getPenaltiesHistoryUsecase)

@@ -1,8 +1,8 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/features/coupons/domain/repositories/coupons_repository.dart';
 import 'package:mashena_rider/features/coupons/presentation/cubits/coupons_state.dart';
 
-class CouponsCubit extends Cubit<CouponsState> {
+class CouponsCubit extends BaseCubit<CouponsState> {
   final CouponsRepository repository;
 
   CouponsCubit(this.repository) : super(const CouponsState());

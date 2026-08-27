@@ -28,6 +28,8 @@ import 'package:mashena_rider/features/moderation/presentation/views/moderation_
 import 'package:mashena_rider/features/profile/presentation/views/profile_view.dart';
 import 'package:mashena_rider/features/trip_history/presentation/views/trip_history_view.dart';
 import 'package:mashena_rider/features/coupons/presentation/views/coupons_view.dart';
+import 'package:mashena_rider/features/active_trips/presentation/views/active_trips_view.dart';
+import 'package:mashena_rider/features/settings/presentation/views/settings_view.dart';
 
 final class AppRouter {
   const AppRouter._();
@@ -212,6 +214,18 @@ final class AppRouter {
         path: AppRoutes.couponsPath,
         name: AppRoutes.coupons,
         builder: (context, state) => const CouponsView(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.activeTripsPath,
+        name: AppRoutes.activeTrips,
+        builder: (context, state) => const ActiveTripsView(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutes.settingsPath,
+        name: AppRoutes.settings,
+        builder: (context, state) => const SettingsView(),
       ),
     ],
     errorBuilder: (context, state) => _ErrorPage(error: state.error),

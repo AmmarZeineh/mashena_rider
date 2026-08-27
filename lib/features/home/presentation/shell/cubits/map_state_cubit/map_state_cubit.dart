@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_marker.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_polyline.dart';
@@ -13,7 +13,7 @@ part 'map_state_state.dart';
 /// Any cubit that needs to draw on the map writes to this cubit.
 /// Widgets read from this cubit only — they never receive map data
 /// directly from other cubits.
-class MapStateCubit extends Cubit<MapStateState> {
+class MapStateCubit extends BaseCubit<MapStateState> {
   MapStateCubit() : super(const MapStateState());
 
   void setPolylines(List<MapPolyline> polylines) =>

@@ -21,8 +21,14 @@ class ModerationMetricCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
+
     return Material(
-      color: Colors.white,
+      color: isDark
+          ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.7)
+          : Colors.white,
       borderRadius: BorderRadius.circular(14.r),
       child: InkWell(
         onTap: onTap,
@@ -31,10 +37,16 @@ class ModerationMetricCard extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14.r),
-            border: Border.all(color: AppColors.borderColor.withValues(alpha: 0.5)),
+            border: Border.all(
+              color: isDark
+                  ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+                  : AppColors.borderColor.withValues(alpha: 0.5),
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.02),
+                color: isDark
+                    ? Colors.black.withValues(alpha: 0.2)
+                    : Colors.black.withValues(alpha: 0.02),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
@@ -45,7 +57,7 @@ class ModerationMetricCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(8.r),
                 decoration: BoxDecoration(
-                  color: accentColor.withValues(alpha: 0.12),
+                  color: accentColor.withValues(alpha: isDark ? 0.2 : 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: accentColor, size: 20.r),
@@ -59,14 +71,16 @@ class ModerationMetricCard extends StatelessWidget {
                     Text(
                       count.toString(),
                       style: AppTextStyles.w700_18.copyWith(
-                        color: count > 0 ? accentColor : Colors.black87,
+                        color: count > 0 ? accentColor : colorScheme.onSurface,
                       ),
                     ),
                     SizedBox(height: 2.h),
                     Text(
                       title,
                       style: AppTextStyles.w500_12.copyWith(
-                        color: AppColors.textGrey,
+                        color: isDark
+                            ? colorScheme.onSurfaceVariant
+                            : AppColors.textGrey,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

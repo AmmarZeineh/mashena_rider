@@ -5,11 +5,12 @@ class HomeMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
+    return PositionedDirectional(
       top: 20,
-      left: 24,
+      start: 24,
       child: SafeArea(
         child: InkWell(
+          borderRadius: BorderRadius.circular(12),
           onTap: () {
             Scaffold.of(context).openDrawer();
           },

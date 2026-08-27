@@ -16,20 +16,35 @@ class AppealCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm');
+
+    final cardBg = isDark
+        ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.7)
+        : Colors.white;
+    final borderColor = isDark
+        ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+        : AppColors.borderColor.withValues(alpha: 0.6);
+    final timeColor = isDark
+        ? colorScheme.onSurfaceVariant
+        : AppColors.textGrey;
 
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBg,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: AppColors.borderColor.withValues(alpha: 0.6),
+          color: borderColor,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.2)
+                : Colors.black.withValues(alpha: 0.02),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -51,7 +66,7 @@ class AppealCard extends StatelessWidget {
                     Text(
                       s.moderationAppealRef(appeal.id),
                       style: AppTextStyles.w700_16.copyWith(
-                        color: Colors.black87,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     SizedBox(width: 8.w),
@@ -61,13 +76,15 @@ class AppealCard extends StatelessWidget {
                         vertical: 2.h,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF3F4F6),
+                        color: isDark
+                            ? colorScheme.surfaceContainerLow
+                            : const Color(0xFFF3F4F6),
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                       child: Text(
                         s.moderationPenaltyRef(appeal.penaltyId),
                         style: AppTextStyles.w500_12.copyWith(
-                          color: AppColors.textGrey,
+                          color: timeColor,
                           fontSize: 11.sp,
                         ),
                       ),
@@ -80,7 +97,7 @@ class AppealCard extends StatelessWidget {
                 Text(
                   appeal.reason,
                   style: AppTextStyles.w400_14.copyWith(
-                    color: Colors.black87,
+                    color: colorScheme.onSurface,
                     height: 1.35,
                   ),
                   maxLines: 2,
@@ -93,9 +110,13 @@ class AppealCard extends StatelessWidget {
                     width: double.infinity,
                     padding: EdgeInsets.all(10.r),
                     decoration: BoxDecoration(
-                      color: appeal.status.isApproved
-                          ? const Color(0xFFF0FDF4)
-                          : const Color(0xFFFEF2F2),
+                      color: isDark
+                          ? (appeal.status.isApproved
+                              ? const Color(0xFF14532D).withValues(alpha: 0.3)
+                              : const Color(0xFF7F1D1D).withValues(alpha: 0.3))
+                          : (appeal.status.isApproved
+                              ? const Color(0xFFF0FDF4)
+                              : const Color(0xFFFEF2F2)),
                       borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Row(
@@ -107,8 +128,12 @@ class AppealCard extends StatelessWidget {
                               : Icons.info_outline,
                           size: 16.r,
                           color: appeal.status.isApproved
-                              ? const Color(0xFF16A34A)
-                              : AppColors.errorColor,
+                              ? (isDark
+                                  ? const Color(0xFF4ADE80)
+                                  : const Color(0xFF16A34A))
+                              : (isDark
+                                  ? const Color(0xFFF87171)
+                                  : AppColors.errorColor),
                         ),
                         SizedBox(width: 6.w),
                         Expanded(
@@ -116,8 +141,12 @@ class AppealCard extends StatelessWidget {
                             appeal.adminDecision!,
                             style: AppTextStyles.w500_12.copyWith(
                               color: appeal.status.isApproved
-                                  ? const Color(0xFF15803D)
-                                  : const Color(0xFFB91C1C),
+                                  ? (isDark
+                                      ? const Color(0xFF4ADE80)
+                                      : const Color(0xFF15803D))
+                                  : (isDark
+                                      ? const Color(0xFFF87171)
+                                      : const Color(0xFFB91C1C)),
                             ),
                           ),
                         ),
@@ -131,7 +160,7 @@ class AppealCard extends StatelessWidget {
                     Icon(
                       Icons.schedule_rounded,
                       size: 13.r,
-                      color: AppColors.textGrey,
+                      color: timeColor,
                     ),
                     SizedBox(width: 4.w),
                     Text(
@@ -141,13 +170,13 @@ class AppealCard extends StatelessWidget {
                             )
                           : '',
                       style: AppTextStyles.w500_12.copyWith(
-                        color: AppColors.textGrey,
+                        color: timeColor,
                       ),
                     ),
                     const Spacer(),
                     Icon(
                       Icons.chevron_right_rounded,
-                      color: AppColors.textGrey,
+                      color: timeColor,
                       size: 18.r,
                     ),
                   ],

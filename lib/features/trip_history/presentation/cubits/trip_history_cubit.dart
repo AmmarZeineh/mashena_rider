@@ -1,10 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/constants/app_pagination.dart';
 import 'package:mashena_rider/features/trip_history/domain/entities/rider_trip_status.dart';
 import 'package:mashena_rider/features/trip_history/domain/repositories/trip_history_repository.dart';
 import 'package:mashena_rider/features/trip_history/presentation/cubits/trip_history_state.dart';
 
-class TripHistoryCubit extends Cubit<TripHistoryState> {
+class TripHistoryCubit extends BaseCubit<TripHistoryState> {
   final TripHistoryRepository _repository;
 
   TripHistoryCubit(this._repository) : super(const TripHistoryState());

@@ -24,6 +24,9 @@ class OverviewTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
 
     final hasContent =
         overview.activeRestrictions.isNotEmpty ||
@@ -39,19 +42,23 @@ class OverviewTabView extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(20.r),
               decoration: BoxDecoration(
-                color: AppColors.shieldGreen.withValues(alpha: 0.1),
+                color: AppColors.shieldGreen.withValues(
+                  alpha: isDark ? 0.2 : 0.1,
+                ),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.check_circle_outline_rounded,
-                size: 56.r,
+                size: 56,
                 color: AppColors.shieldGreen,
               ),
             ),
             SizedBox(height: 16.h),
             Text(
               s.moderationNoRestrictions,
-              style: AppTextStyles.w600_16.copyWith(color: Colors.black87),
+              style: AppTextStyles.w600_16.copyWith(
+                color: colorScheme.onSurface,
+              ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -64,7 +71,10 @@ class OverviewTabView extends StatelessWidget {
       children: [
         // Active Restrictions Section
         if (overview.activeRestrictions.isNotEmpty) ...[
-          Text(s.moderationActiveRestrictions, style: AppTextStyles.w700_16),
+          Text(
+            s.moderationActiveRestrictions,
+            style: AppTextStyles.w700_16.copyWith(color: colorScheme.onSurface),
+          ),
           SizedBox(height: 10.h),
           ...overview.activeRestrictions.map(
             (r) => ActiveRestrictionCard(restriction: r),
@@ -74,7 +84,10 @@ class OverviewTabView extends StatelessWidget {
 
         // Active Penalties Section
         if (overview.activePenalties.isNotEmpty) ...[
-          Text(s.moderationActivePenalties, style: AppTextStyles.w700_16),
+          Text(
+            s.moderationActivePenalties,
+            style: AppTextStyles.w700_16.copyWith(color: colorScheme.onSurface),
+          ),
           SizedBox(height: 10.h),
           ...overview.activePenalties.map(
             (p) => PenaltyCard(
@@ -92,7 +105,10 @@ class OverviewTabView extends StatelessWidget {
 
         // Recent Violations Section
         if (overview.recentViolations.isNotEmpty) ...[
-          Text(s.moderationRecentViolations, style: AppTextStyles.w700_16),
+          Text(
+            s.moderationRecentViolations,
+            style: AppTextStyles.w700_16.copyWith(color: colorScheme.onSurface),
+          ),
           SizedBox(height: 10.h),
           ...overview.recentViolations.map((v) => ViolationCard(violation: v)),
           SizedBox(height: 16.h),
@@ -100,7 +116,10 @@ class OverviewTabView extends StatelessWidget {
 
         // Active Appeals Section
         if (overview.activeAppeals.isNotEmpty) ...[
-          Text(s.moderationActiveAppeals, style: AppTextStyles.w700_16),
+          Text(
+            s.moderationActiveAppeals,
+            style: AppTextStyles.w700_16.copyWith(color: colorScheme.onSurface),
+          ),
           SizedBox(height: 10.h),
           ...overview.activeAppeals.map(
             (a) => AppealCard(

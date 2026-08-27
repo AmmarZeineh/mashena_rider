@@ -5,6 +5,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:mashena_rider/app/di/injector.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/utils/toast_helper.dart';
@@ -33,6 +34,7 @@ class _PoolDiscoveryViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final cubit = context.read<PoolDiscoveryCubit>();
     final args = cubit.args;
 
@@ -43,7 +45,7 @@ class _PoolDiscoveryViewBody extends StatelessWidget {
         }
 
         if (state.joinedRoom != null) {
-          context.showSuccessToast('Joined pool room successfully!');
+          context.showSuccessToast(s.poolJoinSuccess);
           context.pushReplacement(
             AppRoutes.poolLobbyPath,
             extra: state.joinedRoom!.id,
@@ -53,7 +55,7 @@ class _PoolDiscoveryViewBody extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Pool Transport'),
+            title: Text(s.poolTransport),
             centerTitle: true,
             elevation: 0,
           ),
@@ -69,7 +71,7 @@ class _PoolDiscoveryViewBody extends StatelessWidget {
                     _buildRouteHeader(context, args),
                     SizedBox(height: 16.h),
                     Text(
-                      'Matching Pools Nearby',
+                      s.poolMatchingNearby,
                       style: AppTextStyles.w700_16.copyWith(
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
@@ -159,6 +161,7 @@ class _PoolDiscoveryViewBody extends StatelessWidget {
     PoolDiscoveryState state,
     PoolDiscoveryCubit cubit,
   ) {
+    final s = S.of(context);
     if (state.isLoading) {
       return Center(
         child: Column(
@@ -167,7 +170,7 @@ class _PoolDiscoveryViewBody extends StatelessWidget {
             const CircularProgressIndicator(),
             SizedBox(height: 16.h),
             Text(
-              'Searching for matching pool lobbies...',
+              s.poolSearchingLobbies,
               style: AppTextStyles.w500_14.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -203,7 +206,7 @@ class _PoolDiscoveryViewBody extends StatelessWidget {
                   ),
                   SizedBox(height: 20.h),
                   Text(
-                    'No Pool Lobbies Found',
+                    s.poolNoLobbiesFound,
                     style: AppTextStyles.w700_18.copyWith(
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
@@ -211,7 +214,7 @@ class _PoolDiscoveryViewBody extends StatelessWidget {
                   ),
                   SizedBox(height: 12.h),
                   Text(
-                    'Be the first to create a pool lobby and other passengers traveling your direction will join you!',
+                    s.poolNoLobbiesFoundSubtitle,
                     textAlign: TextAlign.center,
                     style: AppTextStyles.w400_14.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -229,7 +232,7 @@ class _PoolDiscoveryViewBody extends StatelessWidget {
                         );
                       },
                       icon: const Icon(Icons.add_rounded),
-                      label: const Text('Create Pool Lobby'),
+                      label: Text(s.poolCreateLobby),
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
                         padding: EdgeInsets.symmetric(vertical: 14.h),
@@ -263,6 +266,7 @@ class _PoolDiscoveryViewBody extends StatelessWidget {
   }
 
   Widget _buildBottomBar(BuildContext context, PoolDiscoveryArgs args) {
+    final s = S.of(context);
     return Container(
       padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
       decoration: BoxDecoration(
@@ -282,7 +286,7 @@ class _PoolDiscoveryViewBody extends StatelessWidget {
             context.push(AppRoutes.poolCreatePath, extra: args);
           },
           icon: const Icon(Icons.add_circle_outline_rounded),
-          label: const Text('Create New Pool Lobby'),
+          label: Text(s.poolCreateNewLobby),
           style: FilledButton.styleFrom(
             backgroundColor: AppColors.primaryColor,
             padding: EdgeInsets.symmetric(vertical: 14.h),

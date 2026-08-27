@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:mashena_rider/core/services/logger_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/core/services/location_status.dart';
+import 'package:mashena_rider/core/services/logger_service.dart';
 import 'package:mashena_rider/core/services/nominatim_service.dart';
 import 'package:mashena_rider/features/home/domain/entities/place_entity.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_estimate.dart';
@@ -14,7 +14,7 @@ import 'package:mashena_rider/features/home/domain/usecases/create_ride_request_
 import 'package:mashena_rider/features/home/presentation/common/models/confirmed_ride_flow_result.dart';
 import 'pick_address_state.dart';
 
-class PickAddressCubit extends Cubit<PickAddressState> {
+class PickAddressCubit extends BaseCubit<PickAddressState> {
   PickAddressCubit(
     this._locationService,
     this._placesService,

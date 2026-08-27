@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import '../../domain/entities/pool_room_status.dart';
@@ -45,6 +46,7 @@ class _PoolStatusBadgeState extends State<PoolStatusBadge>
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final isReady = widget.status.isReadyForDriver;
     final isMatched = widget.status.isMatched;
 
@@ -55,16 +57,22 @@ class _PoolStatusBadgeState extends State<PoolStatusBadge>
         : AppColors.primaryColor;
 
     final title = isMatched
-        ? 'Driver Assigned!'
+        ? s.poolStatusMatched
         : isReady
-        ? 'Finding Driver...'
-        : 'Looking for Passengers';
+        ? s.poolStatusReady
+        : s.poolStatusLooking;
 
     final subtitle = isMatched
-        ? 'Switching to active ride tracking'
+        ? s.poolStatusSwitchingTracking
         : isReady
-        ? 'Room is full (${widget.currentPassengers}/${widget.maxPassengers}) • Drivers notified'
-        : '${widget.currentPassengers}/${widget.maxPassengers} passengers joined';
+        ? s.poolStatusRoomFullDriversNotified(
+            widget.currentPassengers,
+            widget.maxPassengers,
+          )
+        : s.poolStatusPassengersJoined(
+            widget.currentPassengers,
+            widget.maxPassengers,
+          );
 
     return AnimatedBuilder(
       animation: _pulseAnimation,

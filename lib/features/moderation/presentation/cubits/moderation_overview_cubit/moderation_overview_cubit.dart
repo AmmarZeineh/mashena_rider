@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/features/moderation/domain/repositories/moderation_repository.dart';
 import 'package:mashena_rider/features/moderation/domain/usecases/get_moderation_overview_usecase.dart';
 import 'package:mashena_rider/features/moderation/presentation/cubits/moderation_overview_cubit/moderation_overview_state.dart';
 
-class ModerationOverviewCubit extends Cubit<ModerationOverviewState> {
+class ModerationOverviewCubit extends BaseCubit<ModerationOverviewState> {
   final GetModerationOverviewUsecase _getOverviewUsecase;
   final ModerationRepository _repository;
 

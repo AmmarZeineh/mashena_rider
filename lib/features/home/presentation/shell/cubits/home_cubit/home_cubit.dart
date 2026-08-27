@@ -1,8 +1,8 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/features/home/domain/repositories/ride_repository.dart';
 import 'package:mashena_rider/features/home/presentation/shell/cubits/location_cubit/location_cubit.dart';
 
-class HomeCubit extends Cubit<void> {
+class HomeCubit extends BaseCubit<void> {
   HomeCubit(this._rideRepository, this._locationCubit) : super(null);
 
   final RideRepository _rideRepository;

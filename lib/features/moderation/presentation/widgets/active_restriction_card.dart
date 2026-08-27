@@ -35,16 +35,28 @@ class ActiveRestrictionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm');
+
+    final headerColor = isDark
+        ? const Color(0xFFFB923C)
+        : const Color(0xFFC2410C);
+    final timeColor = isDark
+        ? colorScheme.onSurfaceVariant
+        : AppColors.textGrey;
 
     return Container(
       margin: EdgeInsets.only(bottom: 10.h),
       padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF7ED),
+        color: isDark
+            ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.7)
+            : const Color(0xFFFFF7ED),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color: const Color(0xFFF97316).withValues(alpha: 0.3),
+          color: const Color(0xFFF97316).withValues(alpha: isDark ? 0.4 : 0.3),
           width: 1,
         ),
       ),
@@ -56,7 +68,9 @@ class ActiveRestrictionCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(6.r),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF97316).withValues(alpha: 0.15),
+                  color: const Color(0xFFF97316).withValues(
+                    alpha: isDark ? 0.2 : 0.15,
+                  ),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -70,7 +84,7 @@ class ActiveRestrictionCard extends StatelessWidget {
                 child: Text(
                   _getRestrictionLabel(context, restriction.restrictionType),
                   style: AppTextStyles.w700_14.copyWith(
-                    color: const Color(0xFFC2410C),
+                    color: headerColor,
                   ),
                 ),
               ),
@@ -80,7 +94,9 @@ class ActiveRestrictionCard extends StatelessWidget {
             SizedBox(height: 8.h),
             Text(
               restriction.reason,
-              style: AppTextStyles.w400_14.copyWith(color: Colors.black87),
+              style: AppTextStyles.w400_14.copyWith(
+                color: colorScheme.onSurface,
+              ),
             ),
           ],
           SizedBox(height: 8.h),
@@ -89,7 +105,7 @@ class ActiveRestrictionCard extends StatelessWidget {
               Icon(
                 Icons.schedule_rounded,
                 size: 14.r,
-                color: AppColors.textGrey,
+                color: timeColor,
               ),
               SizedBox(width: 4.w),
               Text(
@@ -98,7 +114,7 @@ class ActiveRestrictionCard extends StatelessWidget {
                         dateFormat.format(restriction.expiresAt!),
                       )
                     : s.moderationPermanentBanNotice,
-                style: AppTextStyles.w500_12.copyWith(color: AppColors.textGrey),
+                style: AppTextStyles.w500_12.copyWith(color: timeColor),
               ),
             ],
           ),

@@ -43,21 +43,36 @@ class ViolationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm');
+
+    final cardBg = isDark
+        ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.7)
+        : Colors.white;
+    final borderColor = isDark
+        ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+        : AppColors.borderColor.withValues(alpha: 0.6);
+    final timeColor = isDark
+        ? colorScheme.onSurfaceVariant
+        : AppColors.textGrey;
 
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardBg,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: AppColors.borderColor.withValues(alpha: 0.6),
+          color: borderColor,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.2)
+                : Colors.black.withValues(alpha: 0.02),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -71,7 +86,9 @@ class ViolationCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   _getViolationTypeLabel(context, violation.violationType),
-                  style: AppTextStyles.w700_16.copyWith(color: Colors.black87),
+                  style: AppTextStyles.w700_16.copyWith(
+                    color: colorScheme.onSurface,
+                  ),
                 ),
               ),
               SeverityBadge(severity: violation.severity),
@@ -82,7 +99,7 @@ class ViolationCard extends StatelessWidget {
             Text(
               violation.description,
               style: AppTextStyles.w400_14.copyWith(
-                color: Colors.black87,
+                color: colorScheme.onSurface,
                 height: 1.35,
               ),
             ),
@@ -93,7 +110,7 @@ class ViolationCard extends StatelessWidget {
               Icon(
                 Icons.calendar_today_rounded,
                 size: 13.r,
-                color: AppColors.textGrey,
+                color: timeColor,
               ),
               SizedBox(width: 4.w),
               Text(
@@ -102,7 +119,7 @@ class ViolationCard extends StatelessWidget {
                     : (violation.createdAt != null
                           ? dateFormat.format(violation.createdAt!)
                           : ''),
-                style: AppTextStyles.w500_12.copyWith(color: AppColors.textGrey),
+                style: AppTextStyles.w500_12.copyWith(color: timeColor),
               ),
               if (violation.sourceType != null &&
                   violation.sourceId != null) ...[
@@ -110,13 +127,15 @@ class ViolationCard extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF3F4F6),
+                    color: isDark
+                        ? colorScheme.surfaceContainerLow
+                        : const Color(0xFFF3F4F6),
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                   child: Text(
                     '${violation.sourceType} #${violation.sourceId}',
                     style: AppTextStyles.w500_12.copyWith(
-                      color: AppColors.textGrey,
+                      color: timeColor,
                       fontSize: 11.sp,
                     ),
                   ),

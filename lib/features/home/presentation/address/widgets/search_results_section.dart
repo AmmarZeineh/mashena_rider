@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/features/home/presentation/address/cubits/pick_address_cubit/pick_address_cubit.dart';
 import 'package:mashena_rider/features/home/presentation/address/cubits/pick_address_cubit/pick_address_state.dart';
 
@@ -19,7 +20,7 @@ class SearchResultsSection extends StatelessWidget {
     }
 
     if (state.searchResults.isEmpty) {
-      return const Center(child: Text("No results found"));
+      return Center(child: Text(S.of(context).commonNoResultsFound));
     }
 
     return Column(

@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/features/pool/domain/entities/join_pool_params.dart';
 import 'package:mashena_rider/features/pool/domain/entities/pool_suggestion_params.dart';
 import 'package:mashena_rider/features/pool/domain/usecases/get_pool_suggestions_usecase.dart';
@@ -6,7 +6,7 @@ import 'package:mashena_rider/features/pool/domain/usecases/join_pool_room_useca
 import 'package:mashena_rider/features/pool/presentation/models/pool_discovery_args.dart';
 import 'pool_discovery_state.dart';
 
-class PoolDiscoveryCubit extends Cubit<PoolDiscoveryState> {
+class PoolDiscoveryCubit extends BaseCubit<PoolDiscoveryState> {
   final GetPoolSuggestionsUsecase _getPoolSuggestionsUsecase;
   final JoinPoolRoomUsecase _joinPoolRoomUsecase;
   final PoolDiscoveryArgs args;

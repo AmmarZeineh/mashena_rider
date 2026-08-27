@@ -44,14 +44,27 @@ class _CouponInputCardState extends State<CouponInputCard> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark
+            ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.7)
+            : AppColors.white,
         borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: isDark
+              ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+              : AppColors.borderColor.withValues(alpha: 0.5),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.2)
+                : Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -63,7 +76,7 @@ class _CouponInputCardState extends State<CouponInputCard> {
           Text(
             S.of(context).applyCouponTitle,
             style: AppTextStyles.w600_16.copyWith(
-              color: AppColors.primaryColor,
+              color: isDark ? colorScheme.onSurface : AppColors.primaryColor,
             ),
           ),
           SizedBox(height: 12.h),

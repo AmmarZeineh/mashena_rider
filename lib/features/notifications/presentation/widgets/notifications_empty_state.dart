@@ -12,6 +12,9 @@ class NotificationsEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
 
     return RefreshIndicator(
       onRefresh: () async => onRefresh(),
@@ -29,12 +32,14 @@ class NotificationsEmptyState extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(24.r),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withValues(alpha: 0.08),
+                      color: AppColors.primaryColor.withValues(
+                        alpha: isDark ? 0.15 : 0.08,
+                      ),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.notifications_off_outlined,
-                      size: 64.r,
+                      size: 64,
                       color: AppColors.primaryColor,
                     ),
                   ),
@@ -42,7 +47,7 @@ class NotificationsEmptyState extends StatelessWidget {
                   Text(
                     s.noNotifications,
                     style: AppTextStyles.w700_18.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color: colorScheme.onSurface,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -50,7 +55,9 @@ class NotificationsEmptyState extends StatelessWidget {
                   Text(
                     s.notificationsEmptySubtitle,
                     style: AppTextStyles.w400_14.copyWith(
-                      color: AppColors.textGrey,
+                      color: isDark
+                          ? colorScheme.onSurfaceVariant
+                          : AppColors.textGrey,
                     ),
                     textAlign: TextAlign.center,
                   ),

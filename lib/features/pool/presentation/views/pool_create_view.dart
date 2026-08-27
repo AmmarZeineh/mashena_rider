@@ -6,6 +6,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:mashena_rider/app/di/injector.dart';
 import 'package:mashena_rider/app/router/app_routes.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import 'package:mashena_rider/core/utils/toast_helper.dart';
@@ -32,6 +33,7 @@ class _PoolCreateViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark
         ? Theme.of(context).colorScheme.surfaceContainerHigh
@@ -45,7 +47,7 @@ class _PoolCreateViewBody extends StatelessWidget {
         }
 
         if (state.createdRoom != null) {
-          context.showSuccessToast('Pool room created! Waiting in lobby.');
+          context.showSuccessToast(s.poolCreateSuccess);
           context.pushReplacement(
             AppRoutes.poolLobbyPath,
             extra: state.createdRoom!.id,
@@ -58,7 +60,7 @@ class _PoolCreateViewBody extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Create Pool Room'),
+            title: Text(s.poolCreateRoomTitle),
             centerTitle: true,
             elevation: 0,
           ),
@@ -98,7 +100,7 @@ class _PoolCreateViewBody extends StatelessWidget {
                         ? null
                         : () => cubit.submitCreatePool(),
                     icon: const Icon(Icons.rocket_launch_rounded),
-                    label: const Text('Publish Pool Lobby'),
+                    label: Text(s.poolPublishLobby),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
                       padding: EdgeInsets.symmetric(vertical: 16.h),
@@ -122,6 +124,7 @@ class _PoolCreateViewBody extends StatelessWidget {
     Color cardBg,
     Color borderColor,
   ) {
+    final s = S.of(context);
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
@@ -133,7 +136,7 @@ class _PoolCreateViewBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Your Pool Journey',
+            s.poolYourJourney,
             style: AppTextStyles.w700_14.copyWith(
               color: Theme.of(context).colorScheme.onSurface,
             ),
@@ -195,6 +198,7 @@ class _PoolCreateViewBody extends StatelessWidget {
     Color cardBg,
     Color borderColor,
   ) {
+    final s = S.of(context);
     final format = DateFormat('EEE, MMM d • h:mm a');
     final formattedTime = format.format(state.departureTime);
 
@@ -217,7 +221,7 @@ class _PoolCreateViewBody extends StatelessWidget {
               ),
               SizedBox(width: 8.w),
               Text(
-                'Target Departure Time',
+                s.poolTargetDepartureTime,
                 style: AppTextStyles.w700_14.copyWith(
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
@@ -331,6 +335,7 @@ class _PoolCreateViewBody extends StatelessWidget {
     Color cardBg,
     Color borderColor,
   ) {
+    final s = S.of(context);
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
@@ -345,14 +350,14 @@ class _PoolCreateViewBody extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Seats You Need',
+                  s.poolSeatsYouNeed,
                   style: AppTextStyles.w700_14.copyWith(
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 SizedBox(height: 2.h),
                 Text(
-                  'Number of seats for you & companions',
+                  s.poolSeatsYouNeedDesc,
                   style: AppTextStyles.w400_12.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -369,16 +374,18 @@ class _PoolCreateViewBody extends StatelessWidget {
                     ? () => cubit.setSeatsNeeded(state.seatsNeeded - 1)
                     : null,
                 icon: const Icon(Icons.remove),
-                iconSize: 18.r,
-                constraints: BoxConstraints.tightFor(width: 36.r, height: 36.r),
-                padding: EdgeInsets.zero,
+                style: IconButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                padding: EdgeInsets.symmetric(horizontal: 14.w),
                 child: Text(
-                  '${state.seatsNeeded}',
-                  style: AppTextStyles.w700_16.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
+                  state.seatsNeeded.toString(),
+                  style: AppTextStyles.w700_18.copyWith(
+                    color: AppColors.primaryColor,
                   ),
                 ),
               ),
@@ -387,9 +394,11 @@ class _PoolCreateViewBody extends StatelessWidget {
                     ? () => cubit.setSeatsNeeded(state.seatsNeeded + 1)
                     : null,
                 icon: const Icon(Icons.add),
-                iconSize: 18.r,
-                constraints: BoxConstraints.tightFor(width: 36.r, height: 36.r),
-                padding: EdgeInsets.zero,
+                style: IconButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                ),
               ),
             ],
           ),

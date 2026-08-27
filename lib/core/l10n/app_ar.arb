@@ -153,6 +153,22 @@
   "settingsDarkMode": "الوضع الليلي",
   "settingsChangeLanguage": "تغيير اللغة",
   "settingsAboutApp": "حول التطبيق",
+  "drawerSettings": "الإعدادات",
+  "settingsTheme": "المظهر",
+  "settingsThemeSubtitle": "اختر مظهر التطبيق المفضل لديك",
+  "settingsThemeSystem": "تلقائي حسب النظام",
+  "settingsThemeSystemDesc": "مطابقة إعدادات مظهر جهازك",
+  "settingsThemeLight": "الوضع الفاتح",
+  "settingsThemeLightDesc": "مظهر مشرق وأنيق للرؤية بوضوح",
+  "settingsThemeDark": "الوضع الداكن",
+  "settingsThemeDarkDesc": "مريح للعينين في الإضاءة المنخفضة",
+  "settingsLanguage": "اللغة",
+  "settingsLanguageSubtitle": "حدد لغة التطبيق المفضلة",
+  "settingsLanguageEnglish": "English (الإنجليزية)",
+  "settingsLanguageArabic": "العربية",
+  "settingsAppInfo": "معلومات التطبيق",
+  "settingsAppVersion": "الإصدار 1.0.0",
+  "settingsAppDescription": "مشينا راكب - رحلات آمنة وموثوقة ومريحة",
   "errorsNetwork": "تحقق من اتصال الإنترنت",
   "errorsUnauthorized": "غير مصرح لك",
   "errorsLocationPermission": "يرجى السماح بالوصول إلى الموقع",
@@ -330,6 +346,9 @@
   },
   "couponAppliedSuccess": "تم تطبيق الكوبون بنجاح",
   "enterValidCouponCode": "يرجى إدخال كود الكوبون",
+  "couponOriginalFare": "الأجرة الأصلية",
+  "couponSaved": "التوفير",
+  "couponFinalFare": "الأجرة النهائية",
   "appCurrency": "ل.س",
   "rideExpiredTitle": "انتهت صلاحية طلب الرحلة",
   "rideExpiredSubtitle": "لم يكن هناك سائقون متاحون في منطقتك. يرجى المحاولة مرة أخرى.",
@@ -517,6 +536,222 @@
     }
   },
   "moderationRealtimePenaltyTitle": "تنبيه رقابي جديد",
-  "moderationRealtimeLiftedTitle": "تم رفع القيد بنجاح"
+  "moderationRealtimeLiftedTitle": "تم رفع القيد بنجاح",
+  "drawerActiveTrips": "الرحلات النشطة",
+  "activeTripsTitle": "الرحلات النشطة",
+  "activeTripsSubtitle": "الرحلات الجارية وقيد التنفيذ",
+  "activeTripsEmptyTitle": "لا توجد رحلات نشطة",
+  "activeTripsEmptySubtitle": "ليس لديك أي رحلات نشطة أو قيد التنفيذ في الوقت الحالي.",
+  "activeTripsLiveTracking": "تتبع مباشر",
+  "activeTripsRegularTrip": "رحلة عادية",
+  "activeTripsSharedRide": "رحلة مشتركة",
+  "activeTripsCompanionBooking": "حجز لمرافق",
+  "activeTripsSelf": "رحلة شخصية",
+  "activeTripsTripId": "رحلة #{id}",
+  "@activeTripsTripId": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "activeTripsRideRequestId": "طلب #{id}",
+  "@activeTripsRideRequestId": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "activeTripsSharedRideId": "غرفة #{id}",
+  "@activeTripsSharedRideId": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "activeTripsPassengerId": "راكب #{id}",
+  "@activeTripsPassengerId": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "activeTripsActiveSeats": "{count} مقاعد نشطة",
+  "@activeTripsActiveSeats": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "activeTripsAccountHolderOnBoard": "صاحب الحساب على متن الرحلة",
+  "activeTripsAccountHolderNotOnBoard": "المرافق على متن الرحلة",
+  "activeTripsStatusStarted": "بدأت الرحلة",
+  "activeTripsStatusInProgress": "قيد التنفيذ",
+  "activeTripsStatusDriverArrived": "وصل السائق",
+  "activeTripsStatusOpen": "غرفة مفتوحة",
+  "activeTripsStatusReady": "جاهزة للانطلاق",
+  "activeTripsStatusAccepted": "تم القبول",
+  "activeTripsStatusPending": "جاري البحث عن سائق",
+  "commonNoResultsFound": "لا توجد نتائج",
+  "unitKm": "كم",
+  "unitMin": "دقيقة",
+  "unitStops": "توقفات",
+  "rideChooseYourRide": "اختر نوع الرحلة",
+  "rideCarType": "نوع السيارة",
+  "rideNoCarTypesAvailable": "لا توجد أنواع سيارات متاحة لهذه الرحلة حالياً.",
+  "sharedTripTryPoolInstead": "جرّب تجمع الركاب بدلاً من ذلك",
+  "sharedTripRemovedTitle": "تمت الإزالة من الرحلة",
+  "sharedTripRemovedBody": "تمت إزالتك من هذه الرحلة المشتركة من قبل السائق.",
+  "sharedTripRemovedBodyReason": "تمت إزالتك من هذه الرحلة المشتركة من قبل السائق.\n\nالسبب: {reason}",
+  "@sharedTripRemovedBodyReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "sharedTripCanceledNotice": "تم إلغاء الرحلة.",
+  "sharedTripCanceledReason": "تم إلغاء الرحلة: {reason}",
+  "@sharedTripCanceledReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "sharedTripStartedNotice": "بدأت الرحلة! جاري تتبع المسار المباشر.",
+  "sharedTripCompletedNotice": "اكتملت الرحلة! شكراً لاستخدامك مشوار.",
+  "poolCreateNewLobby": "إنشاء غرفة تجمع جديدة",
+  "poolCreateRoomTitle": "إنشاء غرفة تجمع",
+  "poolYourJourney": "مسار رحلتك في التجمع",
+  "poolLobbyTitle": "لوبي التجمع #{id}",
+  "@poolLobbyTitle": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "poolDepartureTime": "الانطلاق: {time}",
+  "@poolDepartureTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "poolWalkUnderOneMin": "أقل من دقيقة مشياً",
+  "poolWalkMinutes": "{minutes} دقيقة مشياً",
+  "@poolWalkMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "poolOptimalMeetingPoint": "نقطة تجمع مركزية مناسبة",
+  "poolOccupiedSeats": "{current} / {total} مقاعد",
+  "@poolOccupiedSeats": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "poolPassengerNumber": "راكب #{id}",
+  "@poolPassengerNumber": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "poolPassengerYou": "{name} (أنت)",
+  "@poolPassengerYou": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "poolHost": "المضيف",
+  "poolSeatsRequested": "{count, plural, =1{مقعد واحد مطلوب} =2{مقعدان مطلوبان} few{{count} مقاعد مطلوبة} other{{count} مقعداً مطلوباً}}",
+  "@poolSeatsRequested": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "poolWaitingForPassenger": "بانتظار انضمام راكب...",
+  "poolStatusSwitchingTracking": "الانتقال إلى تتبع الرحلة المباشر",
+  "poolStatusRoomFullDriversNotified": "اكتملت الغرفة ({current}/{max}) • تم إشعار السائقين",
+  "@poolStatusRoomFullDriversNotified": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "poolStatusPassengersJoined": "انضم {current}/{max} ركاب",
+  "@poolStatusPassengersJoined": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "poolDepartingSoon": "الانطلاق قريباً",
+  "poolDepartsAt": "الانطلاق في {time}",
+  "@poolDepartsAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "poolSeatsOpen": "{count}/{max} مقاعد متاحة",
+  "@poolSeatsOpen": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "poolHostedBy": "المضيف: {name}",
+  "@poolHostedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "poolJoinPool": "انضمام للتجمع",
+  "drawerWallet": "المحفظة",
+  "walletBalance": "الرصيد",
+  "walletStatusActive": "نشط",
+  "walletStatusInactive": "غير نشط",
+  "walletDetails": "تفاصيل المحفظة",
+  "walletId": "معرّف المحفظة",
+  "walletCreatedAt": "تاريخ الإنشاء",
+  "walletUpdatedAt": "آخر تحديث",
+  "walletErrorLoading": "فشل في تحميل بيانات المحفظة",
+  "walletRetry": "إعادة المحاولة",
+  "walletTransactions": "المعاملات",
+  "walletTransactionsHistory": "سجل المعاملات",
+  "walletDeposit": "إيداع",
+  "walletWithdraw": "سحب",
+  "walletTransfer": "تحويل",
+  "walletTripPayment": "دفع رحلة",
+  "walletNoTransactions": "لا توجد معاملات بعد",
+  "walletTapToViewTransactions": "اضغط لعرض المعاملات",
+  "walletBalanceAfter": "الرصيد بعد",
+  "walletBalanceBefore": "الرصيد قبل"
 }
 

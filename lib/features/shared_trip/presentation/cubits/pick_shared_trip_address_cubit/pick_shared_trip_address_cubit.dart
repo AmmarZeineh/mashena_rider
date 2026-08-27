@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/core/services/location_status.dart';
 import 'package:mashena_rider/core/services/logger_service.dart';
@@ -14,7 +14,8 @@ import 'package:mashena_rider/features/home/presentation/common/models/confirmed
 import 'package:mashena_rider/features/shared_trip/presentation/models/shared_trip_rooms_args.dart';
 import 'pick_shared_trip_address_state.dart';
 
-class PickSharedTripAddressCubit extends Cubit<PickSharedTripAddressState> {
+class PickSharedTripAddressCubit
+    extends BaseCubit<PickSharedTripAddressState> {
   PickSharedTripAddressCubit(
     this._locationService,
     this._placesService,

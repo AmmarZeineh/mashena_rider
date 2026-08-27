@@ -7,6 +7,8 @@ import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/network/socket_client.dart';
 import 'package:mashena_rider/core/network/token_manager.dart';
 import 'package:mashena_rider/features/auth/presentation/blocs/auth_cubit/auth_cubit.dart';
+import 'package:mashena_rider/features/settings/presentation/cubits/settings_cubit.dart';
+import 'package:mashena_rider/features/settings/presentation/cubits/settings_state.dart';
 
 import '../core/theme/app_theme.dart';
 import 'router/app_router.dart';
@@ -22,6 +24,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> with WidgetsBindingObserver {
   late final AuthCubit _authCubit;
+  late final SettingsCubit _settingsCubit;
   Locale? _deviceLocale;
 
   @override
@@ -29,6 +32,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _authCubit = getIt<AuthCubit>()..appStarted();
+    _settingsCubit = getIt<SettingsCubit>();
     _updateDeviceLocale();
   }
 
@@ -72,8 +76,11 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => _authCubit,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>.value(value: _authCubit),
+        BlocProvider<SettingsCubit>.value(value: _settingsCubit),
+      ],
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           state.maybeWhen(
@@ -83,22 +90,30 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             orElse: () {},
           );
         },
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.light(_deviceLocale ?? Locale('en')),
-          darkTheme: AppTheme.dark(_deviceLocale ?? Locale('en')),
-          themeMode: ThemeMode.system,
-          locale: _deviceLocale,
-          routerConfig: AppRouter.router,
-          supportedLocales: const [Locale('en'), Locale('ar')],
-          localizationsDelegates: const [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
+        child: BlocBuilder<SettingsCubit, SettingsState>(
+          builder: (context, settingsState) {
+            final effectiveLocale =
+                settingsState.locale ?? _deviceLocale ?? const Locale('en');
+
+            return MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.light(effectiveLocale),
+              darkTheme: AppTheme.dark(effectiveLocale),
+              themeMode: settingsState.themeMode,
+              locale: settingsState.locale,
+              routerConfig: AppRouter.router,
+              supportedLocales: const [Locale('en'), Locale('ar')],
+              localizationsDelegates: const [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+            );
+          },
         ),
       ),
     );
   }
 }
+

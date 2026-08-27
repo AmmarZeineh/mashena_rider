@@ -3,6 +3,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
+import 'package:mashena_rider/features/auth/domain/entities/auth_session.dart';
+import 'package:mashena_rider/features/auth/domain/entities/user.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_usecase.dart';
 import 'package:mashena_rider/features/shared_trip/data/models/shared_ride_socket_events.dart';
 import 'package:mashena_rider/features/shared_trip/domain/entities/join_shared_ride_params.dart';
@@ -209,6 +211,21 @@ void main() {
     test(
       'passengerDropped with accountHolderOnBoard: true emits companionDroppedPayload and keeps tracking active',
       () async {
+        final session = AuthSession(
+          accessToken: 'token',
+          user: User(
+            id: 5,
+            fullName: 'Test Rider',
+            email: 'test@test.com',
+            phoneNumber: '+123456789',
+            createdAt: DateTime(2026, 1, 1),
+            updatedAt: DateTime(2026, 1, 1),
+          ),
+        );
+        when(
+          () => mockGetCachedSession(),
+        ).thenAnswer((_) async => Right(session));
+
         final dropController =
             StreamController<SharedRidePassengerDroppedPayload>.broadcast();
         when(
@@ -295,6 +312,21 @@ void main() {
     test(
       'passengerDropped with accountHolderOnBoard: false emits currentUserDroppedOffPayload',
       () async {
+        final session = AuthSession(
+          accessToken: 'token',
+          user: User(
+            id: 5,
+            fullName: 'Test Rider',
+            email: 'test@test.com',
+            phoneNumber: '+123456789',
+            createdAt: DateTime(2026, 1, 1),
+            updatedAt: DateTime(2026, 1, 1),
+          ),
+        );
+        when(
+          () => mockGetCachedSession(),
+        ).thenAnswer((_) async => Right(session));
+
         final dropController =
             StreamController<SharedRidePassengerDroppedPayload>.broadcast();
         when(

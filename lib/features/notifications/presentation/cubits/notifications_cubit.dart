@@ -1,9 +1,9 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/constants/app_pagination.dart';
 import 'package:mashena_rider/features/notifications/domain/repositories/notifications_repository.dart';
 import 'package:mashena_rider/features/notifications/presentation/cubits/notifications_state.dart';
 
-class NotificationsCubit extends Cubit<NotificationsState> {
+class NotificationsCubit extends BaseCubit<NotificationsState> {
   final NotificationsRepository _repository;
 
   NotificationsCubit(this._repository) : super(const NotificationsState());

@@ -122,7 +122,12 @@ class _PenaltiesTabViewState extends State<PenaltiesTabView> {
                         color: AppColors.errorColor,
                       ),
                       SizedBox(height: 12.h),
-                      Text(s.commonError, style: AppTextStyles.w600_16),
+                      Text(
+                        s.commonError,
+                        style: AppTextStyles.w600_16.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
                       SizedBox(height: 12.h),
                       ElevatedButton(
                         onPressed: () => context
@@ -142,6 +147,12 @@ class _PenaltiesTabViewState extends State<PenaltiesTabView> {
                         .toList();
 
               if (displayedItems.isEmpty) {
+                final isDark =
+                    Theme.of(context).brightness == Brightness.dark;
+                final emptyColor = isDark
+                    ? Theme.of(context).colorScheme.onSurfaceVariant
+                    : AppColors.textGrey;
+
                 return RefreshIndicator(
                   onRefresh: () =>
                       context.read<PenaltiesHistoryCubit>().refresh(),
@@ -154,7 +165,7 @@ class _PenaltiesTabViewState extends State<PenaltiesTabView> {
                         child: Text(
                           s.moderationNoPenalties,
                           style: AppTextStyles.w600_16.copyWith(
-                            color: AppColors.textGrey,
+                            color: emptyColor,
                           ),
                         ),
                       ),
@@ -229,22 +240,35 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final unselectedBg = isDark
+        ? colorScheme.surfaceContainerHigh
+        : Colors.white;
+    final unselectedBorder = isDark
+        ? colorScheme.outlineVariant.withValues(alpha: 0.3)
+        : AppColors.borderColor;
+    final unselectedLabel = isDark
+        ? colorScheme.onSurfaceVariant
+        : AppColors.textGrey;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryColor : Colors.white,
+          color: isSelected ? AppColors.primaryColor : unselectedBg,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: isSelected ? AppColors.primaryColor : AppColors.borderColor,
+            color: isSelected ? AppColors.primaryColor : unselectedBorder,
           ),
         ),
         child: Text(
           label,
           style: AppTextStyles.w600_12.copyWith(
-            color: isSelected ? Colors.white : AppColors.textGrey,
+            color: isSelected ? Colors.white : unselectedLabel,
           ),
         ),
       ),

@@ -18,12 +18,13 @@ class RideEstimatesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final estimates = estimateResponse.estimates;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Choose your ride', style: AppTextStyles.w600_18),
+        Text(s.rideChooseYourRide, style: AppTextStyles.w600_18),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -31,23 +32,23 @@ class RideEstimatesSection extends StatelessWidget {
           children: [
             _TripStat(
               icon: Icons.route_outlined,
-              label: '${_formatNumber(estimateResponse.distanceKm)} km',
+              label: s.rideDistanceKm(_formatNumber(estimateResponse.distanceKm)),
             ),
             _TripStat(
               icon: Icons.schedule_outlined,
-              label: '${_formatNumber(estimateResponse.durationMin)} min',
+              label: s.rideDurationMin(_formatNumber(estimateResponse.durationMin)),
             ),
             if (estimateResponse.stopsCount > 0)
               _TripStat(
                 icon: Icons.alt_route,
-                label: '${estimateResponse.stopsCount} stops',
+                label: s.rideStopsCount(estimateResponse.stopsCount),
               ),
           ],
         ),
         const SizedBox(height: 12),
         if (estimates.isEmpty)
           Text(
-            'No car types are available for this trip right now.',
+            s.rideNoCarTypesAvailable,
             style: AppTextStyles.w400_14.copyWith(color: Colors.grey),
           )
         else
@@ -166,7 +167,9 @@ class _RideEstimateTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      estimate.name.isEmpty ? 'Car type' : estimate.name,
+                      estimate.name.isEmpty
+                          ? S.of(context).rideCarType
+                          : estimate.name,
                       style: AppTextStyles.w600_16,
                     ),
                     const SizedBox(height: 4),

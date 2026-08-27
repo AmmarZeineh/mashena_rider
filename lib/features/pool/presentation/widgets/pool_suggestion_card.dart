@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mashena_rider/core/common/extensions/responsive_num_x.dart';
+import 'package:mashena_rider/core/l10n/app_localizations.dart';
 import 'package:mashena_rider/core/theme/app_colors.dart';
 import 'package:mashena_rider/core/utils/app_font_styles.dart';
 import '../../domain/entities/pool_room_entity.dart';
@@ -15,14 +16,16 @@ class PoolSuggestionCard extends StatelessWidget {
     required this.onJoin,
   });
 
-  String _formatTime(DateTime? time) {
-    if (time == null) return 'Departing soon';
+  String _formatTime(BuildContext context, DateTime? time) {
+    final s = S.of(context);
+    if (time == null) return s.poolDepartingSoon;
     final format = DateFormat('h:mm a');
-    return 'Departs at ${format.format(time.toLocal())}';
+    return s.poolDepartsAt(format.format(time.toLocal()));
   }
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark
         ? Theme.of(context).colorScheme.surfaceContainerHigh
@@ -33,7 +36,7 @@ class PoolSuggestionCard extends StatelessWidget {
     final hostMember = room.members
         .where((m) => m.riderProfileId == room.creatorRiderProfileId)
         .firstOrNull;
-    final hostName = hostMember?.riderName ?? 'Host Rider';
+    final hostName = hostMember?.riderName ?? s.poolHost;
 
     return Container(
       margin: EdgeInsets.only(bottom: 14.h),
@@ -72,7 +75,7 @@ class PoolSuggestionCard extends StatelessWidget {
                     ),
                     SizedBox(width: 5.w),
                     Text(
-                      _formatTime(room.departureTime),
+                      _formatTime(context, room.departureTime),
                       style: AppTextStyles.w600_12.copyWith(
                         color: AppColors.primaryColor,
                       ),
@@ -89,7 +92,7 @@ class PoolSuggestionCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Text(
-                  '$availableSeats/${room.maxPassengers} seats open',
+                  s.poolSeatsOpen(availableSeats, room.maxPassengers),
                   style: AppTextStyles.w600_12.copyWith(
                     color: availableSeats > 0
                         ? AppColors.shieldGreen
@@ -138,7 +141,7 @@ class PoolSuggestionCard extends StatelessWidget {
                       room.meetingAddress != null &&
                               room.meetingAddress!.isNotEmpty
                           ? room.meetingAddress!
-                          : 'Shared Meeting Point',
+                          : s.poolMeetingPoint,
                       style: AppTextStyles.w500_14.copyWith(
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
@@ -150,7 +153,7 @@ class PoolSuggestionCard extends StatelessWidget {
                       room.destinationAddress != null &&
                               room.destinationAddress!.isNotEmpty
                           ? room.destinationAddress!
-                          : 'Destination',
+                          : s.sharedTripDestination,
                       style: AppTextStyles.w500_14.copyWith(
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
@@ -182,7 +185,7 @@ class PoolSuggestionCard extends StatelessWidget {
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    'Hosted by $hostName',
+                    s.poolHostedBy(hostName),
                     style: AppTextStyles.w500_12.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -202,7 +205,7 @@ class PoolSuggestionCard extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Join Pool',
+                  s.poolJoinPool,
                   style: AppTextStyles.w600_14.copyWith(color: Colors.white),
                 ),
               ),

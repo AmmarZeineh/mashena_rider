@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mashena_rider/core/auth/auth_event.dart';
 import 'package:mashena_rider/core/auth/auth_event_bus.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/services/notification_service.dart';
 import 'package:mashena_rider/features/auth/domain/entities/auth_session.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_usecase.dart';
@@ -12,7 +12,7 @@ import 'package:mashena_rider/features/auth/domain/usecases/logout_usecase.dart'
 part 'auth_state.dart';
 part 'auth_cubit.freezed.dart';
 
-class AuthCubit extends Cubit<AuthState> {
+class AuthCubit extends BaseCubit<AuthState> {
   AuthCubit(this._getCached, this._logout, this._authEventBus)
     : super(const AuthState.initial()) {
     _subscription = _authEventBus.stream.listen((event) {

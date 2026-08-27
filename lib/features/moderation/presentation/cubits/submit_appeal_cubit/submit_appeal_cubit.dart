@@ -1,8 +1,8 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/features/moderation/domain/usecases/submit_appeal_usecase.dart';
 import 'package:mashena_rider/features/moderation/presentation/cubits/submit_appeal_cubit/submit_appeal_state.dart';
 
-class SubmitAppealCubit extends Cubit<SubmitAppealState> {
+class SubmitAppealCubit extends BaseCubit<SubmitAppealState> {
   final SubmitAppealUsecase _submitAppealUsecase;
 
   SubmitAppealCubit(this._submitAppealUsecase)

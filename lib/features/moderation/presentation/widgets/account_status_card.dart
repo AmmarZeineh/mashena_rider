@@ -14,39 +14,44 @@ class AccountStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
 
-    final (shieldColor, bgGradStart, bgGradEnd, icon) = switch (accountStatus) {
+    final (shieldColor, lightGradStart, icon) = switch (accountStatus) {
       UserAccountStatus.active => (
         AppColors.shieldGreen,
         const Color(0xFFF0FDF4),
-        Colors.white,
         Icons.verified_user_rounded,
       ),
       UserAccountStatus.warning => (
         const Color(0xFFD97706),
         const Color(0xFFFFFBEB),
-        Colors.white,
         Icons.warning_rounded,
       ),
       UserAccountStatus.restricted => (
         const Color(0xFFEA580C),
         const Color(0xFFFFF7ED),
-        Colors.white,
         Icons.gpp_maybe_rounded,
       ),
       UserAccountStatus.suspended => (
         AppColors.errorColor,
         const Color(0xFFFEF2F2),
-        Colors.white,
         Icons.gpp_bad_rounded,
       ),
       UserAccountStatus.banned => (
         const Color(0xFF991B1B),
         const Color(0xFFFEF2F2),
-        Colors.white,
         Icons.block_rounded,
       ),
     };
+
+    final bgGradStart = isDark
+        ? shieldColor.withValues(alpha: 0.18)
+        : lightGradStart;
+    final bgGradEnd = isDark
+        ? colorScheme.surfaceContainerHigh
+        : Colors.white;
 
     return Container(
       width: double.infinity,
@@ -59,12 +64,14 @@ class AccountStatusCard extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: shieldColor.withValues(alpha: 0.25),
+          color: shieldColor.withValues(alpha: isDark ? 0.35 : 0.25),
           width: 1.2,
         ),
         boxShadow: [
           BoxShadow(
-            color: shieldColor.withValues(alpha: 0.06),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.25)
+                : shieldColor.withValues(alpha: 0.06),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -75,7 +82,7 @@ class AccountStatusCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
-              color: shieldColor.withValues(alpha: 0.12),
+              color: shieldColor.withValues(alpha: isDark ? 0.2 : 0.12),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: shieldColor, size: 28.r),
@@ -88,7 +95,9 @@ class AccountStatusCard extends StatelessWidget {
                 Text(
                   s.moderationAccountStatus,
                   style: AppTextStyles.w500_12.copyWith(
-                    color: AppColors.textGrey,
+                    color: isDark
+                        ? colorScheme.onSurfaceVariant
+                        : AppColors.textGrey,
                   ),
                 ),
                 SizedBox(height: 4.h),

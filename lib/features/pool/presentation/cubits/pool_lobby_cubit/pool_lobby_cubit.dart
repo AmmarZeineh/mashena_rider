@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/maps/domain/entities/map_lat_lng.dart';
 import 'package:mashena_rider/core/services/osrm_route_service.dart';
 import 'package:mashena_rider/features/auth/domain/usecases/get_cached_session_usecase.dart';
@@ -12,7 +12,7 @@ import 'package:mashena_rider/features/pool/domain/usecases/get_pool_room_detail
 import 'package:mashena_rider/features/pool/domain/usecases/leave_pool_room_usecase.dart';
 import 'pool_lobby_state.dart';
 
-class PoolLobbyCubit extends Cubit<PoolLobbyState> {
+class PoolLobbyCubit extends BaseCubit<PoolLobbyState> {
   final GetPoolRoomDetailsUsecase _getPoolRoomDetailsUsecase;
   final LeavePoolRoomUsecase _leavePoolRoomUsecase;
   final CancelPoolRoomUsecase _cancelPoolRoomUsecase;

@@ -14,39 +14,62 @@ class CouponCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     final coupon = userCoupon.coupon;
     final isActive = userCoupon.isActive;
     final isUsed = userCoupon.isUsed;
 
+    final cardBg = isDark
+        ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.7)
+        : AppColors.white;
+
+    final borderColor = isDark
+        ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+        : AppColors.borderColor.withValues(alpha: 0.5);
+
+    final secondaryTextColor =
+        isDark ? colorScheme.onSurfaceVariant : AppColors.textGrey;
+
+    final dividerColor = isDark
+        ? colorScheme.outlineVariant.withValues(alpha: 0.25)
+        : AppColors.borderColor.withValues(alpha: 0.4);
+
     final Color primaryBorder = isActive
         ? AppColors.primaryColor
-        : (isUsed ? AppColors.textGrey : AppColors.errorColor);
+        : (isUsed ? secondaryTextColor : AppColors.errorColor);
 
     final Color statusBg = isActive
-        ? AppColors.shieldGreen.withValues(alpha: 0.12)
+        ? AppColors.shieldGreen.withValues(alpha: isDark ? 0.18 : 0.12)
         : (isUsed
-              ? Colors.grey.withValues(alpha: 0.15)
-              : AppColors.errorColor.withValues(alpha: 0.12));
+            ? (isDark
+                ? colorScheme.surfaceContainerHighest
+                : Colors.grey.withValues(alpha: 0.15))
+            : AppColors.errorColor.withValues(alpha: isDark ? 0.18 : 0.12));
 
     final Color statusTextColor = isActive
         ? AppColors.shieldGreen
-        : (isUsed ? AppColors.textGrey : AppColors.errorColor);
+        : (isUsed ? secondaryTextColor : AppColors.errorColor);
 
     final String statusLabel = isActive
         ? S.of(context).couponStatusActive
         : (isUsed
-              ? S.of(context).couponStatusUsed
-              : S.of(context).couponStatusExpired);
+            ? S.of(context).couponStatusUsed
+            : S.of(context).couponStatusExpired);
 
     final DateTime? effectiveExpiresAt =
         (coupon.expiresAt != null && userCoupon.expiresAt != null)
-        ? (coupon.expiresAt!.isBefore(userCoupon.expiresAt!)
-              ? coupon.expiresAt
-              : userCoupon.expiresAt)
-        : (coupon.expiresAt ?? userCoupon.expiresAt);
+            ? (coupon.expiresAt!.isBefore(userCoupon.expiresAt!)
+                ? coupon.expiresAt
+                : userCoupon.expiresAt)
+            : (coupon.expiresAt ?? userCoupon.expiresAt);
 
     final String dateText = effectiveExpiresAt != null
-        ? DateFormat('yyyy-MM-dd').format(effectiveExpiresAt)
+        ? DateFormat.yMMMd(
+            Localizations.localeOf(context).toString(),
+          ).format(effectiveExpiresAt)
         : '';
 
     return GestureDetector(
@@ -54,17 +77,19 @@ class CouponCard extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(bottom: 12.h),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: cardBg,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: isActive
-                ? AppColors.primaryColor.withValues(alpha: 0.2)
-                : AppColors.borderColor.withValues(alpha: 0.5),
+                ? AppColors.primaryColor.withValues(alpha: isDark ? 0.35 : 0.2)
+                : borderColor,
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
+              color: isDark
+                  ? Colors.black.withValues(alpha: 0.2)
+                  : Colors.black.withValues(alpha: 0.03),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -74,11 +99,11 @@ class CouponCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.r),
           child: Stack(
             children: [
-              // Decorative left accent border line
-              Positioned(
+              // Decorative directional start accent border line
+              PositionedDirectional(
                 top: 0,
                 bottom: 0,
-                left: 0,
+                start: 0,
                 child: Container(width: 5.w, color: primaryBorder),
               ),
               Padding(
@@ -99,7 +124,7 @@ class CouponCard extends StatelessWidget {
                               ),
                               decoration: BoxDecoration(
                                 color: AppColors.primaryColor.withValues(
-                                  alpha: 0.1,
+                                  alpha: isDark ? 0.2 : 0.1,
                                 ),
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
@@ -119,17 +144,23 @@ class CouponCard extends StatelessWidget {
                                 vertical: 4.h,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
+                                color: isDark
+                                    ? colorScheme.surfaceContainerHighest
+                                    : Colors.grey.shade100,
                                 borderRadius: BorderRadius.circular(6.r),
                                 border: Border.all(
-                                  color: AppColors.borderColor,
+                                  color: isDark
+                                      ? colorScheme.outlineVariant.withValues(
+                                          alpha: 0.3,
+                                        )
+                                      : AppColors.borderColor,
                                   width: 0.5,
                                 ),
                               ),
                               child: Text(
                                 coupon.code,
                                 style: AppTextStyles.w700_12.copyWith(
-                                  color: Colors.black87,
+                                  color: colorScheme.onSurface,
                                   letterSpacing: 1,
                                 ),
                               ),
@@ -162,7 +193,9 @@ class CouponCard extends StatelessWidget {
                     Text(
                       coupon.name,
                       style: AppTextStyles.w600_14.copyWith(
-                        color: isActive ? Colors.black87 : AppColors.textGrey,
+                        color: isActive
+                            ? colorScheme.onSurface
+                            : secondaryTextColor,
                       ),
                     ),
                     if (coupon.description != null &&
@@ -171,7 +204,7 @@ class CouponCard extends StatelessWidget {
                       Text(
                         coupon.description!,
                         style: AppTextStyles.w400_12.copyWith(
-                          color: AppColors.textGrey,
+                          color: secondaryTextColor,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -179,7 +212,7 @@ class CouponCard extends StatelessWidget {
                     ],
 
                     SizedBox(height: 12.h),
-                    const Divider(height: 1, color: AppColors.borderColor),
+                    Divider(height: 1, color: dividerColor),
                     SizedBox(height: 10.h),
 
                     // Bottom info: Usages + Expiry Date
@@ -191,7 +224,7 @@ class CouponCard extends StatelessWidget {
                             Icon(
                               Icons.history_outlined,
                               size: 16.r,
-                              color: AppColors.textGrey,
+                              color: secondaryTextColor,
                             ),
                             SizedBox(width: 4.w),
                             Text(
@@ -199,7 +232,7 @@ class CouponCard extends StatelessWidget {
                                   .of(context)
                                   .remainingUsages(userCoupon.remainingUsages),
                               style: AppTextStyles.w400_12.copyWith(
-                                color: AppColors.textGrey,
+                                color: secondaryTextColor,
                               ),
                             ),
                           ],
@@ -210,13 +243,13 @@ class CouponCard extends StatelessWidget {
                               Icon(
                                 Icons.access_time_outlined,
                                 size: 16.r,
-                                color: AppColors.textGrey,
+                                color: secondaryTextColor,
                               ),
                               SizedBox(width: 4.w),
                               Text(
                                 S.of(context).expiresOn(dateText),
                                 style: AppTextStyles.w400_12.copyWith(
-                                  color: AppColors.textGrey,
+                                  color: secondaryTextColor,
                                 ),
                               ),
                             ],

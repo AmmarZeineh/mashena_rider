@@ -1,8 +1,7 @@
-import 'package:mashena_rider/core/services/logger_service.dart';
-
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
+import 'package:mashena_rider/core/services/logger_service.dart';
 import 'package:mashena_rider/features/home/domain/entities/ride_submission_response.dart';
 import 'package:mashena_rider/features/home/domain/repositories/ride_repository.dart';
 import 'package:mashena_rider/features/home/domain/usecases/cancel_ride_usecase.dart';
@@ -19,7 +18,7 @@ part 'ride_booking_state.dart';
 ///
 /// Coordinates with [TripLifecycleCubit], [DriverTrackingCubit], and
 /// [MapStateCubit] to reset/start them at the right moments.
-class RideBookingCubit extends Cubit<RideBookingState> {
+class RideBookingCubit extends BaseCubit<RideBookingState> {
   RideBookingCubit(
     this._submitRideRequest,
     this._cancelRideUsecase,

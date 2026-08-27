@@ -859,6 +859,102 @@ abstract class S {
   /// **'About App'**
   String get settingsAboutApp;
 
+  /// No description provided for @drawerSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get drawerSettings;
+
+  /// No description provided for @settingsTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsTheme;
+
+  /// No description provided for @settingsThemeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how Mashena Rider looks to you'**
+  String get settingsThemeSubtitle;
+
+  /// No description provided for @settingsThemeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System Default'**
+  String get settingsThemeSystem;
+
+  /// No description provided for @settingsThemeSystemDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Match your device system settings'**
+  String get settingsThemeSystemDesc;
+
+  /// No description provided for @settingsThemeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light Mode'**
+  String get settingsThemeLight;
+
+  /// No description provided for @settingsThemeLightDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic bright look with optimal clarity'**
+  String get settingsThemeLightDesc;
+
+  /// No description provided for @settingsThemeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get settingsThemeDark;
+
+  /// No description provided for @settingsThemeDarkDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Easy on the eyes in low-light conditions'**
+  String get settingsThemeDarkDesc;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// No description provided for @settingsLanguageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your preferred application language'**
+  String get settingsLanguageSubtitle;
+
+  /// No description provided for @settingsLanguageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get settingsLanguageEnglish;
+
+  /// No description provided for @settingsLanguageArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'العربية (Arabic)'**
+  String get settingsLanguageArabic;
+
+  /// No description provided for @settingsAppInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'App Information'**
+  String get settingsAppInfo;
+
+  /// No description provided for @settingsAppVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version 1.0.0'**
+  String get settingsAppVersion;
+
+  /// No description provided for @settingsAppDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Mashena Rider - Safe, reliable and comfortable rides'**
+  String get settingsAppDescription;
+
   /// No description provided for @errorsNetwork.
   ///
   /// In en, this message translates to:
@@ -1518,6 +1614,24 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Please enter a coupon code'**
   String get enterValidCouponCode;
+
+  /// No description provided for @couponOriginalFare.
+  ///
+  /// In en, this message translates to:
+  /// **'Original Fare'**
+  String get couponOriginalFare;
+
+  /// No description provided for @couponSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get couponSaved;
+
+  /// No description provided for @couponFinalFare.
+  ///
+  /// In en, this message translates to:
+  /// **'Final Fare'**
+  String get couponFinalFare;
 
   /// No description provided for @appCurrency.
   ///
@@ -2406,6 +2520,492 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Restriction Lifted'**
   String get moderationRealtimeLiftedTitle;
+
+  /// No description provided for @drawerActiveTrips.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Trips'**
+  String get drawerActiveTrips;
+
+  /// No description provided for @activeTripsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Trips'**
+  String get activeTripsTitle;
+
+  /// No description provided for @activeTripsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ongoing & in-progress rides'**
+  String get activeTripsSubtitle;
+
+  /// No description provided for @activeTripsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Active Trips'**
+  String get activeTripsEmptyTitle;
+
+  /// No description provided for @activeTripsEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You do not have any active or ongoing trips at the moment.'**
+  String get activeTripsEmptySubtitle;
+
+  /// No description provided for @activeTripsLiveTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Tracking'**
+  String get activeTripsLiveTracking;
+
+  /// No description provided for @activeTripsRegularTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Regular Ride'**
+  String get activeTripsRegularTrip;
+
+  /// No description provided for @activeTripsSharedRide.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared Ride'**
+  String get activeTripsSharedRide;
+
+  /// No description provided for @activeTripsCompanionBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Companion Booking'**
+  String get activeTripsCompanionBooking;
+
+  /// No description provided for @activeTripsSelf.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Ride'**
+  String get activeTripsSelf;
+
+  /// No description provided for @activeTripsTripId.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip #{id}'**
+  String activeTripsTripId(int id);
+
+  /// No description provided for @activeTripsRideRequestId.
+  ///
+  /// In en, this message translates to:
+  /// **'Request #{id}'**
+  String activeTripsRideRequestId(int id);
+
+  /// No description provided for @activeTripsSharedRideId.
+  ///
+  /// In en, this message translates to:
+  /// **'Room #{id}'**
+  String activeTripsSharedRideId(int id);
+
+  /// No description provided for @activeTripsPassengerId.
+  ///
+  /// In en, this message translates to:
+  /// **'Passenger #{id}'**
+  String activeTripsPassengerId(int id);
+
+  /// No description provided for @activeTripsActiveSeats.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Active Seats'**
+  String activeTripsActiveSeats(int count);
+
+  /// No description provided for @activeTripsAccountHolderOnBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Holder On Board'**
+  String get activeTripsAccountHolderOnBoard;
+
+  /// No description provided for @activeTripsAccountHolderNotOnBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Companion On Board'**
+  String get activeTripsAccountHolderNotOnBoard;
+
+  /// No description provided for @activeTripsStatusStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Started'**
+  String get activeTripsStatusStarted;
+
+  /// No description provided for @activeTripsStatusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get activeTripsStatusInProgress;
+
+  /// No description provided for @activeTripsStatusDriverArrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Arrived'**
+  String get activeTripsStatusDriverArrived;
+
+  /// No description provided for @activeTripsStatusOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Room'**
+  String get activeTripsStatusOpen;
+
+  /// No description provided for @activeTripsStatusReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get activeTripsStatusReady;
+
+  /// No description provided for @activeTripsStatusAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get activeTripsStatusAccepted;
+
+  /// No description provided for @activeTripsStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding Driver'**
+  String get activeTripsStatusPending;
+
+  /// No description provided for @commonNoResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get commonNoResultsFound;
+
+  /// No description provided for @unitKm.
+  ///
+  /// In en, this message translates to:
+  /// **'km'**
+  String get unitKm;
+
+  /// No description provided for @unitMin.
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get unitMin;
+
+  /// No description provided for @unitStops.
+  ///
+  /// In en, this message translates to:
+  /// **'stops'**
+  String get unitStops;
+
+  /// No description provided for @rideChooseYourRide.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your ride'**
+  String get rideChooseYourRide;
+
+  /// No description provided for @rideCarType.
+  ///
+  /// In en, this message translates to:
+  /// **'Car type'**
+  String get rideCarType;
+
+  /// No description provided for @rideNoCarTypesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No car types are available for this trip right now.'**
+  String get rideNoCarTypesAvailable;
+
+  /// No description provided for @sharedTripTryPoolInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Passenger Pool Instead'**
+  String get sharedTripTryPoolInstead;
+
+  /// No description provided for @sharedTripRemovedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from Ride'**
+  String get sharedTripRemovedTitle;
+
+  /// No description provided for @sharedTripRemovedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You were removed from this shared ride by the driver.'**
+  String get sharedTripRemovedBody;
+
+  /// No description provided for @sharedTripRemovedBodyReason.
+  ///
+  /// In en, this message translates to:
+  /// **'You were removed from this shared ride by the driver.\n\nReason: {reason}'**
+  String sharedTripRemovedBodyReason(String reason);
+
+  /// No description provided for @sharedTripCanceledNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'The ride has been canceled.'**
+  String get sharedTripCanceledNotice;
+
+  /// No description provided for @sharedTripCanceledReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip Canceled: {reason}'**
+  String sharedTripCanceledReason(String reason);
+
+  /// No description provided for @sharedTripStartedNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip has started! Tracking live route.'**
+  String get sharedTripStartedNotice;
+
+  /// No description provided for @sharedTripCompletedNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip completed! Thank you for riding.'**
+  String get sharedTripCompletedNotice;
+
+  /// No description provided for @poolCreateNewLobby.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Pool Lobby'**
+  String get poolCreateNewLobby;
+
+  /// No description provided for @poolCreateRoomTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Pool Room'**
+  String get poolCreateRoomTitle;
+
+  /// No description provided for @poolYourJourney.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Pool Journey'**
+  String get poolYourJourney;
+
+  /// No description provided for @poolLobbyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pool Lobby #{id}'**
+  String poolLobbyTitle(int id);
+
+  /// No description provided for @poolDepartureTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure: {time}'**
+  String poolDepartureTime(String time);
+
+  /// No description provided for @poolWalkUnderOneMin.
+  ///
+  /// In en, this message translates to:
+  /// **'< 1 min walk'**
+  String get poolWalkUnderOneMin;
+
+  /// No description provided for @poolWalkMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min walk'**
+  String poolWalkMinutes(int minutes);
+
+  /// No description provided for @poolOptimalMeetingPoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal central meeting point'**
+  String get poolOptimalMeetingPoint;
+
+  /// No description provided for @poolOccupiedSeats.
+  ///
+  /// In en, this message translates to:
+  /// **'{current} / {total} Seats'**
+  String poolOccupiedSeats(int current, int total);
+
+  /// No description provided for @poolPassengerNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Passenger #{id}'**
+  String poolPassengerNumber(int id);
+
+  /// No description provided for @poolPassengerYou.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} (You)'**
+  String poolPassengerYou(String name);
+
+  /// No description provided for @poolHost.
+  ///
+  /// In en, this message translates to:
+  /// **'Host'**
+  String get poolHost;
+
+  /// No description provided for @poolSeatsRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 seat requested} other{{count} seats requested}}'**
+  String poolSeatsRequested(int count);
+
+  /// No description provided for @poolWaitingForPassenger.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for a passenger...'**
+  String get poolWaitingForPassenger;
+
+  /// No description provided for @poolStatusSwitchingTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Switching to active ride tracking'**
+  String get poolStatusSwitchingTracking;
+
+  /// No description provided for @poolStatusRoomFullDriversNotified.
+  ///
+  /// In en, this message translates to:
+  /// **'Room is full ({current}/{max}) • Drivers notified'**
+  String poolStatusRoomFullDriversNotified(int current, int max);
+
+  /// No description provided for @poolStatusPassengersJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'{current}/{max} passengers joined'**
+  String poolStatusPassengersJoined(int current, int max);
+
+  /// No description provided for @poolDepartingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Departing soon'**
+  String get poolDepartingSoon;
+
+  /// No description provided for @poolDepartsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Departs at {time}'**
+  String poolDepartsAt(String time);
+
+  /// No description provided for @poolSeatsOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}/{max} seats open'**
+  String poolSeatsOpen(int count, int max);
+
+  /// No description provided for @poolHostedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Hosted by {name}'**
+  String poolHostedBy(String name);
+
+  /// No description provided for @poolJoinPool.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Pool'**
+  String get poolJoinPool;
+
+  /// No description provided for @drawerWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get drawerWallet;
+
+  /// No description provided for @walletBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get walletBalance;
+
+  /// No description provided for @walletStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get walletStatusActive;
+
+  /// No description provided for @walletStatusInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get walletStatusInactive;
+
+  /// No description provided for @walletDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet Details'**
+  String get walletDetails;
+
+  /// No description provided for @walletId.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet ID'**
+  String get walletId;
+
+  /// No description provided for @walletCreatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created Date'**
+  String get walletCreatedAt;
+
+  /// No description provided for @walletUpdatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated'**
+  String get walletUpdatedAt;
+
+  /// No description provided for @walletErrorLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load wallet'**
+  String get walletErrorLoading;
+
+  /// No description provided for @walletRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get walletRetry;
+
+  /// No description provided for @walletTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get walletTransactions;
+
+  /// No description provided for @walletTransactionsHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction History'**
+  String get walletTransactionsHistory;
+
+  /// No description provided for @walletDeposit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deposit'**
+  String get walletDeposit;
+
+  /// No description provided for @walletWithdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawal'**
+  String get walletWithdraw;
+
+  /// No description provided for @walletTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer'**
+  String get walletTransfer;
+
+  /// No description provided for @walletTripPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip Payment'**
+  String get walletTripPayment;
+
+  /// No description provided for @walletNoTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions found'**
+  String get walletNoTransactions;
+
+  /// No description provided for @walletTapToViewTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to view transactions'**
+  String get walletTapToViewTransactions;
+
+  /// No description provided for @walletBalanceAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance after'**
+  String get walletBalanceAfter;
+
+  /// No description provided for @walletBalanceBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance before'**
+  String get walletBalanceBefore;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

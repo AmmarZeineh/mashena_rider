@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/core/services/location_status.dart';
 
 part 'location_state.dart';
 
 /// Manages GPS permission state and the current device position.
-class LocationCubit extends Cubit<LocationState> {
+class LocationCubit extends BaseCubit<LocationState> {
   LocationCubit(this._locationService) : super(const LocationState.initial());
 
   final LocationService _locationService;
