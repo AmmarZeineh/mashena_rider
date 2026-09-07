@@ -39,7 +39,10 @@ class DriverTrackingCubit extends BaseCubit<DriverTrackingState> {
     required MapLatLng destination,
   }) {
     _locationSubscription?.cancel();
-    emit(state.copyWith(pickup: pickup, destination: destination));
+    _osrmDebounceTimer?.cancel();
+    _mapStateCubit.removeMarker('driver');
+    _mapStateCubit.clearDriverPolylines();
+    emit(DriverTrackingState(pickup: pickup, destination: destination));
 
     _locationSubscription = _rideRepository.driverLocationStream.listen(
       (location) => _onLocation(location),
@@ -49,13 +52,16 @@ class DriverTrackingCubit extends BaseCubit<DriverTrackingState> {
   /// Notifies the cubit that the trip has started so the route
   /// target switches from pickup to destination.
   void onTripStarted({required MapLatLng destination}) {
-    emit(state.copyWith(destination: destination));
+    _mapStateCubit.clearDriverPolylines();
+    emit(state.copyWith(destination: destination, isTripStarted: true));
   }
 
   void stopTracking() {
     _locationSubscription?.cancel();
     _locationSubscription = null;
+    _osrmDebounceTimer?.cancel();
     _mapStateCubit.removeMarker('driver');
+    _mapStateCubit.clearDriverPolylines();
     emit(const DriverTrackingState());
   }
 
@@ -77,7 +83,7 @@ class DriverTrackingCubit extends BaseCubit<DriverTrackingState> {
       bearing = _calculateBearing(state.driverLocation!, driverLocation);
     }
 
-    // 2. Write marker to MapStateCubit INSTANTLY
+    // 2. Write marker to MapStateCubit INSTANTLY (only driver position is drawn)
     _mapStateCubit.upsertMarker(
       MapMarker(
         id: 'driver',
@@ -99,7 +105,6 @@ class DriverTrackingCubit extends BaseCubit<DriverTrackingState> {
 
       String? distanceText;
       String? etaText;
-      var routePoints = [driverLocation, targetLocation];
 
       try {
         final routeDetails = await _osrmRouteService.getRouteDetails([
@@ -108,7 +113,6 @@ class DriverTrackingCubit extends BaseCubit<DriverTrackingState> {
         ]);
 
         if (routeDetails != null) {
-          routePoints = routeDetails.points;
           final distMeters = routeDetails.distance;
           distanceText = distMeters < 1000
               ? '${distMeters.toStringAsFixed(0)} m'
@@ -121,17 +125,7 @@ class DriverTrackingCubit extends BaseCubit<DriverTrackingState> {
         // Ignored for UI - keep last valid values
       }
 
-      // 4. Write polyline to MapStateCubit
-      final isArrived = state.isDriverArrived;
-      _mapStateCubit.updateDriverPolylines(
-        borderId: isArrived
-            ? 'driver_to_destination_border'
-            : 'driver_to_pickup_border',
-        lineId: isArrived ? 'driver_to_destination' : 'driver_to_pickup',
-        points: routePoints,
-      );
-
-      // Emit state update with polyline/ETA info
+      // Emit state update with ETA/distance info (no polyline drawn between driver and rider)
       if (!isClosed) {
         emit(
           state.copyWith(
@@ -150,8 +144,9 @@ class DriverTrackingCubit extends BaseCubit<DriverTrackingState> {
     });
   }
 
-  /// Called when the driver has arrived so the amber line refreshes.
+  /// Called when the driver has arrived at the pickup location.
   void onDriverArrived() {
+    _mapStateCubit.clearDriverPolylines();
     emit(state.copyWith(isDriverArrived: true));
     if (state.driverLocation != null) {
       _onLocation(state.driverLocation!);

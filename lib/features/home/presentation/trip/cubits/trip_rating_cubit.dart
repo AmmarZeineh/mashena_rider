@@ -1,15 +1,26 @@
 import 'package:mashena_rider/core/base/base_cubit.dart';
 import 'package:mashena_rider/core/constants/app_constants.dart';
 import 'package:mashena_rider/features/home/domain/repositories/rating_repository.dart';
+import 'package:mashena_rider/features/home/domain/usecases/pay_trip_with_wallet_usecase.dart';
+import 'package:mashena_rider/features/wallet/domain/usecases/get_my_wallet_usecase.dart';
 
 import 'trip_rating_state.dart';
 
 class TripRatingCubit extends BaseCubit<TripRatingState> {
-  TripRatingCubit(this._ratingRepository) : super(const TripRatingState()) {
-    _fetchTags();
-  }
-
   final RatingRepository _ratingRepository;
+  final PayTripWithWalletUsecase _payTripWithWalletUsecase;
+  final GetMyWalletUsecase _getMyWalletUsecase;
+
+  TripRatingCubit(
+    this._ratingRepository, {
+    required PayTripWithWalletUsecase payTripWithWalletUsecase,
+    required GetMyWalletUsecase getMyWalletUsecase,
+  }) : _payTripWithWalletUsecase = payTripWithWalletUsecase,
+       _getMyWalletUsecase = getMyWalletUsecase,
+       super(const TripRatingState()) {
+    _fetchTags();
+    fetchWalletBalance();
+  }
 
   Future<void> _fetchTags() async {
     emit(state.copyWith(isLoadingTags: true, clearError: true));
@@ -35,6 +46,44 @@ class TripRatingCubit extends BaseCubit<TripRatingState> {
         isLoadingTags: false,
         positiveTags: positiveRes.fold((l) => [], (r) => r),
         negativeTags: negativeRes.fold((l) => [], (r) => r),
+      ),
+    );
+  }
+
+  void selectPaymentMethod(TripPaymentMethod method) {
+    emit(state.copyWith(paymentMethod: method, clearPaymentError: true));
+  }
+
+  Future<void> fetchWalletBalance() async {
+    emit(state.copyWith(isLoadingWallet: true, clearPaymentError: true));
+    final result = await _getMyWalletUsecase();
+    result.fold(
+      (failure) => emit(state.copyWith(isLoadingWallet: false)),
+      (wallet) => emit(
+        state.copyWith(isLoadingWallet: false, walletBalance: wallet.balance),
+      ),
+    );
+  }
+
+  Future<void> payWithWallet(int rideRequestId) async {
+    if (state.isPayingWithWallet || state.isWalletPaid) return;
+
+    emit(state.copyWith(isPayingWithWallet: true, clearPaymentError: true));
+
+    final result = await _payTripWithWalletUsecase(rideRequestId);
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(isPayingWithWallet: false, paymentError: failure),
+      ),
+      (paymentResult) => emit(
+        state.copyWith(
+          isPayingWithWallet: false,
+          isWalletPaid: true,
+          walletBalance: paymentResult.riderBalanceAfter,
+          walletPaymentResult: paymentResult,
+          clearPaymentError: true,
+        ),
       ),
     );
   }

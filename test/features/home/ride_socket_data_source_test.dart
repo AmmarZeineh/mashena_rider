@@ -29,40 +29,39 @@ void main() {
       });
     });
 
-    test('registers listeners and emits ride matched & driver location', () async {
-      final dataSource = RideSocketDataSourceImpl(mockSocketClient);
+    test(
+      'registers listeners and emits ride matched & driver location',
+      () async {
+        final dataSource = RideSocketDataSourceImpl(mockSocketClient);
 
-      expect(registeredCallbacks.containsKey('ride:matched'), isTrue);
-      expect(registeredCallbacks.containsKey('driver:location'), isTrue);
-      expect(registeredCallbacks.containsKey('trip:driver-arrived'), isTrue);
+        expect(registeredCallbacks.containsKey('ride:matched'), isTrue);
+        expect(registeredCallbacks.containsKey('driver:location'), isTrue);
+        expect(registeredCallbacks.containsKey('trip:driver-arrived'), isTrue);
 
-      expectLater(
-        dataSource.rideMatchedStream,
-        emits(123),
-      );
+        expectLater(dataSource.rideMatchedStream, emits(123));
 
-      expectLater(
-        dataSource.driverLocationStream,
-        emits(
-          isA<MapLatLng>()
-              .having((p) => p.latitude, 'latitude', 33.51)
-              .having((p) => p.longitude, 'longitude', 36.27),
-        ),
-      );
+        expectLater(
+          dataSource.driverLocationStream,
+          emits(
+            isA<MapLatLng>()
+                .having((p) => p.latitude, 'latitude', 33.51)
+                .having((p) => p.longitude, 'longitude', 36.27),
+          ),
+        );
 
-      expectLater(
-        dataSource.driverArrivedStream,
-        emits(
-          isA<DriverArrivedPayload>()
-              .having((p) => p.tripId, 'tripId', 99),
-        ),
-      );
+        expectLater(
+          dataSource.driverArrivedStream,
+          emits(
+            isA<DriverArrivedPayload>().having((p) => p.tripId, 'tripId', 99),
+          ),
+        );
 
-      registeredCallbacks['ride:matched']!({'rideRequestId': 123});
-      registeredCallbacks['driver:location']!({'lat': 33.51, 'lng': 36.27});
-      registeredCallbacks['trip:driver-arrived']!({'tripId': 99});
+        registeredCallbacks['ride:matched']!({'rideRequestId': 123});
+        registeredCallbacks['driver:location']!({'lat': 33.51, 'lng': 36.27});
+        registeredCallbacks['trip:driver-arrived']!({'tripId': 99});
 
-      await dataSource.dispose();
-    });
+        await dataSource.dispose();
+      },
+    );
   });
 }

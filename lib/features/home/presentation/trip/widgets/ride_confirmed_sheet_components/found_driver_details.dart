@@ -315,39 +315,21 @@ class FoundDriverDetails extends StatelessWidget {
                   ],
                 ),
               ),
-              Row(
-                children: [
-                  DriverActionCircle(
-                    icon: Icons.share_rounded,
-                    color: colorScheme.tertiary,
-                    onPressed: () {
-                      final rideRequestId = matchedTrip.rideRequestId;
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (_) => BlocProvider<TripShareCubit>(
-                          create: (_) => getIt<TripShareCubit>(),
-                          child: TripShareBottomSheet(
-                            rideRequestId: rideRequestId,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  SizedBox(width: 8.w),
-                  DriverActionCircle(
-                    icon: Icons.chat_bubble_outline_rounded,
-                    color: colorScheme.secondary,
-                    onPressed: () {},
-                  ),
-                  SizedBox(width: 8.w),
-                  DriverActionCircle(
-                    icon: Icons.phone_rounded,
-                    color: colorScheme.primary,
-                    onPressed: () {},
-                  ),
-                ],
+              DriverActionCircle(
+                icon: Icons.share_rounded,
+                color: colorScheme.tertiary,
+                onPressed: () {
+                  final rideRequestId = matchedTrip.rideRequestId;
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => BlocProvider<TripShareCubit>(
+                      create: (_) => getIt<TripShareCubit>(),
+                      child: TripShareBottomSheet(rideRequestId: rideRequestId),
+                    ),
+                  );
+                },
               ),
             ],
           ),

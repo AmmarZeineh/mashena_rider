@@ -18,6 +18,7 @@ import 'package:mashena_rider/core/l10n/failure_localizer.dart';
 import 'package:mashena_rider/core/utils/toast_helper.dart';
 
 import 'ride_confirmed_sheet_components/driver_card.dart';
+import 'trip_payment_section.dart';
 
 class TripRatingBottomSheet extends StatefulWidget {
   const TripRatingBottomSheet({
@@ -54,11 +55,20 @@ class _TripRatingBottomSheetState extends State<TripRatingBottomSheet> {
                 previous.errorMessage != current.errorMessage) ||
             (current.validationError != null &&
                 previous.validationError != current.validationError) ||
+            (current.paymentError != null &&
+                previous.paymentError != current.paymentError) ||
+            (current.isWalletPaid && !previous.isWalletPaid) ||
             (current.isSuccess && !previous.isSuccess),
         listener: (context, state) {
           if (state.errorMessage != null) {
             // API/repository error — localized via failureText
             context.showErrorToast(failureText(context, state.errorMessage!));
+          }
+          if (state.paymentError != null) {
+            context.showErrorToast(failureText(context, state.paymentError!));
+          }
+          if (state.isWalletPaid) {
+            context.showSuccessToast(S.of(context).paymentWalletSuccess);
           }
           if (state.validationError != null) {
             // Local UI validation — map constant to localized string
@@ -174,6 +184,24 @@ class _TripRatingBottomSheetState extends State<TripRatingBottomSheet> {
                     ),
                     SizedBox(height: 24.h),
 
+                    // Trip Payment Method Section
+                    TripPaymentSection(
+                      state: state,
+                      fare: widget.submissionResponse.estimatedFare,
+                      currency: currency,
+                      onMethodChanged: (method) {
+                        context.read<TripRatingCubit>().selectPaymentMethod(
+                          method,
+                        );
+                      },
+                      onPayWithWallet: () {
+                        context.read<TripRatingCubit>().payWithWallet(
+                          widget.submissionResponse.rideRequestId,
+                        );
+                      },
+                    ),
+                    SizedBox(height: 24.h),
+
                     // Driver Card
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -279,6 +307,14 @@ class _TripRatingBottomSheetState extends State<TripRatingBottomSheet> {
                             title: S.of(context).ratingSubmitRating,
                             isLoading: state.isSubmitting,
                             onPressed: () {
+                              if (state.paymentMethod ==
+                                      TripPaymentMethod.wallet &&
+                                  !state.isWalletPaid) {
+                                context.showErrorToast(
+                                  S.of(context).paymentPleasePayFirst,
+                                );
+                                return;
+                              }
                               context.read<TripRatingCubit>().submitRating(
                                 tripId: activeTripId,
                                 comment: _commentController.text,
@@ -294,6 +330,14 @@ class _TripRatingBottomSheetState extends State<TripRatingBottomSheet> {
                             onPressed: state.isSubmitting
                                 ? null
                                 : () {
+                                    if (state.paymentMethod ==
+                                            TripPaymentMethod.wallet &&
+                                        !state.isWalletPaid) {
+                                      context.showErrorToast(
+                                        S.of(context).paymentPleasePayFirst,
+                                      );
+                                      return;
+                                    }
                                     context
                                         .read<RideBookingCubit>()
                                         .clearBooking();

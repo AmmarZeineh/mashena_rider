@@ -9,6 +9,10 @@ extension RideEstimateModelMapper on RideEstimateModel {
       imageUrl: imageUrl,
       currency: currency,
       estimatedFare: estimatedFare,
+      originalFare: originalFare,
+      discountAmount: discountAmount,
+      finalFare: finalFare,
+      appliedCoupon: appliedCoupon?.toEntity(),
     );
   }
 }

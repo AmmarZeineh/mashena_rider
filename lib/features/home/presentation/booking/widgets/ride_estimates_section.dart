@@ -32,11 +32,15 @@ class RideEstimatesSection extends StatelessWidget {
           children: [
             _TripStat(
               icon: Icons.route_outlined,
-              label: s.rideDistanceKm(_formatNumber(estimateResponse.distanceKm)),
+              label: s.rideDistanceKm(
+                _formatNumber(estimateResponse.distanceKm),
+              ),
             ),
             _TripStat(
               icon: Icons.schedule_outlined,
-              label: s.rideDurationMin(_formatNumber(estimateResponse.durationMin)),
+              label: s.rideDurationMin(
+                _formatNumber(estimateResponse.durationMin),
+              ),
             ),
             if (estimateResponse.stopsCount > 0)
               _TripStat(
@@ -174,14 +178,61 @@ class _RideEstimateTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${S.of(context).rideEstimatedPrice}: ${_formatFare(estimate)}',
+                      '${S.of(context).rideEstimatedPrice}: ${_formatAmount(estimate.displayFinalFare, estimate.currency)}',
                       style: AppTextStyles.w400_12.copyWith(color: Colors.grey),
                     ),
+                    if (estimate.hasDiscount &&
+                        estimate.appliedCoupon != null) ...[
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.local_offer_rounded,
+                            size: 12,
+                            color: theme.colorScheme.primary,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            estimate.appliedCoupon!.code,
+                            style: AppTextStyles.w600_10.copyWith(
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
               const SizedBox(width: 8),
-              Text(_formatFare(estimate), style: AppTextStyles.w600_14),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (estimate.hasDiscount) ...[
+                    Text(
+                      _formatAmount(
+                        estimate.displayOriginalFare,
+                        estimate.currency,
+                      ),
+                      style: AppTextStyles.w400_11.copyWith(
+                        color: theme.colorScheme.outline,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                  ],
+                  Text(
+                    _formatAmount(estimate.displayFinalFare, estimate.currency),
+                    style: AppTextStyles.w600_14.copyWith(
+                      color: estimate.hasDiscount
+                          ? theme.colorScheme.primary
+                          : null,
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(width: 8),
               Icon(
                 isSelected ? Icons.check_circle : Icons.radio_button_unchecked,
@@ -196,16 +247,15 @@ class _RideEstimateTile extends StatelessWidget {
     );
   }
 
-  static String _formatFare(RideEstimate estimate) {
-    final fare = estimate.estimatedFare;
+  static String _formatAmount(double fare, String currency) {
     final formattedFare = fare.truncateToDouble() == fare
         ? fare.toStringAsFixed(0)
         : fare.toStringAsFixed(2);
-    final currency = estimate.currency.trim();
+    final trimmedCurrency = currency.trim();
 
-    if (currency.isEmpty) return formattedFare;
+    if (trimmedCurrency.isEmpty) return formattedFare;
 
-    return '$currency $formattedFare';
+    return '$trimmedCurrency $formattedFare';
   }
 }
 

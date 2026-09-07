@@ -1,12 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:mashena_rider/core/errors/failure.dart';
 import 'package:mashena_rider/features/home/domain/entities/rating_tag.dart';
+import 'package:mashena_rider/features/home/domain/entities/trip_wallet_payment_entity.dart';
+
+enum TripPaymentMethod { cash, wallet }
 
 class TripRatingState extends Equatable {
   final bool isLoadingTags;
   final bool isSubmitting;
 
-  /// API/repository errors — displayed via failureText(context, failure).
+  /// API/repository errors for rating submission — displayed via failureText(context, failure).
   final Failure? errorMessage;
 
   /// Local UI validation errors (e.g. "Please select a rating score").
@@ -21,6 +24,15 @@ class TripRatingState extends Equatable {
   final double currentScore;
   final Set<int> selectedTagIds;
 
+  // --- Payment fields ---
+  final TripPaymentMethod paymentMethod;
+  final bool isLoadingWallet;
+  final num? walletBalance;
+  final bool isPayingWithWallet;
+  final bool isWalletPaid;
+  final TripWalletPaymentEntity? walletPaymentResult;
+  final Failure? paymentError;
+
   const TripRatingState({
     this.isLoadingTags = false,
     this.isSubmitting = false,
@@ -31,6 +43,13 @@ class TripRatingState extends Equatable {
     this.negativeTags = const [],
     this.currentScore = 0.0,
     this.selectedTagIds = const {},
+    this.paymentMethod = TripPaymentMethod.cash,
+    this.isLoadingWallet = false,
+    this.walletBalance,
+    this.isPayingWithWallet = false,
+    this.isWalletPaid = false,
+    this.walletPaymentResult,
+    this.paymentError,
   });
 
   TripRatingState copyWith({
@@ -45,6 +64,14 @@ class TripRatingState extends Equatable {
     List<RatingTag>? negativeTags,
     double? currentScore,
     Set<int>? selectedTagIds,
+    TripPaymentMethod? paymentMethod,
+    bool? isLoadingWallet,
+    num? walletBalance,
+    bool? isPayingWithWallet,
+    bool? isWalletPaid,
+    TripWalletPaymentEntity? walletPaymentResult,
+    Failure? paymentError,
+    bool clearPaymentError = false,
   }) {
     return TripRatingState(
       isLoadingTags: isLoadingTags ?? this.isLoadingTags,
@@ -58,6 +85,15 @@ class TripRatingState extends Equatable {
       negativeTags: negativeTags ?? this.negativeTags,
       currentScore: currentScore ?? this.currentScore,
       selectedTagIds: selectedTagIds ?? this.selectedTagIds,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      isLoadingWallet: isLoadingWallet ?? this.isLoadingWallet,
+      walletBalance: walletBalance ?? this.walletBalance,
+      isPayingWithWallet: isPayingWithWallet ?? this.isPayingWithWallet,
+      isWalletPaid: isWalletPaid ?? this.isWalletPaid,
+      walletPaymentResult: walletPaymentResult ?? this.walletPaymentResult,
+      paymentError: clearPaymentError
+          ? null
+          : (paymentError ?? this.paymentError),
     );
   }
 
@@ -79,5 +115,12 @@ class TripRatingState extends Equatable {
     negativeTags,
     currentScore,
     selectedTagIds,
+    paymentMethod,
+    isLoadingWallet,
+    walletBalance,
+    isPayingWithWallet,
+    isWalletPaid,
+    walletPaymentResult,
+    paymentError,
   ];
 }

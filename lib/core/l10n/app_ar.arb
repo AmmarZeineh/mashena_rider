@@ -752,6 +752,44 @@
   "walletNoTransactions": "لا توجد معاملات بعد",
   "walletTapToViewTransactions": "اضغط لعرض المعاملات",
   "walletBalanceAfter": "الرصيد بعد",
-  "walletBalanceBefore": "الرصيد قبل"
+  "walletBalanceBefore": "الرصيد قبل",
+  "unifiedTripAll": "الكل",
+  "unifiedTripDriverRides": "رحلات السائقين",
+  "unifiedTripPoolLobbies": "تجمعات الركاب",
+  "unifiedTripDriverBadge": "رحلة سائق",
+  "unifiedTripPoolBadge": "تجمع ركاب",
+  "unifiedTripNoRidesFound": "لا توجد رحلات أو تجمعات متاحة حالياً",
+  "unifiedTripNoDriverRidesFound": "لا توجد رحلات سائقين متاحة في هذا المسار",
+  "unifiedTripNoPoolLobbiesFound": "لا توجد تجمعات ركاب في هذا المسار حالياً",
+  "unifiedTripCreatePoolCta": "أنشئ غرفة تجمع جديدة لطلب سائق معاً",
+  "paymentMethodTitle": "طريقة الدفع",
+  "paymentMethodCash": "نقداً",
+  "paymentMethodCashDesc": "ادفع المبلغ نقداً للسائق",
+  "paymentMethodWallet": "المحفظة الإلكترونية",
+  "paymentWalletAvailableBalance": "الرصيد المتاح: {balance} {currency}",
+  "@paymentWalletAvailableBalance": {
+    "placeholders": {
+      "balance": { "type": "String" },
+      "currency": { "type": "String" }
+    }
+  },
+  "paymentWalletPayNow": "ادفع {amount} {currency} عبر المحفظة",
+  "@paymentWalletPayNow": {
+    "placeholders": {
+      "amount": { "type": "String" },
+      "currency": { "type": "String" }
+    }
+  },
+  "paymentWalletSuccess": "تم الدفع بنجاح من المحفظة",
+  "paymentWalletSuccessDesc": "تم خصم {amount} {currency}. الرصيد المتبقي: {balance} {currency}",
+  "@paymentWalletSuccessDesc": {
+    "placeholders": {
+      "amount": { "type": "String" },
+      "balance": { "type": "String" },
+      "currency": { "type": "String" }
+    }
+  },
+  "paymentWalletInsufficient": "رصيد المحفظة غير كافٍ. يرجى اختيار الدفع نقداً.",
+  "paymentPleasePayFirst": "يرجى إتمام الدفع عبر المحفظة أولاً أو اختيار الدفع نقداً"
 }
 

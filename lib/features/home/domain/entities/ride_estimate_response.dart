@@ -32,4 +32,12 @@ class RideEstimateResponse {
   /// When non-empty, these should be used directly for map rendering
   /// instead of decoding a polyline string or fetching from OSRM.
   final List<MapLatLng> routePoints;
+
+  @override
+  String toString() {
+    return 'RideEstimateResponse(rideRequestId: $rideRequestId, '
+        'distanceKm: $distanceKm, durationMin: $durationMin, '
+        'stopsCount: $stopsCount, isNight: $isNight, '
+        'estimatesCount: ${estimates.length}, estimates: $estimates)';
+  }
 }

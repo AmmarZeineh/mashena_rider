@@ -8,6 +8,7 @@ import 'package:mashena_rider/features/home/domain/entities/ride_submission_resp
 import 'package:mashena_rider/features/home/domain/entities/trip_completed.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_cancelled.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_share.dart';
+import 'package:mashena_rider/features/home/domain/entities/trip_wallet_payment_entity.dart';
 import '../entities/ride_request.dart';
 
 abstract interface class RideRepository {
@@ -65,4 +66,9 @@ abstract interface class RideRepository {
 
   /// Revokes public trip sharing for the ride request
   Future<Either<Failure, bool>> revokeShareTrip(int rideRequestId);
+
+  /// Pays for a completed trip from wallet using the ride request ID
+  Future<Either<Failure, TripWalletPaymentEntity>> payTripWithWallet(
+    int rideRequestId,
+  );
 }

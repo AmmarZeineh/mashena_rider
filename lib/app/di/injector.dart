@@ -70,6 +70,7 @@ import 'package:mashena_rider/features/home/domain/usecases/submit_ride_request_
 import 'package:mashena_rider/features/home/domain/usecases/cancel_ride_usecase.dart';
 import 'package:mashena_rider/features/home/domain/usecases/share_trip_usecase.dart';
 import 'package:mashena_rider/features/home/domain/usecases/revoke_share_trip_usecase.dart';
+import 'package:mashena_rider/features/home/domain/usecases/pay_trip_with_wallet_usecase.dart';
 import 'package:mashena_rider/features/home/presentation/trip/cubits/trip_share_cubit/trip_share_cubit.dart';
 import 'package:mashena_rider/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:mashena_rider/features/profile/domain/repositories/profile_repository.dart';
@@ -420,6 +421,10 @@ Future<void> configureDependencies() async {
     () => RevokeShareTripUsecase(getIt<RideRepository>()),
   );
 
+  getIt.registerFactory<PayTripWithWalletUsecase>(
+    () => PayTripWithWalletUsecase(getIt<RideRepository>()),
+  );
+
   getIt.registerFactory<TripShareCubit>(
     () => TripShareCubit(
       getIt<ShareTripUsecase>(),
@@ -452,7 +457,11 @@ Future<void> configureDependencies() async {
   );
 
   getIt.registerFactory<TripRatingCubit>(
-    () => TripRatingCubit(getIt<RatingRepository>()),
+    () => TripRatingCubit(
+      getIt<RatingRepository>(),
+      payTripWithWalletUsecase: getIt<PayTripWithWalletUsecase>(),
+      getMyWalletUsecase: getIt<GetMyWalletUsecase>(),
+    ),
   );
 
   // =====================================================
@@ -517,6 +526,8 @@ Future<void> configureDependencies() async {
   getIt.registerFactoryParam<SharedTripRoomsCubit, SharedTripRoomsArgs, void>(
     (args, _) => SharedTripRoomsCubit(
       searchSharedRidesUsecase: getIt<SearchSharedRidesUsecase>(),
+      getPoolSuggestionsUsecase: getIt<GetPoolSuggestionsUsecase>(),
+      joinPoolRoomUsecase: getIt<JoinPoolRoomUsecase>(),
       args: args,
     ),
   );

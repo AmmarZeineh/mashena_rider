@@ -3006,6 +3006,124 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Balance before'**
   String get walletBalanceBefore;
+
+  /// No description provided for @unifiedTripAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get unifiedTripAll;
+
+  /// No description provided for @unifiedTripDriverRides.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Rides'**
+  String get unifiedTripDriverRides;
+
+  /// No description provided for @unifiedTripPoolLobbies.
+  ///
+  /// In en, this message translates to:
+  /// **'Pool Lobbies'**
+  String get unifiedTripPoolLobbies;
+
+  /// No description provided for @unifiedTripDriverBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver Ride'**
+  String get unifiedTripDriverBadge;
+
+  /// No description provided for @unifiedTripPoolBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Passenger Pool'**
+  String get unifiedTripPoolBadge;
+
+  /// No description provided for @unifiedTripNoRidesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No rides or pools currently available'**
+  String get unifiedTripNoRidesFound;
+
+  /// No description provided for @unifiedTripNoDriverRidesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No driver shared rides found along this route'**
+  String get unifiedTripNoDriverRidesFound;
+
+  /// No description provided for @unifiedTripNoPoolLobbiesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No passenger pools found along this route'**
+  String get unifiedTripNoPoolLobbiesFound;
+
+  /// No description provided for @unifiedTripCreatePoolCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a pool lobby to request a driver together'**
+  String get unifiedTripCreatePoolCta;
+
+  /// No description provided for @paymentMethodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get paymentMethodTitle;
+
+  /// No description provided for @paymentMethodCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get paymentMethodCash;
+
+  /// No description provided for @paymentMethodCashDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay the driver in cash'**
+  String get paymentMethodCashDesc;
+
+  /// No description provided for @paymentMethodWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get paymentMethodWallet;
+
+  /// No description provided for @paymentWalletAvailableBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Available balance: {balance} {currency}'**
+  String paymentWalletAvailableBalance(String balance, String currency);
+
+  /// No description provided for @paymentWalletPayNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay {amount} {currency} from Wallet'**
+  String paymentWalletPayNow(String amount, String currency);
+
+  /// No description provided for @paymentWalletSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid successfully from wallet'**
+  String get paymentWalletSuccess;
+
+  /// No description provided for @paymentWalletSuccessDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Deducted {amount} {currency}. Remaining balance: {balance} {currency}'**
+  String paymentWalletSuccessDesc(
+    String amount,
+    String balance,
+    String currency,
+  );
+
+  /// No description provided for @paymentWalletInsufficient.
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient wallet balance. Please choose cash.'**
+  String get paymentWalletInsufficient;
+
+  /// No description provided for @paymentPleasePayFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete wallet payment or choose cash'**
+  String get paymentPleasePayFirst;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

@@ -16,7 +16,6 @@ import 'package:mashena_rider/core/services/location_service.dart';
 import 'package:mashena_rider/core/services/osrm_route_service.dart';
 import 'package:mashena_rider/features/home/domain/usecases/cancel_ride_usecase.dart';
 import 'package:mashena_rider/features/home/domain/usecases/submit_ride_request_usecase.dart';
-import 'package:mashena_rider/features/home/domain/repositories/rating_repository.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -58,7 +57,7 @@ class _HomeViewState extends State<HomeView> {
       driverTrackingCubit,
       mapStateCubit,
     );
-    tripRatingCubit = TripRatingCubit(getIt<RatingRepository>());
+    tripRatingCubit = getIt<TripRatingCubit>();
     homeCubit = HomeCubit(getIt<RideRepository>(), locationCubit)..init();
   }
 

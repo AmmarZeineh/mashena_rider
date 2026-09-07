@@ -37,7 +37,15 @@ class RideBookingCubit extends BaseCubit<RideBookingState> {
 
   /// Stores the confirmed ride from the pick-address flow.
   void setConfirmedRide(ConfirmedRideFlowResult result) {
-    emit(state.copyWith(confirmedRideResult: result));
+    _tripLifecycleCubit.reset();
+    _driverTrackingCubit.stopTracking();
+    emit(
+      state.copyWith(
+        confirmedRideResult: result,
+        clearSubmissionResponse: true,
+        clearError: true,
+      ),
+    );
   }
 
   /// Submits the selected vehicle type to the API.
@@ -46,7 +54,16 @@ class RideBookingCubit extends BaseCubit<RideBookingState> {
     final result = state.confirmedRideResult;
     if (result == null) return;
 
-    emit(state.copyWith(isSubmitting: true, clearError: true));
+    _tripLifecycleCubit.reset();
+    _driverTrackingCubit.stopTracking();
+
+    emit(
+      state.copyWith(
+        isSubmitting: true,
+        clearError: true,
+        clearSubmissionResponse: true,
+      ),
+    );
 
     // Ensure the socket is connected before/during ride submission
     // to avoid missing initial real-time events.

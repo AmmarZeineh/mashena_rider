@@ -361,8 +361,44 @@ class PickAddressCubit extends BaseCubit<PickAddressState> {
           ),
         );
         if (kDebugMode) {
+          debugPrint('========================================');
+          debugPrint('🚖 [ESTIMATE RIDE SUCCESS]');
+          debugPrint('Ride Request ID: ${estimateResponse.rideRequestId}');
+          debugPrint('Distance: ${estimateResponse.distanceKm} km | Duration: ${estimateResponse.durationMin} min | Night: ${estimateResponse.isNight}');
+          debugPrint('📍 Pickup: ${estimateResponse.pickup?.address ?? request.pickup.address} (${estimateResponse.pickup?.lat ?? request.pickup.lat}, ${estimateResponse.pickup?.lng ?? request.pickup.lng})');
+          if (estimateResponse.stops.isNotEmpty || request.stops.isNotEmpty) {
+            debugPrint('🛑 Stops (${estimateResponse.stops.isNotEmpty ? estimateResponse.stops.length : request.stops.length}):');
+            final stopsList = estimateResponse.stops.isNotEmpty
+                ? estimateResponse.stops.map((s) => '(${s.latitude}, ${s.longitude})').toList()
+                : request.stops.map((s) => '${s.address} (${s.lat}, ${s.lng})').toList();
+            for (final stop in stopsList) {
+              debugPrint('   - $stop');
+            }
+          }
+          debugPrint('🏁 Destination: ${estimateResponse.destination?.address ?? request.destination.address} (${estimateResponse.destination?.lat ?? request.destination.lat}, ${estimateResponse.destination?.lng ?? request.destination.lng})');
+          if (estimateResponse.polyline != null && estimateResponse.polyline!.isNotEmpty) {
+            debugPrint('〰️ Polyline: ${estimateResponse.polyline}');
+          }
+          debugPrint('🗺️ Route Points (${estimateResponse.routePoints.length}):');
+          if (estimateResponse.routePoints.isNotEmpty) {
+            final pointsStr = estimateResponse.routePoints
+                .map((p) => '(${p.latitude}, ${p.longitude})')
+                .join(' -> ');
+            debugPrint('   $pointsStr');
+          } else {
+            debugPrint('   (No decoded route points from backend)');
+          }
+          debugPrint('🚗 Available Estimates (${estimateResponse.estimates.length}):');
+          for (final estimate in estimateResponse.estimates) {
+            debugPrint(
+              '  • [ID: ${estimate.vehicleTypeId}] ${estimate.name}: ${estimate.estimatedFare} ${estimate.currency}'
+              '${estimate.hasDiscount ? ' | Final: ${estimate.displayFinalFare} ${estimate.currency} (Orig: ${estimate.displayOriginalFare}, Discount: ${estimate.effectiveDiscountAmount}, Coupon: ${estimate.appliedCoupon?.code ?? "N/A"})' : ''}',
+            );
+          }
+          debugPrint('========================================');
+
           LoggerService.debug(
-            'Ride Request Created. Estimates: ${estimateResponse.estimates}',
+            'Ride Request Created: $estimateResponse',
             name: 'features.home.pick_address',
           );
         }

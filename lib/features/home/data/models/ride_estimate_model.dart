@@ -1,7 +1,18 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mashena_rider/core/network/json_readers.dart';
+import 'applied_coupon_model.dart';
 
 part 'ride_estimate_model.g.dart';
+
+AppliedCouponModel? _readAppliedCoupon(Object? value) {
+  if (value is Map<String, dynamic>) {
+    return AppliedCouponModel.fromJson(value);
+  }
+  if (value is Map) {
+    return AppliedCouponModel.fromJson(Map<String, dynamic>.from(value));
+  }
+  return null;
+}
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class RideEstimateModel {
@@ -11,6 +22,10 @@ class RideEstimateModel {
     required this.currency,
     required this.estimatedFare,
     this.imageUrl,
+    this.originalFare,
+    this.discountAmount,
+    this.finalFare,
+    this.appliedCoupon,
   });
 
   factory RideEstimateModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +44,12 @@ class RideEstimateModel {
         json['price'];
     normalized['image_url'] =
         json['image_url'] ?? json['imageUrl'] ?? json['image'];
+    normalized['original_fare'] = json['original_fare'] ?? json['originalFare'];
+    normalized['discount_amount'] =
+        json['discount_amount'] ?? json['discountAmount'];
+    normalized['final_fare'] = json['final_fare'] ?? json['finalFare'];
+    normalized['applied_coupon'] =
+        json['applied_coupon'] ?? json['appliedCoupon'];
 
     return _$RideEstimateModelFromJson(normalized);
   }
@@ -47,6 +68,18 @@ class RideEstimateModel {
 
   @JsonKey(fromJson: readDouble)
   final double estimatedFare;
+
+  @JsonKey(fromJson: readDoubleOptional)
+  final double? originalFare;
+
+  @JsonKey(fromJson: readDoubleOptional)
+  final double? discountAmount;
+
+  @JsonKey(fromJson: readDoubleOptional)
+  final double? finalFare;
+
+  @JsonKey(fromJson: _readAppliedCoupon)
+  final AppliedCouponModel? appliedCoupon;
 
   Map<String, dynamic> toJson() => _$RideEstimateModelToJson(this);
 }

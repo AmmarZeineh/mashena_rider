@@ -51,6 +51,10 @@ class TripLifecycleCubit extends BaseCubit<TripLifecycleState> {
           isDriverFound: true,
           isLoadingMatchedTrip: true,
           clearTripError: true,
+          clearMatchedTrip: true,
+          isDriverArrived: false,
+          isTripStarted: false,
+          isTripEnded: false,
         ),
       );
       await _fetchMatchedTripWithRetry(rideRequestId);
@@ -69,12 +73,12 @@ class TripLifecycleCubit extends BaseCubit<TripLifecycleState> {
       );
     });
 
-    _driverStartedSubscription = _rideRepository.driverStartedStream.listen(
-      (_) {
-        if (isClosed) return;
-        emit(state.copyWith(isTripStarted: true));
-      },
-    );
+    _driverStartedSubscription = _rideRepository.driverStartedStream.listen((
+      _,
+    ) {
+      if (isClosed) return;
+      emit(state.copyWith(isTripStarted: true));
+    });
 
     _tripCompletedSubscription = _rideRepository.tripCompletedStream.listen((
       payload,
@@ -104,13 +108,26 @@ class TripLifecycleCubit extends BaseCubit<TripLifecycleState> {
           tripError: cancelFailure,
           tripCancelledData: payload,
           clearMatchedTrip: true,
+          isDriverFound: false,
+          isDriverArrived: false,
+          isTripStarted: false,
+          isTripEnded: false,
         ),
       );
     });
 
     _rideExpiredSubscription = _rideRepository.rideExpiredStream.listen((_) {
       if (isClosed) return;
-      emit(state.copyWith(isRideExpired: true, clearMatchedTrip: true));
+      emit(
+        state.copyWith(
+          isRideExpired: true,
+          clearMatchedTrip: true,
+          isDriverFound: false,
+          isDriverArrived: false,
+          isTripStarted: false,
+          isTripEnded: false,
+        ),
+      );
     });
   }
 
@@ -128,27 +145,29 @@ class TripLifecycleCubit extends BaseCubit<TripLifecycleState> {
   }
 
   void _subscribeToConnectionStatus() {
-    _connectionStatusSubscription = _rideRepository.connectionStatusStream.listen(
-      (isConnected) {
+    _connectionStatusSubscription = _rideRepository.connectionStatusStream.listen((
+      isConnected,
+    ) {
+      LoggerService.debug(
+        'Socket connection status changed: $isConnected',
+        name: 'features.home.trip_lifecycle',
+      );
+      emit(state.copyWith(isConnected: isConnected));
+
+      // If we were disconnected and now reconnected, try to restore socket if needed
+      if (isConnected &&
+          (state.isDriverFound ||
+              state.isDriverArrived ||
+              state.isTripStarted)) {
+        // We were in the middle of a trip and socket reconnected
         LoggerService.debug(
-          'Socket connection status changed: $isConnected',
+          'Socket reconnected during active trip, ensuring connection...',
           name: 'features.home.trip_lifecycle',
         );
-        emit(state.copyWith(isConnected: isConnected));
-
-        // If we were disconnected and now reconnected, try to restore socket if needed
-        if (isConnected &&
-            (state.isDriverFound || state.isDriverArrived || state.isTripStarted)) {
-          // We were in the middle of a trip and socket reconnected
-          LoggerService.debug(
-            'Socket reconnected during active trip, ensuring connection...',
-            name: 'features.home.trip_lifecycle',
-          );
-          // The socket should already be connected via the SocketIOClientImpl's reconnect logic
-          // but we can ensure it's properly set up if needed
-        }
-      },
-    );
+        // The socket should already be connected via the SocketIOClientImpl's reconnect logic
+        // but we can ensure it's properly set up if needed
+      }
+    });
   }
 
   Future<void> _fetchMatchedTripWithRetry(int rideRequestId) async {

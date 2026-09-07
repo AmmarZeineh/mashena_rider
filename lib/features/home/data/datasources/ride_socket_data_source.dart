@@ -290,7 +290,8 @@ class RideSocketDataSourceImpl implements RideSocketDataSource {
   Stream<int> get rideExpiredStream => _rideExpiredController.stream;
 
   @override
-  Stream<bool> get connectionStatusStream => _socketClient.connectionStatusStream;
+  Stream<bool> get connectionStatusStream =>
+      _socketClient.connectionStatusStream;
 
   @override
   Future<void> connectSocket() => _socketClient.connect();

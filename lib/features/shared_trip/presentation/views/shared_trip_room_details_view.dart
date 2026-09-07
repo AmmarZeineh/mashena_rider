@@ -118,7 +118,8 @@ class _SharedTripRoomDetailsScaffoldState
           if (state.companionDroppedPayload != null &&
               state.companionDroppedPayload != _lastCompanionDroppedPayload) {
             _lastCompanionDroppedPayload = state.companionDroppedPayload;
-            final fareValue = state.companionDroppedPayload!.finalFare ??
+            final fareValue =
+                state.companionDroppedPayload!.finalFare ??
                 state.companionDroppedPayload!.totalPaidFare ??
                 state.details.effectiveSeatFare;
             context.showInfoToast(
@@ -264,7 +265,10 @@ class _SharedTripRoomDetailsScaffoldState
         return AlertDialog(
           title: Row(
             children: [
-              const Icon(Icons.warning_amber_rounded, color: AppColors.errorColor),
+              const Icon(
+                Icons.warning_amber_rounded,
+                color: AppColors.errorColor,
+              ),
               const SizedBox(width: 8),
               Text(s.sharedTripRemovedTitle),
             ],
@@ -314,7 +318,8 @@ class _SharedTripRoomDetailsScaffoldState
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       builder: (sheetContext) {
-        final fareValue = payload.finalFare ??
+        final fareValue =
+            payload.finalFare ??
             payload.totalPaidFare ??
             details.effectiveSeatFare;
 
@@ -430,7 +435,9 @@ class _SharedTripRoomDetailsScaffoldState
                                   SizedBox(width: 4.w),
                                   Text(
                                     s.rideDistanceKm(
-                                      payload.finalDistanceKm!.toStringAsFixed(1),
+                                      payload.finalDistanceKm!.toStringAsFixed(
+                                        1,
+                                      ),
                                     ),
                                     style: AppTextStyles.w500_12.copyWith(
                                       color: AppColors.textGrey,

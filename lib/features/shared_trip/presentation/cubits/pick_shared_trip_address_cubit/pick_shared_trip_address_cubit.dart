@@ -14,8 +14,7 @@ import 'package:mashena_rider/features/home/presentation/common/models/confirmed
 import 'package:mashena_rider/features/shared_trip/presentation/models/shared_trip_rooms_args.dart';
 import 'pick_shared_trip_address_state.dart';
 
-class PickSharedTripAddressCubit
-    extends BaseCubit<PickSharedTripAddressState> {
+class PickSharedTripAddressCubit extends BaseCubit<PickSharedTripAddressState> {
   PickSharedTripAddressCubit(
     this._locationService,
     this._placesService,
@@ -276,8 +275,35 @@ class PickSharedTripAddressCubit
           ),
         );
         if (kDebugMode) {
+          debugPrint('========================================');
+          debugPrint('🚐 [SHARED TRIP ESTIMATE SUCCESS]');
+          debugPrint('Ride Request ID: ${estimateResponse.rideRequestId}');
+          debugPrint('Distance: ${estimateResponse.distanceKm} km | Duration: ${estimateResponse.durationMin} min | Night: ${estimateResponse.isNight}');
+          debugPrint('📍 Pickup: ${estimateResponse.pickup?.address ?? request.pickup.address} (${estimateResponse.pickup?.lat ?? request.pickup.lat}, ${estimateResponse.pickup?.lng ?? request.pickup.lng})');
+          debugPrint('🏁 Destination: ${estimateResponse.destination?.address ?? request.destination.address} (${estimateResponse.destination?.lat ?? request.destination.lat}, ${estimateResponse.destination?.lng ?? request.destination.lng})');
+          if (estimateResponse.polyline != null && estimateResponse.polyline!.isNotEmpty) {
+            debugPrint('〰️ Polyline: ${estimateResponse.polyline}');
+          }
+          debugPrint('🗺️ Route Points (${estimateResponse.routePoints.length}):');
+          if (estimateResponse.routePoints.isNotEmpty) {
+            final pointsStr = estimateResponse.routePoints
+                .map((p) => '(${p.latitude}, ${p.longitude})')
+                .join(' -> ');
+            debugPrint('   $pointsStr');
+          } else {
+            debugPrint('   (No decoded route points from backend)');
+          }
+          debugPrint('🚗 Available Estimates (${estimateResponse.estimates.length}):');
+          for (final estimate in estimateResponse.estimates) {
+            debugPrint(
+              '  • [ID: ${estimate.vehicleTypeId}] ${estimate.name}: ${estimate.estimatedFare} ${estimate.currency}'
+              '${estimate.hasDiscount ? ' | Final: ${estimate.displayFinalFare} ${estimate.currency} (Orig: ${estimate.displayOriginalFare}, Discount: ${estimate.effectiveDiscountAmount}, Coupon: ${estimate.appliedCoupon?.code ?? "N/A"})' : ''}',
+            );
+          }
+          debugPrint('========================================');
+
           LoggerService.debug(
-            'Shared Trip Ride Request Created. Estimates: ${estimateResponse.estimates}',
+            'Shared Trip Ride Request Created: $estimateResponse',
             name: 'features.shared_trip.pick_address',
           );
         }

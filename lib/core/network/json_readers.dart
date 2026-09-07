@@ -11,6 +11,13 @@ double readDouble(Object? value) {
   return 0;
 }
 
+double? readDoubleOptional(Object? value) {
+  if (value == null) return null;
+  if (value is num) return value.toDouble();
+  if (value is String) return double.tryParse(value);
+  return null;
+}
+
 bool readBool(Object? value) {
   if (value is bool) return value;
   if (value is String) return value.toLowerCase() == 'true';

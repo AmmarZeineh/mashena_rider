@@ -22,7 +22,9 @@ import 'package:mashena_rider/features/home/domain/entities/matched_trip.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_completed.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_cancelled.dart';
 import 'package:mashena_rider/features/home/data/models/trip_share_model.dart';
+import 'package:mashena_rider/features/home/data/models/trip_wallet_payment_model.dart';
 import 'package:mashena_rider/features/home/domain/entities/trip_share.dart';
+import 'package:mashena_rider/features/home/domain/entities/trip_wallet_payment_entity.dart';
 import '../../domain/entities/ride_request.dart';
 import '../../domain/repositories/ride_repository.dart';
 import '../models/ride_request_model.dart';
@@ -162,7 +164,8 @@ class RideRepositoryImpl implements RideRepository {
   Stream<int> get rideExpiredStream => _rideSocketDataSource.rideExpiredStream;
 
   @override
-  Stream<bool> get connectionStatusStream => _rideSocketDataSource.connectionStatusStream;
+  Stream<bool> get connectionStatusStream =>
+      _rideSocketDataSource.connectionStatusStream;
 
   @override
   Future<void> connectSocket() => _rideSocketDataSource.connectSocket();
@@ -224,6 +227,35 @@ class RideRepositoryImpl implements RideRepository {
     try {
       await _apiClient.delete(BackendEndpoints.shareTripByRide(rideRequestId));
       return const Right(true);
+    } on ApiException catch (e) {
+      return Left(mapApiExceptionToFailure(e));
+    } catch (e) {
+      return Left(Failure(FailureCode.unknown, rawMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, TripWalletPaymentEntity>> payTripWithWallet(
+    int rideRequestId,
+  ) async {
+    try {
+      final response = await _apiClient.post(
+        BackendEndpoints.payTripByRide(rideRequestId),
+      );
+
+      if (response is! Map) {
+        return const Left(
+          Failure(FailureCode.unknown, rawMessage: 'Invalid payment response'),
+        );
+      }
+
+      final jsonMap = Map<String, dynamic>.from(response);
+      final data = (jsonMap['data'] is Map<String, dynamic>)
+          ? jsonMap['data'] as Map<String, dynamic>
+          : jsonMap;
+
+      final model = TripWalletPaymentModel.fromJson(data);
+      return Right(model.toEntity());
     } on ApiException catch (e) {
       return Left(mapApiExceptionToFailure(e));
     } catch (e) {

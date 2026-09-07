@@ -1604,4 +1604,76 @@ class SEn extends S {
 
   @override
   String get walletBalanceBefore => 'Balance before';
+
+  @override
+  String get unifiedTripAll => 'All';
+
+  @override
+  String get unifiedTripDriverRides => 'Driver Rides';
+
+  @override
+  String get unifiedTripPoolLobbies => 'Pool Lobbies';
+
+  @override
+  String get unifiedTripDriverBadge => 'Driver Ride';
+
+  @override
+  String get unifiedTripPoolBadge => 'Passenger Pool';
+
+  @override
+  String get unifiedTripNoRidesFound => 'No rides or pools currently available';
+
+  @override
+  String get unifiedTripNoDriverRidesFound =>
+      'No driver shared rides found along this route';
+
+  @override
+  String get unifiedTripNoPoolLobbiesFound =>
+      'No passenger pools found along this route';
+
+  @override
+  String get unifiedTripCreatePoolCta =>
+      'Create a pool lobby to request a driver together';
+
+  @override
+  String get paymentMethodTitle => 'Payment Method';
+
+  @override
+  String get paymentMethodCash => 'Cash';
+
+  @override
+  String get paymentMethodCashDesc => 'Pay the driver in cash';
+
+  @override
+  String get paymentMethodWallet => 'Wallet';
+
+  @override
+  String paymentWalletAvailableBalance(String balance, String currency) {
+    return 'Available balance: $balance $currency';
+  }
+
+  @override
+  String paymentWalletPayNow(String amount, String currency) {
+    return 'Pay $amount $currency from Wallet';
+  }
+
+  @override
+  String get paymentWalletSuccess => 'Paid successfully from wallet';
+
+  @override
+  String paymentWalletSuccessDesc(
+    String amount,
+    String balance,
+    String currency,
+  ) {
+    return 'Deducted $amount $currency. Remaining balance: $balance $currency';
+  }
+
+  @override
+  String get paymentWalletInsufficient =>
+      'Insufficient wallet balance. Please choose cash.';
+
+  @override
+  String get paymentPleasePayFirst =>
+      'Please complete wallet payment or choose cash';
 }

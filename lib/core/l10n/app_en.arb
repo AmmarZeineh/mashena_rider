@@ -769,6 +769,44 @@
   "walletNoTransactions": "No transactions found",
   "walletTapToViewTransactions": "Tap to view transactions",
   "walletBalanceAfter": "Balance after",
-  "walletBalanceBefore": "Balance before"
+  "walletBalanceBefore": "Balance before",
+  "unifiedTripAll": "All",
+  "unifiedTripDriverRides": "Driver Rides",
+  "unifiedTripPoolLobbies": "Pool Lobbies",
+  "unifiedTripDriverBadge": "Driver Ride",
+  "unifiedTripPoolBadge": "Passenger Pool",
+  "unifiedTripNoRidesFound": "No rides or pools currently available",
+  "unifiedTripNoDriverRidesFound": "No driver shared rides found along this route",
+  "unifiedTripNoPoolLobbiesFound": "No passenger pools found along this route",
+  "unifiedTripCreatePoolCta": "Create a pool lobby to request a driver together",
+  "paymentMethodTitle": "Payment Method",
+  "paymentMethodCash": "Cash",
+  "paymentMethodCashDesc": "Pay the driver in cash",
+  "paymentMethodWallet": "Wallet",
+  "paymentWalletAvailableBalance": "Available balance: {balance} {currency}",
+  "@paymentWalletAvailableBalance": {
+    "placeholders": {
+      "balance": { "type": "String" },
+      "currency": { "type": "String" }
+    }
+  },
+  "paymentWalletPayNow": "Pay {amount} {currency} from Wallet",
+  "@paymentWalletPayNow": {
+    "placeholders": {
+      "amount": { "type": "String" },
+      "currency": { "type": "String" }
+    }
+  },
+  "paymentWalletSuccess": "Paid successfully from wallet",
+  "paymentWalletSuccessDesc": "Deducted {amount} {currency}. Remaining balance: {balance} {currency}",
+  "@paymentWalletSuccessDesc": {
+    "placeholders": {
+      "amount": { "type": "String" },
+      "balance": { "type": "String" },
+      "currency": { "type": "String" }
+    }
+  },
+  "paymentWalletInsufficient": "Insufficient wallet balance. Please choose cash.",
+  "paymentPleasePayFirst": "Please complete wallet payment or choose cash"
 }
 

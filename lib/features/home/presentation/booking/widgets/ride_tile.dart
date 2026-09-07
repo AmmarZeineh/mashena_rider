@@ -74,25 +74,109 @@ class RideTile extends StatelessWidget {
                 SizedBox(width: 16.w),
                 // Info
                 Expanded(
-                  child: Text(
-                    estimate.name.isEmpty
-                        ? localizations.ridePersonCapacity
-                        : estimate.name,
-                    style: AppTextStyles.w700_16.copyWith(
-                      color: isSelected
-                          ? AppColors.primaryColor
-                          : colorScheme.onSurface,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        estimate.name.isEmpty
+                            ? localizations.ridePersonCapacity
+                            : estimate.name,
+                        style: AppTextStyles.w700_16.copyWith(
+                          color: isSelected
+                              ? AppColors.primaryColor
+                              : colorScheme.onSurface,
+                        ),
+                      ),
+                      if (estimate.hasDiscount &&
+                          estimate.appliedCoupon != null) ...[
+                        SizedBox(height: 4.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor.withValues(
+                              alpha: 0.1,
+                            ),
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.local_offer_rounded,
+                                size: 11.sp,
+                                color: AppColors.primaryColor,
+                              ),
+                              SizedBox(width: 4.w),
+                              Flexible(
+                                child: Text(
+                                  estimate.appliedCoupon!.code,
+                                  style: AppTextStyles.w600_10.copyWith(
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ] else if (estimate.hasDiscount &&
+                          estimate.effectiveDiscountAmount > 0) ...[
+                        SizedBox(height: 4.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                          child: Text(
+                            '-${_formatAmount(estimate.effectiveDiscountAmount, estimate.currency)}',
+                            style: AppTextStyles.w600_10.copyWith(
+                              color: Colors.green.shade700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
                 // Price
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (estimate.hasDiscount) ...[
+                      Text(
+                        _formatAmount(
+                          estimate.displayOriginalFare,
+                          estimate.currency,
+                        ),
+                        style: AppTextStyles.w500_12.copyWith(
+                          color: colorScheme.outline,
+                          decoration: TextDecoration.lineThrough,
+                          decorationColor: colorScheme.outline,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                    ],
                     Text(
-                      _formatFare(estimate),
+                      _formatAmount(
+                        estimate.displayFinalFare,
+                        estimate.currency,
+                      ),
                       style: AppTextStyles.w700_18.copyWith(
-                        color: colorScheme.onSurface,
+                        color: estimate.hasDiscount
+                            ? (isSelected
+                                  ? AppColors.primaryColor
+                                  : colorScheme.primary)
+                            : colorScheme.onSurface,
                       ),
                     ),
                     if (isSelected)
@@ -123,13 +207,12 @@ class RideTile extends StatelessWidget {
     );
   }
 
-  static String _formatFare(RideEstimate estimate) {
-    final fare = estimate.estimatedFare;
+  static String _formatAmount(double fare, String currency) {
     final formatted = fare.truncateToDouble() == fare
         ? fare.toStringAsFixed(0)
         : fare.toStringAsFixed(2);
-    final currency = estimate.currency.trim();
-    return currency.isEmpty ? formatted : '$currency $formatted';
+    final trimmed = currency.trim();
+    return trimmed.isEmpty ? formatted : '$trimmed $formatted';
   }
 }
 

@@ -345,7 +345,8 @@ class SharedTripRoomDetailsCubit extends BaseCubit<SharedTripRoomDetailsState> {
           final isCurrentUser =
               _currentUserId != null && payload.userId == _currentUserId;
 
-          final isAccountHolderDropped = !payload.accountHolderOnBoard ||
+          final isAccountHolderDropped =
+              !payload.accountHolderOnBoard ||
               payload.passengerStatus == 'DROPPED_OFF' ||
               payload.accountHolderDroppedOffAt != null ||
               (payload.activeSeats != null && payload.activeSeats == 0);
@@ -358,12 +359,14 @@ class SharedTripRoomDetailsCubit extends BaseCubit<SharedTripRoomDetailsState> {
                 sharedRideId: p.sharedRideId,
                 riderProfileId: p.riderProfileId,
                 riderName: p.riderName,
-                status: payload.passengerStatus ??
+                status:
+                    payload.passengerStatus ??
                     (isAccountHolderDropped ? 'DROPPED_OFF' : p.status),
                 paymentStatus:
                     payload.passenger?.paymentStatus ?? p.paymentStatus,
                 seatsNeeded: payload.seatsNeeded ?? p.seatsNeeded,
-                activeSeats: payload.activeSeats ??
+                activeSeats:
+                    payload.activeSeats ??
                     (isAccountHolderDropped
                         ? 0
                         : (p.activeSeats > 1 ? p.activeSeats - 1 : 1)),
@@ -378,7 +381,8 @@ class SharedTripRoomDetailsCubit extends BaseCubit<SharedTripRoomDetailsState> {
                     ? (payload.droppedOffAt ?? p.droppedOffAt ?? DateTime.now())
                     : p.droppedOffAt,
                 accountHolderOnBoard: payload.accountHolderOnBoard,
-                accountHolderDroppedOffAt: payload.accountHolderDroppedOffAt ??
+                accountHolderDroppedOffAt:
+                    payload.accountHolderDroppedOffAt ??
                     (isAccountHolderDropped
                         ? (payload.droppedOffAt ?? DateTime.now())
                         : p.accountHolderDroppedOffAt),
@@ -450,11 +454,7 @@ class SharedTripRoomDetailsCubit extends BaseCubit<SharedTripRoomDetailsState> {
               );
             }
           } else {
-            emit(
-              currentState.copyWith(
-                details: updatedDetails,
-              ),
-            );
+            emit(currentState.copyWith(details: updatedDetails));
           }
         }
       }),

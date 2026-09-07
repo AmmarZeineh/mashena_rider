@@ -40,6 +40,20 @@ class MapStateCubit extends BaseCubit<MapStateState> {
     );
   }
 
+  /// Clears all driver-related polylines from the map.
+  void clearDriverPolylines() {
+    final updated = state.polylines
+        .where(
+          (p) =>
+              p.id != 'driver_to_pickup_border' &&
+              p.id != 'driver_to_pickup' &&
+              p.id != 'driver_to_destination_border' &&
+              p.id != 'driver_to_destination',
+        )
+        .toList();
+    emit(state.copyWith(polylines: updated));
+  }
+
   /// Replaces all driver-related polylines in one atomic update.
   void updateDriverPolylines({
     required String borderId,

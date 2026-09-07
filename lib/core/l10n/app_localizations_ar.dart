@@ -1600,4 +1600,75 @@ class SAr extends S {
 
   @override
   String get walletBalanceBefore => 'الرصيد قبل';
+
+  @override
+  String get unifiedTripAll => 'الكل';
+
+  @override
+  String get unifiedTripDriverRides => 'رحلات السائقين';
+
+  @override
+  String get unifiedTripPoolLobbies => 'تجمعات الركاب';
+
+  @override
+  String get unifiedTripDriverBadge => 'رحلة سائق';
+
+  @override
+  String get unifiedTripPoolBadge => 'تجمع ركاب';
+
+  @override
+  String get unifiedTripNoRidesFound => 'لا توجد رحلات أو تجمعات متاحة حالياً';
+
+  @override
+  String get unifiedTripNoDriverRidesFound =>
+      'لا توجد رحلات سائقين متاحة في هذا المسار';
+
+  @override
+  String get unifiedTripNoPoolLobbiesFound =>
+      'لا توجد تجمعات ركاب في هذا المسار حالياً';
+
+  @override
+  String get unifiedTripCreatePoolCta => 'أنشئ غرفة تجمع جديدة لطلب سائق معاً';
+
+  @override
+  String get paymentMethodTitle => 'طريقة الدفع';
+
+  @override
+  String get paymentMethodCash => 'نقداً';
+
+  @override
+  String get paymentMethodCashDesc => 'ادفع المبلغ نقداً للسائق';
+
+  @override
+  String get paymentMethodWallet => 'المحفظة الإلكترونية';
+
+  @override
+  String paymentWalletAvailableBalance(String balance, String currency) {
+    return 'الرصيد المتاح: $balance $currency';
+  }
+
+  @override
+  String paymentWalletPayNow(String amount, String currency) {
+    return 'ادفع $amount $currency عبر المحفظة';
+  }
+
+  @override
+  String get paymentWalletSuccess => 'تم الدفع بنجاح من المحفظة';
+
+  @override
+  String paymentWalletSuccessDesc(
+    String amount,
+    String balance,
+    String currency,
+  ) {
+    return 'تم خصم $amount $currency. الرصيد المتبقي: $balance $currency';
+  }
+
+  @override
+  String get paymentWalletInsufficient =>
+      'رصيد المحفظة غير كافٍ. يرجى اختيار الدفع نقداً.';
+
+  @override
+  String get paymentPleasePayFirst =>
+      'يرجى إتمام الدفع عبر المحفظة أولاً أو اختيار الدفع نقداً';
 }
